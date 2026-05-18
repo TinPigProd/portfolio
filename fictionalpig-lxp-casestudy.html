@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CP — Portfolio: Learning Pathway Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #18180F;
+    --ink-mid: #4A4A40;
+    --ink-soft: #8A8A80;
+    --ink-ghost: #C2C2B8;
+    --paper: #F7F6F2;
+    --paper-warm: #EFEDE7;
+    --white: #FFFFFF;
+    --rule: rgba(0,0,0,0.10);
+    --rule-strong: rgba(0,0,0,0.16);
+    --blue-50: #E6F1FB;
+    --blue-400: #4A8FD4;
+    --blue-800: #0C447C;
+    --teal-50: #E1F5EE;
+    --teal-400: #1D9E75;
+    --teal-800: #085041;
+    --amber-50: #FAEEDA;
+    --amber-400: #BA7517;
+    --amber-800: #633806;
+    --pink-50: #FFF0F3;
+    --pink-400: #FF6B8A;
+    --pink-800: #9B1D3A;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247,246,242,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid var(--rule-strong);
+    padding: 0 2rem; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+
+  .nav-initials {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--ink); color: var(--white);
+    font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-label { font-size: 13px; color: var(--ink-mid); }
+  .nav-label strong { font-weight: 500; color: var(--ink); }
+
+  .nav-right { display: flex; gap: 0.5rem; }
+
+  .nav-tag {
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 3px 9px;
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+  }
+
+  /* HERO */
+  .hero {
+    max-width: 900px; margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    display: grid; grid-template-columns: 1fr 280px;
+    gap: 3rem; align-items: start;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px; line-height: 1.1; color: var(--ink); margin-bottom: 1.25rem;
+  }
+
+  .hero-title em { font-style: italic; color: var(--ink-mid); }
+
+  .hero-desc {
+    font-size: 16px; line-height: 1.7; color: var(--ink-mid); max-width: 480px;
+  }
+
+  .hero-meta { display: flex; flex-direction: column; gap: 1rem; padding-top: 0.5rem; }
+
+  .meta-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1rem 1.1rem;
+  }
+
+  .meta-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.3rem;
+  }
+
+  .meta-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .meta-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+  .section-rule { height: 0.5px; background: var(--rule-strong); margin-bottom: 2.5rem; }
+
+  .section-header {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 2rem; margin-bottom: 2rem;
+  }
+
+  .section-num {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); padding-top: 3px;
+  }
+
+  .section-content { grid-column: 2; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px; color: var(--ink); margin-bottom: 0.6rem;
+  }
+
+  .section-body { font-size: 14px; line-height: 1.75; color: var(--ink-mid); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+
+  .content-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+  }
+
+  .content-card-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.75rem;
+  }
+
+  .content-card p { font-size: 14px; line-height: 1.7; color: var(--ink-mid); }
+
+  .process-steps { display: flex; flex-direction: column; margin-top: 1.5rem; }
+
+  .process-step {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 1rem; padding: 1.25rem 0;
+    border-bottom: 0.5px solid var(--rule);
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--ink-mid);
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+  /* DELIVERABLE FRAME */
+  .deliverable-frame {
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-xl); padding: 2rem; margin-top: 1.5rem;
+  }
+
+  .frame-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .frame-label::after { content: ''; flex: 1; height: 0.5px; background: var(--rule-strong); }
+
+  /* EMBEDDED TOOL PREVIEW */
+  .tool-preview {
+    background: var(--white); border-radius: var(--radius-lg);
+    border: 0.5px solid var(--rule); overflow: hidden;
+  }
+
+  .preview-topbar {
+    background: #1A2B4A; height: 44px;
+    display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
+  }
+
+  .preview-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px; color: white; letter-spacing: -0.02em;
+  }
+
+  .preview-nav { display: flex; gap: 0.25rem; }
+
+  .preview-nav-item {
+    font-size: 11px; color: rgba(255,255,255,0.5);
+    padding: 4px 10px; border-radius: 4px;
+  }
+
+  .preview-nav-item.active {
+    color: white; background: rgba(255,255,255,0.12); font-weight: 500;
+  }
+
+  .preview-toggle-bar {
+    background: #243656; padding: 0.5rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .preview-trigger {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: rgba(255,255,255,0.5);
+  }
+
+  .preview-trigger-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #00A88E;
+  }
+
+  .preview-view-toggle {
+    display: flex; border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: 4px; overflow: hidden;
+  }
+
+  .preview-view-btn {
+    font-size: 10px; font-weight: 500; padding: 4px 12px;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    border: none; color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.06); transition: all 0.15s;
+  }
+
+  .preview-view-btn.active { background: #00A88E; color: white; }
+
+  .preview-body {
+    display: flex; height: 320px;
+  }
+
+  .preview-sidebar {
+    width: 160px; background: var(--white);
+    border-right: 1px solid var(--rule); padding: 0.75rem 0;
+    flex-shrink: 0;
+  }
+
+  .preview-sidebar-label {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); padding: 0.5rem 0.75rem 0.3rem;
+  }
+
+  .preview-sidebar-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 0.75rem; font-size: 11px; color: var(--ink-soft);
+  }
+
+  .preview-sidebar-item.active {
+    background: var(--blue-50); color: var(--blue-400); font-weight: 500;
+  }
+
+  .preview-main {
+    flex: 1; background: #F4F6F9; padding: 1rem; overflow: hidden;
+  }
+
+  .preview-pathway-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px; color: var(--ink); margin-bottom: 0.5rem;
+  }
+
+  .preview-stats {
+    display: flex; gap: 1rem; margin-bottom: 0.85rem;
+    font-size: 11px; color: var(--ink-soft);
+  }
+
+  .preview-step {
+    background: var(--white); border: 1px solid var(--rule);
+    border-radius: 6px; padding: 0.6rem 0.75rem;
+    margin-bottom: 5px; display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .preview-step-num {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--blue-50); border: 1px solid var(--blue-400);
+    color: var(--blue-400); font-size: 9px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  .preview-step-title { font-size: 11px; color: var(--ink); flex: 1; font-weight: 500; }
+
+  .preview-step-badge {
+    font-size: 9px; font-weight: 600; padding: 1px 6px;
+    border-radius: 100px; letter-spacing: 0.04em; flex-shrink: 0;
+  }
+
+  .psb-blue { background: var(--blue-50); color: var(--blue-400); }
+  .psb-teal { background: var(--teal-50); color: var(--teal-400); }
+  .psb-pink { background: var(--pink-50); color: var(--pink-400); }
+
+  .preview-right {
+    width: 180px; flex-shrink: 0; padding: 1rem;
+    background: var(--white); border-left: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .preview-right-label {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.5rem;
+  }
+
+  .preview-audience-rule {
+    background: #F4F6F9; border-radius: 4px; padding: 0.4rem 0.5rem;
+    font-size: 10px; color: var(--ink-mid); margin-bottom: 4px; line-height: 1.4;
+  }
+
+  .preview-skill-row {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
+  }
+
+  .preview-skill-name { font-size: 10px; color: var(--ink-soft); flex: 1; }
+
+  .preview-skill-bar {
+    width: 50px; height: 4px; background: #E8E8E8; border-radius: 2px; overflow: hidden;
+  }
+
+  .preview-skill-fill { height: 100%; border-radius: 2px; }
+
+  /* ECOSYSTEM DIAGRAM */
+  .ecosystem-diagram {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 1.5rem;
+  }
+
+  .eco-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 1.25rem; text-align: center;
+  }
+
+  .eco-flow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap;
+  }
+
+  .eco-node {
+    background: var(--paper); border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-md); padding: 0.85rem 1rem;
+    text-align: center; min-width: 130px;
+  }
+
+  .eco-node-label {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 4px;
+  }
+
+  .eco-node-name { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+  .eco-node-sub { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+  .eco-arrow { font-size: 14px; color: var(--ink-ghost); padding: 0 0.5rem; }
+
+  .eco-node.highlight { border-color: var(--pink-400); background: var(--pink-50); }
+  .eco-node.highlight .eco-node-name { color: var(--pink-400); }
+
+  /* DECISIONS */
+  .decisions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+
+  .decision-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1.25rem;
+  }
+
+  .decision-num {
+    font-family: 'DM Serif Display', serif; font-size: 32px;
+    color: var(--ink); margin-bottom: 0.25rem;
+  }
+
+  .decision-label { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 0.3rem; }
+  .decision-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
+
+  /* REFLECTION */
+  .reflection-block {
+    background: var(--ink); color: var(--white);
+    border-radius: var(--radius-lg); padding: 2.5rem; margin-top: 1.5rem;
+  }
+
+  .reflection-block blockquote {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 22px; line-height: 1.45;
+    color: rgba(255,255,255,0.90); margin-bottom: 1.25rem;
+  }
+
+  .reflection-block p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.60); }
+
+  .open-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    color: var(--ink); background: var(--white);
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-md);
+    padding: 8px 18px; text-decoration: none; cursor: pointer;
+    transition: opacity 0.15s; margin-top: 1.25rem;
+  }
+
+  .open-btn:hover { opacity: 0.85; }
+
+  .open-btn-primary {
+    background: var(--blue-400); color: var(--white);
+    border-color: var(--blue-400);
+  }
+
+  footer {
+    max-width: 900px; margin: 0 auto; padding: 2rem 2rem 4rem;
+    border-top: 0.5px solid var(--rule-strong);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink-ghost);
+  }
+
+  @media (max-width: 680px) {
+    .hero, .section-header { grid-template-columns: 1fr; }
+    .section-num { display: none; }
+    .section-content { grid-column: 1; }
+    .two-col, .three-col, .decisions-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 34px; }
+    .preview-body { flex-direction: column; height: auto; }
+    .preview-sidebar, .preview-right { width: 100%; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-initials">CP</div>
+    <span class="nav-label"><strong>CP</strong> — Portfolio</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-tag">Learning Pathway Architecture</span>
+    <span class="nav-tag">FictionalPig LXP</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Portfolio case study · 05</div>
+    <h1 class="hero-title">Learning <em>Pathway</em><br>Architecture</h1>
+    <p class="hero-desc">The infrastructure layer underneath Beacon. A skills-based, competency-anchored pathway that surfaces when a feedback synthesis identifies a gap, built in FictionalPig LXP to demonstrate LXP ecosystem design thinking.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-card">
+      <div class="meta-label">Platform</div>
+      <div class="meta-value">FictionalPig LXP</div>
+      <div class="meta-sub">Simulated · Degreed-informed architecture</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Trigger</div>
+      <div class="meta-value">Feedback synthesis completion</div>
+      <div class="meta-sub">Competency gap auto-assignment</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Views</div>
+      <div class="meta-value">Admin / Architect + Learner</div>
+      <div class="meta-sub">Toggle between both perspectives</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: PROBLEM -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">01 · Problem</div>
+    <div class="section-content">
+      <h2 class="section-title">Beacon surfaces the nudge. But what comes next?</h2>
+      <p class="section-body">Beacon delivers three learning cards in Slack at the moment of highest relevance. But cards are a starting point, not a system. For learning to change behavior at scale, the nudge needs to connect to a deeper infrastructure, a pathway that sequences content deliberately, tags it to the right skills, assigns it to the right audience, and tracks progress without requiring a manager to manually curate anything.</p>
+      <div class="two-col">
+        <div class="content-card">
+          <div class="content-card-label">The gap</div>
+          <p>Point-in-time learning nudges don't build capability on their own. Without an underlying pathway architecture, there's no sequencing, no skill progression tracking, and no scalable way to ensure the right content reaches the right person at the right level.</p>
+        </div>
+        <div class="content-card">
+          <div class="content-card-label">The opportunity</div>
+          <p>Design the LXP pathway layer that Beacon draws from — showing how competency gaps identified in a feedback synthesis translate directly into a structured, skills-tagged, auto-assigned learning experience in the flow of work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: ECOSYSTEM -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">02 · Ecosystem</div>
+    <div class="section-content">
+      <h2 class="section-title">Where this artifact lives in the system.</h2>
+      <p class="section-body">This pathway is Case Study 05, the infrastructure layer that closes the full talent development loop. Each artifact in this portfolio feeds the next.</p>
+      <div class="ecosystem-diagram">
+        <div class="eco-label">The complete system — Case Study 05 closes the loop</div>
+        <div class="eco-flow">
+          <div class="eco-node">
+            <div class="eco-node-label">01</div>
+            <div class="eco-node-name">Success Model</div>
+            <div class="eco-node-sub">Competency framework</div>
+          </div>
+          <div class="eco-arrow">→</div>
+          <div class="eco-node">
+            <div class="eco-node-label">02 · 03</div>
+            <div class="eco-node-name">Feedback &<br>Succession Tools</div>
+            <div class="eco-node-sub">Gap identification</div>
+          </div>
+          <div class="eco-arrow">→</div>
+          <div class="eco-node">
+            <div class="eco-node-label">04</div>
+            <div class="eco-node-name">Beacon</div>
+            <div class="eco-node-sub">In-platform nudge</div>
+          </div>
+          <div class="eco-arrow">→</div>
+          <div class="eco-node highlight">
+            <div class="eco-node-label">05</div>
+            <div class="eco-node-name">FictionalPig LXP</div>
+            <div class="eco-node-sub">Pathway infrastructure</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: PROCESS -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">03 · Process</div>
+    <div class="section-content">
+      <h2 class="section-title">Designing the pathway architecture.</h2>
+      <p class="section-body">The pathway was designed around Jordan Mills' three flagged competencies: Collaborates, Communicates Effectively, and Interpersonal Savvy, using the same architectural decisions that govern real LXP implementations.</p>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Competency-to-skill mapping</div>
+            <div class="step-desc">Each Success Model competency was mapped to a skill tag in the LXP taxonomy — creating the metadata layer that enables auto-assignment, discoverability, and progress tracking tied to the framework rather than arbitrary content categories.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Trigger rule architecture</div>
+            <div class="step-desc">The pathway fires automatically when Beacon's feedback synthesis identifies a gap in any of the three target competencies. The trigger connects the synthesis event to the LXP assignment without manual intervention from a manager or L&D team member.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Content sequencing decisions</div>
+            <div class="step-desc">Required content (3 items) establishes the minimum viable learning experience — article, framework, micro-lesson — each anchored to a specific competency and observable behavior from the Success Model. Optional enrichment (4 items) serves learners who want to go deeper without making the pathway feel mandatory and heavy.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Audience targeting rules</div>
+            <div class="step-desc">The pathway is scoped to Senior IC level in Engineering — not because all senior engineers need it, but because the trigger rule ensures it only reaches people whose synthesis identified these specific gaps. Precise targeting prevents noise.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Dual view design</div>
+            <div class="step-desc">Both the admin/architect view and the learner view were designed deliberately. The admin view shows the infrastructure logic — triggers, metadata, skill coverage, analytics. The learner view shows what Jordan actually sees: a clear why, a clean sequence, and skill progression made visible.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: DELIVERABLE -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">04 · Deliverable</div>
+    <div class="section-content">
+      <h2 class="section-title">FictionalPig LXP. Interactive simulation.</h2>
+      <p class="section-body">The simulation shows both the admin/architect view (pathway builder, trigger rules, metadata, skill coverage) and the learner view (Jordan's experience of the assigned pathway). Toggle between them using the view switcher in the top bar.</p>
+    </div>
+  </div>
+
+  <div class="deliverable-frame">
+    <div class="frame-label">Live simulation</div>
+    <div class="tool-preview">
+
+      <!-- TOPBAR -->
+      <div class="preview-topbar">
+        <div class="preview-logo">Fictional<span style="color:#FF6B8A;">Pig</span> LXP</div>
+        <div class="preview-nav">
+          <div class="preview-nav-item">Home</div>
+          <div class="preview-nav-item">Learn</div>
+          <div class="preview-nav-item active">Pathways</div>
+          <div class="preview-nav-item">Skills</div>
+          <div class="preview-nav-item">Insights</div>
+        </div>
+      </div>
+
+      <!-- TOGGLE BAR -->
+      <div class="preview-toggle-bar">
+        <div class="preview-trigger">
+          <div class="preview-trigger-dot"></div>
+          <span>Triggered by feedback synthesis · Jordan Mills · May 17, 2026</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <span style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.06em;text-transform:uppercase;">View as</span>
+          <div class="preview-view-toggle">
+            <button class="preview-view-btn active">Admin / Architect</button>
+            <button class="preview-view-btn">Learner (Jordan)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW BODY -->
+      <div class="preview-body">
+
+        <!-- SIDEBAR -->
+        <div class="preview-sidebar">
+          <div class="preview-sidebar-label">Pathways</div>
+          <div class="preview-sidebar-item">⬡ All pathways</div>
+          <div class="preview-sidebar-item active">⚡ Active</div>
+          <div class="preview-sidebar-item">✏ Drafts</div>
+          <div class="preview-sidebar-label" style="margin-top:0.5rem;">Content</div>
+          <div class="preview-sidebar-item">📚 Library</div>
+          <div class="preview-sidebar-item">🏷 Skills taxonomy</div>
+          <div class="preview-sidebar-label" style="margin-top:0.5rem;">Integrations</div>
+          <div class="preview-sidebar-item">⬡ Beacon / Slack</div>
+          <div class="preview-sidebar-item">🔗 LMS connectors</div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="preview-main">
+          <div class="preview-pathway-name">Collaboration & Influence Pathway</div>
+          <div class="preview-stats">
+            <span>● Active · Auto-assigned</span>
+            <span>7 items · 3.5 hrs</span>
+            <span>3 skills targeted</span>
+          </div>
+          <div class="preview-step">
+            <div class="preview-step-num">1</div>
+            <div class="preview-step-title">The Collaboration Paradox: Why High Performers Work Alone</div>
+            <span class="preview-step-badge psb-blue">Collaborates</span>
+            <span class="preview-step-badge" style="background:#E8F5F2;color:#1D9E75;margin-left:3px;">Required</span>
+          </div>
+          <div class="preview-step">
+            <div class="preview-step-num">2</div>
+            <div class="preview-step-title">The PREP Model: Structuring Technical Perspective</div>
+            <span class="preview-step-badge psb-teal">Communicates Effectively</span>
+            <span class="preview-step-badge" style="background:#E8F5F2;color:#1D9E75;margin-left:3px;">Required</span>
+          </div>
+          <div class="preview-step">
+            <div class="preview-step-num">3</div>
+            <div class="preview-step-title">Generating Energy Without Authority: Exothermic Model</div>
+            <span class="preview-step-badge psb-pink">Interpersonal Savvy</span>
+            <span class="preview-step-badge" style="background:#E8F5F2;color:#1D9E75;margin-left:3px;">Required</span>
+          </div>
+          <div class="preview-step" style="opacity:0.6;">
+            <div class="preview-step-num" style="background:#F4F6F9;border-color:#ddd;color:#9A9A9A;">4</div>
+            <div class="preview-step-title">Radical Candor · Video · LinkedIn Learning · 22 min</div>
+            <span class="preview-step-badge" style="background:#F4F6F9;color:#9A9A9A;border:1px solid #ddd;">Optional</span>
+          </div>
+          <div style="font-size:10px;color:#9A9A9A;margin-top:6px;padding-left:4px;">+ 3 more optional items</div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="preview-right">
+          <div class="preview-right-label">Audience targeting</div>
+          <div class="preview-audience-rule">⚡ Auto-assign via Beacon synthesis trigger</div>
+          <div class="preview-audience-rule">🎯 Gap: Collaborates OR Communicates Effectively OR Interpersonal Savvy</div>
+          <div class="preview-audience-rule" style="background:#E1F5EE;color:#085041;">👤 1 matched · Jordan Mills</div>
+          <div class="preview-right-label" style="margin-top:0.75rem;">Skill coverage</div>
+          <div class="preview-skill-row">
+            <span class="preview-skill-name">Collaborates</span>
+            <div class="preview-skill-bar"><div class="preview-skill-fill" style="width:85%;background:#4A8FD4;"></div></div>
+          </div>
+          <div class="preview-skill-row">
+            <span class="preview-skill-name">Communicates</span>
+            <div class="preview-skill-bar"><div class="preview-skill-fill" style="width:75%;background:#1D9E75;"></div></div>
+          </div>
+          <div class="preview-skill-row">
+            <span class="preview-skill-name">Interpersonal</span>
+            <div class="preview-skill-bar"><div class="preview-skill-fill" style="width:60%;background:#FF6B8A;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem;display:flex;gap:0.75rem;">
+      <a class="open-btn open-btn-primary" href="fictionalpig-lxp-pathway.html" target="_blank" rel="noopener noreferrer">Open full simulation →</a>
+      <span style="font-size:12px;color:var(--ink-soft);line-height:1;display:flex;align-items:center;">Toggle between Admin/Architect and Learner views inside the simulation.</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: DESIGN DECISIONS -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">05 · Design decisions</div>
+    <div class="section-content">
+      <h2 class="section-title">Three choices that shaped the architecture.</h2>
+      <div class="decisions-grid">
+        <div class="decision-card">
+          <div class="decision-num">01</div>
+          <div class="decision-label">Framework-native metadata</div>
+          <div class="decision-desc">Every content item is tagged to a Success Model competency and tier, not a generic topic. This means the pathway is discoverable by skill gap, not by browsing — and analytics reflect framework progress, not just content consumption.</div>
+        </div>
+        <div class="decision-card">
+          <div class="decision-num">02</div>
+          <div class="decision-label">Required minimum, optional depth</div>
+          <div class="decision-desc">Three required items establish the floor. Four optional items serve motivated learners without making the pathway feel heavy. Respects the leader's time while leaving room for genuine curiosity.</div>
+        </div>
+        <div class="decision-card">
+          <div class="decision-num">03</div>
+          <div class="decision-label">Both views, by design</div>
+          <div class="decision-desc">Showing admin and learner views simultaneously demonstrates that good pathway design thinks from both directions — what the architect builds and what the learner experiences are equally important design surfaces.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: REFLECTION -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">06 · Reflection</div>
+    <div class="section-content">
+      <h2 class="section-title">What this work demonstrates.</h2>
+      <div class="reflection-block">
+        <blockquote>"A learning nudge without infrastructure is a good intention. A pathway architecture is what makes the intention repeatable, measurable, and scalable."</blockquote>
+        <p>This artifact closes the loop on the full talent development system demonstrated across this portfolio. The Success Model defines the language. The Feedback and Succession Tools identify the gaps. Beacon surfaces the moment. FictionalPig LXP provides the infrastructure that turns a single learning moment into a structured capability-building journey — anchored to the same competency framework throughout, auto-assigned without manual intervention, and designed to be experienced differently by the architect who builds it and the learner who lives it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Learning Pathway Architecture · FictionalPig LXP · CP | 5.26</span>
+</footer>
+
+</body>
+</html>

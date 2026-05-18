@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CP — Portfolio: Beacon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #18180F;
+    --ink-mid: #4A4A40;
+    --ink-soft: #8A8A80;
+    --ink-ghost: #C2C2B8;
+    --paper: #F7F6F2;
+    --paper-warm: #EFEDE7;
+    --white: #FFFFFF;
+    --rule: rgba(0,0,0,0.10);
+    --rule-strong: rgba(0,0,0,0.16);
+    --blue-50: #E6F1FB;
+    --blue-400: #378ADD;
+    --blue-800: #0C447C;
+    --teal-50: #E1F5EE;
+    --teal-400: #1D9E75;
+    --teal-800: #085041;
+    --amber-50: #FAEEDA;
+    --amber-800: #633806;
+    --purple-50: #F0EBFB;
+    --purple-400: #7C5CBF;
+    --purple-800: #3B1F7A;
+    --slack-aubergine: #3F0E40;
+    --slack-aubergine-dark: #350D36;
+    --slack-sidebar-text: rgba(255,255,255,0.72);
+    --slack-sidebar-active: #FFFFFF;
+    --slack-sidebar-selected: rgba(255,255,255,0.16);
+    --slack-green: #007a5a;
+    --slack-red: #e8194b;
+    --slack-border: #e8e8e8;
+    --slack-hover: #f8f8f8;
+    --slack-text: #1d1c1d;
+    --slack-text-mid: #616061;
+    --slack-text-soft: #9e9e9e;
+    --slack-link: #1264a3;
+    --slack-reaction: #f2f2f2;
+    --slack-reaction-border: #d8d8d8;
+    --beacon-blue: #0066CC;
+    --beacon-blue-light: #E8F0FB;
+    --beacon-teal: #1D9E75;
+    --beacon-teal-light: #E1F5EE;
+    --beacon-amber: #BA7517;
+    --beacon-amber-light: #FAEEDA;
+    --beacon-purple: #7C5CBF;
+    --beacon-purple-light: #F0EBFB;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247,246,242,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid var(--rule-strong);
+    padding: 0 2rem; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+
+  .nav-initials {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--ink); color: var(--white);
+    font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-label { font-size: 13px; color: var(--ink-mid); }
+  .nav-label strong { font-weight: 500; color: var(--ink); }
+
+  .nav-tag {
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 3px 9px;
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+  }
+
+  .hero {
+    max-width: 900px; margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    display: grid; grid-template-columns: 1fr 280px;
+    gap: 3rem; align-items: start;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px; line-height: 1.1; color: var(--ink); margin-bottom: 1.25rem;
+  }
+
+  .hero-title em { font-style: italic; color: var(--ink-mid); }
+
+  .hero-desc {
+    font-size: 16px; line-height: 1.7; color: var(--ink-mid); max-width: 480px;
+  }
+
+  .hero-meta { display: flex; flex-direction: column; gap: 1rem; padding-top: 0.5rem; }
+
+  .meta-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1rem 1.1rem;
+  }
+
+  .meta-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.3rem;
+  }
+
+  .meta-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .meta-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  .section { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+  .section-rule { height: 0.5px; background: var(--rule-strong); margin-bottom: 2.5rem; }
+
+  .section-header {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 2rem; margin-bottom: 2rem;
+  }
+
+  .section-num {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); padding-top: 3px;
+  }
+
+  .section-content { grid-column: 2; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px; color: var(--ink); margin-bottom: 0.6rem;
+  }
+
+  .section-body { font-size: 14px; line-height: 1.75; color: var(--ink-mid); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+
+  .content-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+  }
+
+  .content-card-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.75rem;
+  }
+
+  .content-card p { font-size: 14px; line-height: 1.7; color: var(--ink-mid); }
+
+  .process-steps { display: flex; flex-direction: column; margin-top: 1.5rem; }
+
+  .process-step {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 1rem; padding: 1.25rem 0;
+    border-bottom: 0.5px solid var(--rule);
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--ink-mid);
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+  .deliverable-frame {
+    background: #1a1a1a;
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .frame-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .frame-label::after {
+    content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.1);
+  }
+
+  /* ── SLACK SIMULATION ── */
+  .slack-chrome {
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.06);
+    display: flex; flex-direction: column;
+  }
+
+  .slack-titlebar {
+    background: var(--slack-aubergine-dark);
+    height: 32px; display: flex; align-items: center;
+    padding: 0 1rem; gap: 6px; flex-shrink: 0;
+  }
+
+  .tb-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .tb-red { background: #ff5f57; }
+  .tb-yellow { background: #febc2e; }
+  .tb-green { background: #28c840; }
+
+  .tb-title {
+    flex: 1; text-align: center; font-size: 11px;
+    color: rgba(255,255,255,0.4); font-family: 'Lato', 'DM Sans', sans-serif; font-weight: 700;
+  }
+
+  .slack-main { display: flex; height: 560px; }
+
+  /* Sidebar */
+  .s-sidebar {
+    width: 210px; flex-shrink: 0;
+    background: var(--slack-aubergine);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  .s-workspace {
+    padding: 12px 14px 8px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .s-workspace-name {
+    font-size: 14px; font-weight: 900; color: var(--slack-sidebar-active);
+    letter-spacing: -0.02em; font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-status { display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+  .s-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--slack-green); border: 1.5px solid var(--slack-aubergine); }
+  .s-name { font-size: 11px; color: var(--slack-sidebar-text); }
+
+  .s-search {
+    margin: 6px 10px;
+    background: rgba(255,255,255,0.10);
+    border-radius: 4px; padding: 4px 9px;
+    font-size: 12px; color: rgba(255,255,255,0.4);
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .s-nav { overflow-y: auto; flex: 1; padding: 4px 0; }
+
+  .s-section-label {
+    font-size: 11px; font-weight: 700; color: var(--slack-sidebar-text);
+    padding: 10px 14px 3px;
+  }
+
+  .s-item {
+    display: flex; align-items: center; gap: 7px;
+    padding: 4px 14px; font-size: 13px; color: var(--slack-sidebar-text);
+    cursor: pointer; border-radius: 3px; margin: 0 3px;
+    font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-item:hover { background: rgba(255,255,255,0.08); }
+  .s-item.active { background: var(--slack-sidebar-selected); color: var(--slack-sidebar-active); font-weight: 700; }
+  .s-item.unread { color: var(--slack-sidebar-active); font-weight: 700; }
+
+  .s-badge {
+    margin-left: auto; background: var(--slack-red); color: white;
+    font-size: 10px; font-weight: 700; padding: 1px 5px;
+    border-radius: 8px; min-width: 15px; text-align: center;
+  }
+
+  .s-avatar {
+    width: 18px; height: 18px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+
+  /* Content */
+  .s-content {
+    flex: 1; background: white; display: flex;
+    flex-direction: column; overflow: hidden;
+  }
+
+  .s-channel-header {
+    height: 46px; border-bottom: 1px solid var(--slack-border);
+    display: flex; align-items: center; padding: 0 1.1rem; gap: 0.6rem; flex-shrink: 0;
+  }
+
+  .s-channel-name {
+    font-size: 14px; font-weight: 900; color: var(--slack-text);
+    letter-spacing: -0.01em; font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-channel-div { width: 1px; height: 18px; background: var(--slack-border); }
+
+  .s-channel-desc {
+    font-size: 12px; color: var(--slack-text-mid); flex: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .s-messages { flex: 1; overflow-y: auto; padding: 0.75rem 0; }
+
+  .s-date-div {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.4rem 1.1rem; margin-bottom: 0.25rem;
+  }
+
+  .s-date-line { flex: 1; height: 1px; background: var(--slack-border); }
+
+  .s-date-text {
+    font-size: 11px; font-weight: 700; color: var(--slack-text-mid); white-space: nowrap;
+    font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-message {
+    display: flex; gap: 0.6rem; padding: 5px 1.1rem;
+    transition: background 0.1s;
+  }
+
+  .s-message:hover { background: var(--slack-hover); }
+
+  .s-msg-avatar {
+    width: 32px; height: 32px; border-radius: 4px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 900; color: white; margin-top: 2px;
+    font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-msg-body { flex: 1; min-width: 0; }
+
+  .s-msg-header {
+    display: flex; align-items: baseline; gap: 0.4rem; margin-bottom: 1px;
+  }
+
+  .s-msg-sender {
+    font-size: 14px; font-weight: 900; color: var(--slack-text);
+    letter-spacing: -0.01em; font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-msg-sender.beacon { color: var(--beacon-blue); }
+
+  .s-app-badge {
+    font-size: 9px; font-weight: 700; color: var(--slack-text-mid);
+    background: var(--slack-reaction); border: 1px solid var(--slack-reaction-border);
+    border-radius: 3px; padding: 1px 4px;
+  }
+
+  .s-msg-time { font-size: 11px; color: var(--slack-text-soft); }
+
+  .s-msg-text {
+    font-size: 13px; color: var(--slack-text); line-height: 1.5;
+    font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .s-msg-text strong { font-weight: 700; }
+
+  .ctx-expand { display: flex; align-items: center; gap: 5px; margin-top: 5px; width: fit-content; cursor: pointer; }
+
+  .ctx-btn {
+    font-size: 11px; color: var(--slack-link); font-weight: 700;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Lato', 'DM Sans', sans-serif; padding: 0;
+  }
+
+  .ctx-detail {
+    display: none; margin-top: 5px;
+    background: var(--slack-reaction); border-left: 3px solid var(--beacon-blue);
+    border-radius: 0 3px 3px 0; padding: 7px 10px;
+    font-size: 12px; color: var(--slack-text-mid); line-height: 1.5;
+    font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .ctx-detail.open { display: block; }
+  .ctx-detail strong { color: var(--slack-text); font-weight: 700; }
+
+  .prog-tracker {
+    margin-top: 8px; background: var(--slack-reaction);
+    border: 1px solid var(--slack-reaction-border);
+    border-radius: var(--radius-md); padding: 8px 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .prog-label { font-size: 11px; font-weight: 700; color: var(--slack-text-mid); white-space: nowrap; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .prog-bar-wrap { flex: 1; height: 5px; background: var(--slack-border); border-radius: 3px; overflow: hidden; }
+
+  .prog-bar-fill { height: 100%; background: var(--beacon-teal); border-radius: 3px; transition: width 0.4s ease; }
+
+  .prog-count { font-size: 11px; font-weight: 700; color: var(--slack-text-mid); white-space: nowrap; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .learning-cards { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+
+  .lc {
+    background: white; border: 1px solid var(--slack-border);
+    border-radius: var(--radius-md); overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .lc:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+
+  .lc-accent { height: 3px; }
+  .acc-blue { background: var(--beacon-blue); }
+  .acc-teal { background: var(--beacon-teal); }
+  .acc-purple { background: var(--beacon-purple); }
+
+  .lc-body { padding: 10px 12px; }
+
+  .lc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 4px; }
+
+  .lc-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 6px; border-radius: 3px; flex-shrink: 0;
+  }
+
+  .lb-article { background: var(--beacon-blue-light); color: var(--beacon-blue); }
+  .lb-framework { background: var(--beacon-teal-light); color: var(--beacon-teal); }
+  .lb-micro { background: var(--beacon-purple-light); color: var(--beacon-purple); }
+
+  .lc-comp { font-size: 9px; color: var(--slack-text-soft); letter-spacing: 0.04em; }
+
+  .lc-title {
+    font-size: 13px; font-weight: 900; color: var(--slack-text);
+    line-height: 1.3; margin-bottom: 3px; letter-spacing: -0.01em;
+    font-family: 'Lato', 'DM Sans', sans-serif;
+  }
+
+  .lc-desc { font-size: 12px; color: var(--slack-text-mid); line-height: 1.5; margin-bottom: 8px; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .lc-footer { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+
+  .lc-meta { font-size: 11px; color: var(--slack-text-soft); display: flex; align-items: center; gap: 6px; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .lc-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--slack-text-soft); }
+
+  .lc-actions { display: flex; gap: 5px; align-items: center; }
+
+  .lc-status-btn {
+    font-size: 10px; font-weight: 700; font-family: 'Lato', 'DM Sans', sans-serif;
+    padding: 3px 9px; border-radius: 3px; cursor: pointer; border: 1px solid;
+    transition: all 0.15s;
+  }
+
+  .st-unread { background: white; color: var(--slack-text-mid); border-color: var(--slack-reaction-border); }
+  .st-unread:hover { background: var(--beacon-blue-light); color: var(--beacon-blue); border-color: var(--beacon-blue); }
+  .st-progress { background: var(--beacon-amber-light); color: var(--beacon-amber); border-color: var(--beacon-amber); }
+  .st-complete { background: var(--beacon-teal-light); color: var(--beacon-teal); border-color: var(--beacon-teal); }
+
+  .lc-link { font-size: 11px; color: var(--slack-link); font-weight: 700; cursor: pointer; text-decoration: none; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .micro-lesson { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--slack-border); }
+  .micro-lesson.open { display: block; }
+
+  .micro-title { font-size: 10px; font-weight: 700; color: var(--slack-text-mid); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .micro-content { font-size: 12px; color: var(--slack-text); line-height: 1.65; margin-bottom: 8px; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .micro-reflect { background: var(--beacon-purple-light); border-radius: 4px; padding: 8px 10px; }
+  .micro-reflect-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--beacon-purple); margin-bottom: 3px; font-family: 'Lato', 'DM Sans', sans-serif; }
+  .micro-reflect-text { font-size: 12px; color: var(--slack-text); line-height: 1.5; font-style: italic; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .reactions { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+
+  .reaction {
+    display: flex; align-items: center; gap: 3px;
+    background: var(--slack-reaction); border: 1px solid var(--slack-reaction-border);
+    border-radius: 12px; padding: 2px 7px; font-size: 12px; cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .reaction:hover { background: var(--beacon-blue-light); border-color: var(--beacon-blue); }
+  .reaction.reacted { background: var(--beacon-blue-light); border-color: var(--beacon-blue); }
+  .reaction-count { font-size: 11px; font-weight: 700; color: var(--slack-text-mid); font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .s-input-wrap { padding: 0.6rem 1.1rem 0.75rem; border-top: 1px solid var(--slack-border); flex-shrink: 0; }
+
+  .s-input-box { border: 1px solid var(--slack-border); border-radius: var(--radius-md); overflow: hidden; }
+
+  .s-input-toolbar { padding: 5px 9px; display: flex; gap: 7px; border-bottom: 1px solid var(--slack-border); }
+  .s-toolbar-btn { font-size: 13px; color: var(--slack-text-soft); cursor: pointer; padding: 2px 3px; border-radius: 3px; }
+  .s-toolbar-btn:hover { background: var(--slack-reaction); }
+
+  .s-input-field { padding: 7px 11px; font-size: 13px; color: var(--slack-text-soft); min-height: 34px; display: flex; align-items: center; font-family: 'Lato', 'DM Sans', sans-serif; }
+
+  .s-input-actions { padding: 3px 7px; display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+  .s-input-action { font-size: 12px; color: var(--slack-text-soft); cursor: pointer; padding: 3px 5px; border-radius: 3px; }
+  .s-send-btn { width: 26px; height: 26px; border-radius: 4px; background: var(--slack-aubergine); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 12px; }
+
+  /* DECISIONS */
+  .decisions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+
+  .decision-card { background: var(--white); border: 0.5px solid var(--rule); border-radius: var(--radius-md); padding: 1.25rem; }
+
+  .decision-num { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--ink); margin-bottom: 0.25rem; }
+  .decision-label { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 0.3rem; }
+  .decision-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
+
+  /* REFLECTION */
+  .reflection-block {
+    background: var(--ink); color: var(--white);
+    border-radius: var(--radius-lg); padding: 2.5rem; margin-top: 1.5rem;
+  }
+
+  .reflection-block blockquote {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 22px; line-height: 1.45;
+    color: rgba(255,255,255,0.90); margin-bottom: 1.25rem;
+  }
+
+  .reflection-block p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.60); }
+
+  footer {
+    max-width: 900px; margin: 0 auto; padding: 2rem 2rem 4rem;
+    border-top: 0.5px solid var(--rule-strong);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink-ghost);
+  }
+
+  @media (max-width: 680px) {
+    .hero, .section-header { grid-template-columns: 1fr; }
+    .section-num { display: none; }
+    .section-content { grid-column: 1; }
+    .two-col, .decisions-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 34px; }
+    .slack-main { height: auto; flex-direction: column; }
+    .s-sidebar { width: 100%; height: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-initials">CP</div>
+    <span class="nav-label"><strong>CP</strong> — Portfolio</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-tag">Beacon</span>
+    <span class="nav-tag">In-platform enablement</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Portfolio case study · 04</div>
+    <h1 class="hero-title"><em>Beacon</em> —<br>AI Learning Agent</h1>
+    <p class="hero-desc">An AI-powered Slack agent that surfaces targeted learning resources in the flow of work, triggered by a completed feedback synthesis and anchored to the Success Model. Learning delivered where leaders already are.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-card">
+      <div class="meta-label">Platform</div>
+      <div class="meta-value">Slack — native workflow</div>
+      <div class="meta-sub">In-platform, not redirected</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Trigger</div>
+      <div class="meta-value">Completed feedback synthesis</div>
+      <div class="meta-sub">Context-aware, not scheduled</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Learning formats</div>
+      <div class="meta-value">Article · Framework · Micro-lesson</div>
+      <div class="meta-sub">Three card types · Progress tracking</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">01 · Problem</div>
+    <div class="section-content">
+      <h2 class="section-title">Learning that lives outside the workflow doesn't get used</h2>
+      <p class="section-body">The traditional model asks leaders to complete a feedback process, then separately navigate to an LMS, find relevant content, and apply it to a development conversation. Each step is a drop-off point. By the time a manager opens an LMS, the feedback moment has passed and the learning has lost its context.</p>
+      <div class="two-col">
+        <div class="content-card">
+          <div class="content-card-label">The gap</div>
+          <p>Development resources exist. But they're decoupled from the moments when leaders are most motivated to use them: immediately after a meaningful feedback or calibration event.</p>
+        </div>
+        <div class="content-card">
+          <div class="content-card-label">The opportunity</div>
+          <p>Surface the right learning at the right moment, inside the tool the leader is already using, triggered by context, anchored to the specific competency gap identified in their feedback synthesis.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">02 · Process</div>
+    <div class="section-content">
+      <h2 class="section-title">Designing Beacon</h2>
+      <p class="section-body">Beacon was designed around a single principle: the best learning moment is the one that happens without friction, at the point of need, in the tool the leader already trusts.</p>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Trigger architecture</div>
+            <div class="step-desc">Beacon fires when a feedback synthesis is completed, not on a calendar cadence. Context-triggered delivery means the learning is immediately relevant rather than generically timed.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Privacy by design</div>
+            <div class="step-desc">The channel-level message references "Direct Report Convo 5.17.26," a timestamp, not a name. Identity is revealed only on deliberate click, creating a privacy boundary that mirrors how enterprise tools should handle sensitive talent data.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Three learning formats</div>
+            <div class="step-desc">Article (external research), Framework (structured model), Micro-lesson (Beacon-generated, competency-specific). Three formats serve different learning preferences and time availability. A leader with 3 minutes gets different value than one with 8.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Accountability loop</div>
+            <div class="step-desc">A progress tracker above the cards shows completion state at a glance. Each card cycles through Unread → In Progress → Complete → Reset — creating a lightweight accountability mechanism without requiring a separate tracking system.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Micro-lesson with reflection prompt</div>
+            <div class="step-desc">The Beacon-generated card includes an expandable micro-lesson and a manager reflection prompt, a question designed to be used in the next 1:1. Learning that ends with an action, not a checkbox.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: DELIVERABLE -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">03 · Deliverable</div>
+    <div class="section-content">
+      <h2 class="section-title">Beacon in action</h2>
+      <p class="section-body">Interact with the simulation below. Click "View synthesis context" to reveal the direct report. Cycle card statuses to update the progress tracker. Expand the micro-lesson on Card 3. React to Beacon's message.</p>
+    </div>
+  </div>
+
+  <div class="deliverable-frame">
+    <div class="frame-label">Live simulation</div>
+
+    <div class="slack-chrome">
+      <!-- Title bar -->
+      <div class="slack-titlebar">
+        <div class="tb-dot tb-red"></div>
+        <div class="tb-dot tb-yellow"></div>
+        <div class="tb-dot tb-green"></div>
+        <div class="tb-title">Stripe — Slack</div>
+      </div>
+
+      <div class="slack-main">
+        <!-- Sidebar -->
+        <div class="s-sidebar">
+          <div class="s-workspace">
+            <div class="s-workspace-name">Stripe</div>
+            <div class="s-status">
+              <div class="s-dot"></div>
+              <span class="s-name">Alex Chen</span>
+            </div>
+          </div>
+          <div class="s-search"><span>🔍</span> Search Stripe</div>
+          <div class="s-nav">
+            <div class="s-section-label">Channels</div>
+            <div class="s-item"><span>#</span> general</div>
+            <div class="s-item"><span>#</span> announcements</div>
+            <div class="s-item"><span>#</span> engineering-leads</div>
+            <div class="s-item active"><span>#</span> people-insights <span class="s-badge">1</span></div>
+            <div class="s-item"><span>#</span> product-eng-sync</div>
+            <div class="s-section-label" style="margin-top:6px;">Direct messages</div>
+            <div class="s-item">
+              <div class="s-avatar" style="background:#2EB67D;">SC</div> Sarah Chen
+            </div>
+            <div class="s-item">
+              <div class="s-avatar" style="background:#7C5CBF;">MR</div> Marcus Reid
+            </div>
+            <div class="s-item unread">
+              <div class="s-avatar" style="background:linear-gradient(135deg,#0066CC,#0047A8);">⬡</div> Beacon <span class="s-badge">1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="s-content">
+          <div class="s-channel-header">
+            <span class="s-channel-name"># people-insights</span>
+            <div class="s-channel-div"></div>
+            <span class="s-channel-desc">AI-assisted development nudges · Powered by Beacon</span>
+          </div>
+
+          <div class="s-messages">
+            <div class="s-date-div">
+              <div class="s-date-line"></div>
+              <div class="s-date-text">Today — May 17, 2026</div>
+              <div class="s-date-line"></div>
+            </div>
+
+            <!-- Manager message -->
+            <div class="s-message">
+              <div class="s-msg-avatar" style="background:#2EB67D;">AC</div>
+              <div class="s-msg-body">
+                <div class="s-msg-header">
+                  <span class="s-msg-sender">Alex Chen</span>
+                  <span class="s-msg-time">9:04 AM</span>
+                </div>
+                <div class="s-msg-text">Just wrapped the feedback synthesis for <strong>Direct Report Convo 5.17.26</strong>. Flagging for the record — some good signals in there but a few development areas I want to be intentional about.</div>
+              </div>
+            </div>
+
+            <!-- Beacon message -->
+            <div class="s-message">
+              <div class="s-msg-avatar" style="background:linear-gradient(135deg,#0066CC,#0047A8);font-size:11px;">⬡</div>
+              <div class="s-msg-body">
+                <div class="s-msg-header">
+                  <span class="s-msg-sender beacon">Beacon</span>
+                  <span class="s-app-badge">APP</span>
+                  <span class="s-msg-time">9:04 AM</span>
+                </div>
+                <div class="s-msg-text">
+                  👋 <strong>Hi Alex</strong> — I noticed you completed a feedback synthesis for <strong>Direct Report Convo 5.17.26</strong>.<br><br>
+                  Based on the competency gaps identified, I've surfaced <strong>3 targeted learning resources</strong> below — anchored to the Stripe Success Model.
+                </div>
+
+                <div class="ctx-expand">
+                  <button class="ctx-btn" onclick="toggleCtx(this)">▶ View synthesis context</button>
+                </div>
+                <div class="ctx-detail" id="ctx-detail">
+                  <strong>Direct report:</strong> Jordan Mills · Senior Engineer<br>
+                  <strong>Synthesis date:</strong> May 17, 2026<br>
+                  <strong>Flagged competencies:</strong> Collaborates (The what) · Communicates Effectively (The how) · Interpersonal Savvy (The how)<br>
+                  <strong>Placement:</strong> High Performer — development investment recommended before leadership trajectory
+                </div>
+
+                <div class="prog-tracker">
+                  <span class="prog-label">Learning progress</span>
+                  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:0%"></div></div>
+                  <span class="prog-count" id="prog-count">0 of 3 complete</span>
+                </div>
+
+                <div class="learning-cards">
+                  <!-- Card 1 -->
+                  <div class="lc">
+                    <div class="lc-accent acc-blue"></div>
+                    <div class="lc-body">
+                      <div class="lc-top">
+                        <span class="lc-badge lb-article">Article</span>
+                        <span class="lc-comp">Collaborates · The what</span>
+                      </div>
+                      <div class="lc-title">The Collaboration Paradox: Why High Performers Work Alone</div>
+                      <div class="lc-desc">Research on how top individual contributors default to solo execution — and the specific behaviors that bridge individual excellence with team amplification.</div>
+                      <div class="lc-footer">
+                        <div class="lc-meta"><span>Harvard Business Review</span><div class="lc-meta-dot"></div><span>8 min read</span></div>
+                        <div class="lc-actions">
+                          <button class="lc-status-btn st-unread" id="cs-1" onclick="cycleStatus(1)">Mark in progress</button>
+                          <a class="lc-link" href="#">View →</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 2 -->
+                  <div class="lc">
+                    <div class="lc-accent acc-teal"></div>
+                    <div class="lc-body">
+                      <div class="lc-top">
+                        <span class="lc-badge lb-framework">Framework</span>
+                        <span class="lc-comp">Communicates Effectively · The how</span>
+                      </div>
+                      <div class="lc-title">The PREP Model: Structuring Technical Perspective for Non-Technical Audiences</div>
+                      <div class="lc-desc">A four-step communication framework — Point, Reason, Example, Point — for technical contributors who need to translate complex thinking into accessible, influence-ready communication.</div>
+                      <div class="lc-footer">
+                        <div class="lc-meta"><span>Stripe People Development</span><div class="lc-meta-dot"></div><span>5 min read</span></div>
+                        <div class="lc-actions">
+                          <button class="lc-status-btn st-unread" id="cs-2" onclick="cycleStatus(2)">Mark in progress</button>
+                          <a class="lc-link" href="#">View →</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card 3 -->
+                  <div class="lc">
+                    <div class="lc-accent acc-purple"></div>
+                    <div class="lc-body">
+                      <div class="lc-top">
+                        <span class="lc-badge lb-micro">Micro-lesson</span>
+                        <span class="lc-comp">Interpersonal Savvy · The how</span>
+                      </div>
+                      <div class="lc-title">Generating Energy Without Authority: The Exothermic Leadership Model</div>
+                      <div class="lc-desc">A Beacon-generated micro-lesson on how senior ICs build cross-functional trust and influence without positional power — grounded in Stripe's exothermic operating principle.</div>
+
+                      <div class="micro-lesson" id="micro-1">
+                        <div class="micro-title">Micro-lesson</div>
+                        <div class="micro-content">
+                          At Stripe, <strong>Interpersonal Savvy</strong> isn't about being likeable — it's about being generative. The most influential senior ICs don't just do great work; they leave every interaction having made the people around them clearer, more capable, or more confident.<br><br>
+                          This is what Stripe calls <em>exothermic</em>: energy that releases outward, not inward. For a senior engineer, it looks like: naming what you've learned in a retro so others benefit, flagging your approach before you start rather than after you finish, or asking a PM what they need from you at the top of a planning session instead of waiting to be asked.<br><br>
+                          None of these require authority. All of them build it.
+                        </div>
+                        <div class="micro-reflect">
+                          <div class="micro-reflect-label">Reflection prompt</div>
+                          <div class="micro-reflect-text">In your next 1:1, ask: "When do you feel most connected to the work the broader team is doing? What gets in the way of that?"</div>
+                        </div>
+                      </div>
+
+                      <div class="lc-footer" style="margin-top:8px;">
+                        <div class="lc-meta"><span>Beacon · Generated</span><div class="lc-meta-dot"></div><span>3 min</span></div>
+                        <div class="lc-actions">
+                          <button class="lc-status-btn st-unread" id="cs-3" onclick="cycleStatus(3)">Mark in progress</button>
+                          <a class="lc-link" href="#" onclick="toggleMicro(event)">Read lesson →</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="reactions">
+                  <div class="reaction" onclick="toggleReaction(this)"><span>👍</span><span class="reaction-count">2</span></div>
+                  <div class="reaction" onclick="toggleReaction(this)"><span>✅</span><span class="reaction-count">1</span></div>
+                  <div class="reaction" onclick="toggleReaction(this)"><span>🎯</span><span class="reaction-count">1</span></div>
+                  <div class="reaction" onclick="toggleReaction(this)">+ Add reaction</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div class="s-input-wrap">
+            <div class="s-input-box">
+              <div class="s-input-toolbar">
+                <span class="s-toolbar-btn">𝐁</span>
+                <span class="s-toolbar-btn">𝐼</span>
+                <span class="s-toolbar-btn">S̶</span>
+                <span class="s-toolbar-btn">🔗</span>
+                <span class="s-toolbar-btn">≡</span>
+              </div>
+              <div class="s-input-field">Message #people-insights</div>
+              <div class="s-input-actions">
+                <span class="s-input-action">😊</span>
+                <span class="s-input-action">📎</span>
+                <div class="s-send-btn">↑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">04 · Design decisions</div>
+    <div class="section-content">
+      <h2 class="section-title">Three choices that shaped Beacon</h2>
+      <div class="decisions-grid">
+        <div class="decision-card">
+          <div class="decision-num">01</div>
+          <div class="decision-label">Context-triggered, not scheduled</div>
+          <div class="decision-desc">Beacon fires when a feedback synthesis completes, not on a Monday morning cadence. The learning arrives when the leader's mind is already on the direct report, not when a calendar decides it should be.</div>
+        </div>
+        <div class="decision-card">
+          <div class="decision-num">02</div>
+          <div class="decision-label">Privacy boundary by design</div>
+          <div class="decision-desc">Channel-level anonymization ("Direct Report Convo 5.17.26") protects identity at the team layer. Name revealed only on deliberate click, a deliberate UX choice that reflects how enterprise talent data should flow.</div>
+        </div>
+        <div class="decision-card">
+          <div class="decision-num">03</div>
+          <div class="decision-label">Accountability without overhead</div>
+          <div class="decision-desc">The progress tracker and card status cycling create lightweight accountability — no new system, no separate dashboard. The conversation thread becomes the record.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">05 · Reflection</div>
+    <div class="section-content">
+      <h2 class="section-title">What this work demonstrates</h2>
+      <div class="reflection-block">
+        <blockquote>"Beacon isn't a learning tool that lives in Slack. It's a talent system that uses Slack as its delivery layer. The difference matters because it reduces the number of steps to find learning and development opportunities."</blockquote>
+        <p>This artifact demonstrates the ability to think beyond content creation into ecosystem architecture: where learning surfaces, when it surfaces, and how it connects back to the frameworks and tools already in use. Beacon closes the loop between feedback synthesis and development action, turning a one-time manager task into a continuous, context-aware learning moment. That's the "in-platform enablement" the Stripe Learning Architect role is built around.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Beacon · Slack Simulation · CP | 5.26</span>
+</footer>
+
+<script>
+const statusStates = { 1: 'unread', 2: 'unread', 3: 'unread' };
+
+const statusLabels = {
+  unread: 'Mark in progress',
+  progress: 'Mark complete',
+  complete: '✓ Complete — click to reset'
+};
+
+const statusClasses = {
+  unread: 'st-unread',
+  progress: 'st-progress',
+  complete: 'st-complete'
+};
+
+function cycleStatus(n) {
+  const current = statusStates[n];
+  const next = current === 'unread' ? 'progress' : current === 'progress' ? 'complete' : 'unread';
+  statusStates[n] = next;
+  const btn = document.getElementById(`cs-${n}`);
+  btn.textContent = statusLabels[next];
+  btn.className = `lc-status-btn ${statusClasses[next]}`;
+  updateProgress();
+}
+
+function updateProgress() {
+  const completed = Object.values(statusStates).filter(s => s === 'complete').length;
+  document.getElementById('prog-bar').style.width = (completed / 3 * 100) + '%';
+  document.getElementById('prog-count').textContent = `${completed} of 3 complete`;
+}
+
+function toggleCtx(btn) {
+  const detail = document.getElementById('ctx-detail');
+  const open = detail.classList.toggle('open');
+  btn.textContent = open ? '▼ Hide synthesis context' : '▶ View synthesis context';
+}
+
+function toggleMicro(e) {
+  e.preventDefault();
+  const lesson = document.getElementById('micro-1');
+  const open = lesson.classList.toggle('open');
+  e.target.textContent = open ? 'Hide lesson ↑' : 'Read lesson →';
+}
+
+function toggleReaction(el) {
+  el.classList.toggle('reacted');
+  const countEl = el.querySelector('.reaction-count');
+  if (!countEl) return;
+  const n = parseInt(countEl.textContent);
+  countEl.textContent = el.classList.contains('reacted') ? n + 1 : n - 1;
+}
+</script>
+</body>
+</html>

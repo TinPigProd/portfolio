@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Succession Planning Tool — CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #18180F;
+    --ink-mid: #4A4A40;
+    --ink-soft: #8A8A80;
+    --ink-ghost: #C2C2B8;
+    --paper: #F7F6F2;
+    --paper-warm: #EFEDE7;
+    --white: #FFFFFF;
+    --rule: rgba(0,0,0,0.10);
+    --rule-strong: rgba(0,0,0,0.16);
+    --blue-50: #E6F1FB;
+    --blue-100: #C8DEFA;
+    --blue-400: #378ADD;
+    --blue-800: #0C447C;
+    --teal-50: #E1F5EE;
+    --teal-400: #1D9E75;
+    --teal-800: #085041;
+    --amber-50: #FAEEDA;
+    --amber-400: #BA7517;
+    --amber-800: #633806;
+    --coral-50: #FAECE7;
+    --coral-400: #D85A30;
+    --purple-50: #F0EBFB;
+    --purple-400: #7C5CBF;
+    --purple-800: #3B1F7A;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247,246,242,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid var(--rule-strong);
+    padding: 0 2rem; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 0.75rem; }
+
+  .nav-initials {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--ink); color: var(--white);
+    font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-label { font-size: 13px; color: var(--ink-mid); }
+  .nav-label strong { font-weight: 500; color: var(--ink); }
+
+  .nav-right { display: flex; gap: 0.5rem; }
+
+  .nav-tag {
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 3px 9px;
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+  .page-header { margin-bottom: 2.5rem; }
+
+  .eyebrow {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 0.6rem;
+  }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px; line-height: 1.1; color: var(--ink); margin-bottom: 0.6rem;
+  }
+
+  .page-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.65; max-width: 580px; }
+
+  /* DR SELECTOR */
+  .dr-selector { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+
+  .dr-tab {
+    flex: 1; padding: 1rem 1.25rem;
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .dr-tab:hover { border-color: var(--rule-strong); }
+  .dr-tab.active { border: 1.5px solid var(--ink); }
+
+  .dr-tab-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .dr-tab-role { font-size: 12px; color: var(--ink-soft); }
+
+  /* MAIN LAYOUT */
+  .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+
+  .panel {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 0.9rem 1.25rem; border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .panel-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .panel-sub { font-size: 11px; color: var(--ink-soft); }
+  .panel-body { padding: 1.25rem; }
+
+  .field { margin-bottom: 1rem; }
+  .field:last-of-type { margin-bottom: 0; }
+
+  label {
+    display: block; font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.35rem;
+  }
+
+  textarea {
+    width: 100%; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--ink); background: var(--paper);
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+    padding: 0.6rem 0.85rem; outline: none; resize: none;
+    min-height: 160px; line-height: 1.65;
+  }
+
+  textarea:focus { border-color: var(--ink-soft); }
+
+  .bias-flag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--amber-800);
+    background: var(--amber-50); border: 0.5px solid var(--amber-400);
+    border-radius: var(--radius-sm); padding: 2px 8px; margin-top: 0.4rem;
+  }
+
+  .hint { font-size: 10px; color: var(--ink-ghost); margin-top: 0.3rem; line-height: 1.5; }
+
+  .synthesize-btn {
+    width: 100%; margin-top: 1rem; padding: 0.7rem 1rem;
+    background: var(--ink); color: var(--white);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    border: none; border-radius: var(--radius-md); cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .synthesize-btn:hover { opacity: 0.85; }
+  .synthesize-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* OUTPUT PANEL */
+  .output-panel {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); overflow: hidden;
+    min-height: 340px; display: flex; flex-direction: column;
+  }
+
+  .output-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem; text-align: center;
+  }
+
+  .output-empty-icon { font-size: 22px; color: var(--ink-ghost); margin-bottom: 0.75rem; }
+  .output-empty-title { font-size: 13px; font-weight: 500; color: var(--ink-soft); margin-bottom: 0.3rem; }
+  .output-empty-desc { font-size: 12px; color: var(--ink-ghost); line-height: 1.6; max-width: 180px; }
+
+  .output-content { padding: 1.25rem; flex: 1; }
+
+  .output-section { margin-bottom: 1.1rem; }
+  .output-section:last-child { margin-bottom: 0; }
+
+  .output-section-header {
+    display: flex; align-items: center; gap: 7px; margin-bottom: 0.6rem;
+  }
+
+  .badge {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm);
+  }
+
+  .badge-strengths { background: var(--teal-50); color: var(--teal-800); }
+  .badge-opportunities { background: var(--amber-50); color: var(--amber-800); }
+  .badge-actions { background: var(--blue-50); color: var(--blue-800); }
+
+  .output-section-title { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+
+  .output-items { display: flex; flex-direction: column; gap: 6px; }
+
+  .output-item {
+    background: var(--paper); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-sm); padding: 0.8rem 1rem;
+  }
+
+  .output-item-comp {
+    font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px;
+  }
+
+  .comp-what { color: var(--blue-400); }
+  .comp-how { color: var(--teal-400); }
+
+  .output-item-text { font-size: 12px; color: var(--ink-mid); line-height: 1.6; }
+
+  /* LOADING */
+  .loading-state {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.75rem;
+  }
+
+  .loading-dots { display: flex; gap: 5px; }
+
+  .loading-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--ink-ghost);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .loading-label { font-size: 12px; color: var(--ink-ghost); }
+
+  /* 9-BOX SECTION */
+  .ninebox-section { margin-top: 0; }
+
+  .ninebox-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .ninebox-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--ink);
+  }
+
+  .view-toggle { display: flex; gap: 0; border: 0.5px solid var(--rule-strong); border-radius: var(--radius-md); overflow: hidden; }
+
+  .view-btn {
+    padding: 6px 14px; font-size: 12px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    border: none; transition: background 0.15s, color 0.15s;
+    background: var(--white); color: var(--ink-soft);
+  }
+
+  .view-btn.active { background: var(--ink); color: var(--white); }
+
+  .ninebox-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    align-items: start;
+  }
+
+  .ninebox-container { position: relative; }
+
+  .ninebox-y-label {
+    position: absolute; left: -2.5rem; top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); white-space: nowrap;
+  }
+
+  .ninebox-x-label {
+    text-align: center; margin-top: 0.5rem;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost);
+  }
+
+  .ninebox-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 4px; padding: 0.5rem; margin-left: 1rem;
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-md);
+  }
+
+  .ninebox-cell {
+    aspect-ratio: 1; border-radius: var(--radius-sm);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 6px; text-align: center; position: relative;
+    transition: transform 0.15s;
+  }
+
+  .ninebox-cell-label {
+    font-size: 9px; font-weight: 500; color: var(--ink-mid);
+    line-height: 1.3; margin-bottom: 2px;
+  }
+
+  .ninebox-cell-sub { font-size: 8px; color: var(--ink-soft); line-height: 1.3; }
+
+  .cell-low-low { background: #FEE2E2; }
+  .cell-low-mid { background: #FEF3C7; }
+  .cell-low-high { background: #FEF3C7; }
+  .cell-mid-low { background: #FEF3C7; }
+  .cell-mid-mid { background: #E0F2FE; }
+  .cell-mid-high { background: #DCFCE7; }
+  .cell-high-low { background: #FEF3C7; }
+  .cell-high-mid { background: #DCFCE7; }
+  .cell-high-high { background: #BBF7D0; }
+
+  .dr-marker {
+    position: absolute; width: 28px; height: 28px;
+    border-radius: 50%; border: 2px solid var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 500; color: var(--white);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: default;
+  }
+
+  .marker-a { background: var(--blue-400); }
+  .marker-b { background: var(--purple-400); }
+
+  /* LEGEND & RATIONALE */
+  .ninebox-side { display: flex; flex-direction: column; gap: 1rem; }
+
+  .legend-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1rem 1.1rem;
+  }
+
+  .legend-title {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.75rem;
+  }
+
+  .legend-items { display: flex; flex-direction: column; gap: 6px; }
+
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+
+  .legend-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--white); box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+
+  .legend-dot-a { background: var(--blue-400); }
+  .legend-dot-b { background: var(--purple-400); }
+
+  .legend-item-text { font-size: 12px; color: var(--ink-mid); }
+  .legend-item-name { font-weight: 500; color: var(--ink); }
+
+  .rationale-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1rem 1.1rem; flex: 1;
+  }
+
+  .rationale-title {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.75rem;
+  }
+
+  .rationale-dr { margin-bottom: 0.85rem; }
+  .rationale-dr:last-child { margin-bottom: 0; }
+
+  .rationale-dr-header { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+
+  .rationale-dot {
+    width: 10px; height: 10px; border-radius: 50; flex-shrink: 0;
+  }
+
+  .rationale-dot-a { background: var(--blue-400); border-radius: 50%; }
+  .rationale-dot-b { background: var(--purple-400); border-radius: 50%; }
+
+  .rationale-dr-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .rationale-placement {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: var(--radius-sm);
+  }
+
+  .placement-a { background: var(--blue-50); color: var(--blue-800); }
+  .placement-b { background: var(--purple-50); color: var(--purple-800); }
+
+  .rationale-text { font-size: 12px; color: var(--ink-mid); line-height: 1.6; }
+
+  /* AXIS LABELS */
+  .axis-labels-x {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    margin-left: 1rem; padding: 0 0.5rem; gap: 4px;
+  }
+
+  .axis-label-x {
+    text-align: center; font-size: 9px; color: var(--ink-ghost);
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 0;
+  }
+
+  /* BIAS TRANSFORMATION */
+  .bias-section {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); overflow: hidden; margin-top: 1.5rem;
+  }
+
+  .bias-header {
+    padding: 0.9rem 1.25rem; border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .bias-body { padding: 1.25rem; }
+
+  .bias-transform-grid {
+    display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0;
+    align-items: center;
+  }
+
+  .bias-col-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.6rem;
+  }
+
+  .bias-arrow {
+    text-align: center; font-size: 18px; color: var(--ink-ghost);
+  }
+
+  .bias-items { display: flex; flex-direction: column; gap: 6px; }
+
+  .bias-item-raw {
+    background: var(--amber-50); border: 0.5px solid rgba(186,117,23,0.25);
+    border-radius: var(--radius-sm); padding: 0.6rem 0.85rem;
+    font-size: 12px; color: var(--amber-800); line-height: 1.5;
+    font-style: italic;
+  }
+
+  .bias-item-structured {
+    background: var(--teal-50); border: 0.5px solid rgba(29,158,117,0.25);
+    border-radius: var(--radius-sm); padding: 0.6rem 0.85rem;
+    font-size: 12px; color: var(--teal-800); line-height: 1.5;
+  }
+
+  .bias-item-comp {
+    font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-400); margin-bottom: 3px;
+  }
+
+  footer {
+    max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem 3rem;
+    border-top: 0.5px solid var(--rule-strong);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink-ghost);
+  }
+
+  .hidden { display: none; }
+
+  @media (max-width: 720px) {
+    .main-layout, .ninebox-wrap { grid-template-columns: 1fr; }
+    .page-title { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-initials">CP</div>
+    <span class="nav-label"><strong>CP</strong> — Portfolio</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-tag">Succession Planning</span>
+    <span class="nav-tag">9-Box</span>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="eyebrow">Portfolio case study · 03</div>
+    <h1 class="page-title">Succession Planning Tool</h1>
+    <p class="page-desc">Enter raw leader observations on a direct report. The tool transforms subjective language into behavior-anchored insights, then places the individual on an interactive 9-box — viewable in both traditional and Stripe Success Model formats.</p>
+  </div>
+
+  <!-- DR SELECTOR -->
+  <div class="dr-selector">
+    <div class="dr-tab active" id="tab-a" onclick="selectDR('a')">
+      <div class="dr-tab-name">Jordan Mills</div>
+      <div class="dr-tab-role">Senior Engineer · 4 years tenure</div>
+    </div>
+    <div class="dr-tab" id="tab-b" onclick="selectDR('b')">
+      <div class="dr-tab-name">Priya Anand</div>
+      <div class="dr-tab-role">Product Manager · 2 years tenure</div>
+    </div>
+  </div>
+
+  <!-- INPUT / OUTPUT -->
+  <div class="main-layout">
+
+    <!-- INPUT -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Leader input</span>
+        <span class="panel-sub">Raw observations</span>
+      </div>
+      <div class="panel-body">
+        <div class="field">
+          <label>Raw notes — Jordan Mills</label>
+          <textarea id="notes-a">Jordan is one of our strongest technical contributors — probably the most reliable person on the team when it comes to shipping clean code on time. He's not the most collaborative though. He tends to go heads down and sometimes the team finds out he's already solved something they were working on together. He doesn't speak up much in planning sessions even though his perspective would be valuable. He's been passed over for staff eng once already and I think he's getting frustrated. Hard worker, doesn't cause drama, just not sure he's ready to lead yet.</textarea>
+          <div class="bias-flag">⚠ Subjective language detected — tool will anchor to observable behavior</div>
+          <div class="hint">The tool strips subjective language and maps observations to competency-anchored behavioral evidence.</div>
+        </div>
+        <div class="field hidden" id="field-b">
+          <label>Raw notes — Priya Anand</label>
+          <textarea id="notes-b">Priya is one of the most impressive people I've managed. She's incredibly smart and picks things up so fast — she was leading her first product area within 6 months. She can be a bit much sometimes, like she moves so fast that she leaves people behind. Engineering gets frustrated with her because she changes direction a lot. But honestly I think she has the highest ceiling of anyone on my team. She's ambitious, maybe too ambitious, but her instincts are usually right even if her process needs work.</textarea>
+          <div class="bias-flag">⚠ Subjective language detected — tool will anchor to observable behavior</div>
+          <div class="hint">The tool strips subjective language and maps observations to competency-anchored behavioral evidence.</div>
+        </div>
+        <button class="synthesize-btn" id="synthesize-btn" onclick="synthesize()">Synthesize & place</button>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="output-panel" id="output-panel">
+      <div class="panel-header">
+        <span class="panel-title">Behavioral synthesis</span>
+        <span class="panel-sub">Objective · Competency-anchored</span>
+      </div>
+      <div class="output-empty" id="output-empty">
+        <div class="output-empty-icon">◎</div>
+        <div class="output-empty-title">Awaiting synthesis</div>
+        <div class="output-empty-desc">Submit observations to generate behavior-anchored output and 9-box placement.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 9-BOX SECTION (hidden until synthesized) -->
+  <div class="ninebox-section hidden" id="ninebox-section">
+
+    <div class="ninebox-header">
+      <h2 class="ninebox-title">9-Box placement</h2>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-traditional" onclick="setView('traditional')">Traditional</button>
+        <button class="view-btn" id="btn-stripe" onclick="setView('stripe')">Stripe Model</button>
+      </div>
+    </div>
+
+    <div class="ninebox-wrap">
+
+      <!-- GRID -->
+      <div class="ninebox-container">
+        <div class="ninebox-y-label" id="y-label">Potential</div>
+        <div class="ninebox-grid" id="ninebox-grid">
+          <!-- Row 3 (high potential) -->
+          <div class="ninebox-cell cell-high-low" id="cell-7">
+            <div class="ninebox-cell-label">Rough Diamond</div>
+            <div class="ninebox-cell-sub">High potential, lower performance</div>
+          </div>
+          <div class="ninebox-cell cell-high-mid" id="cell-8">
+            <div class="ninebox-cell-label">High Potential</div>
+            <div class="ninebox-cell-sub">Strong growth trajectory</div>
+          </div>
+          <div class="ninebox-cell cell-high-high" id="cell-9">
+            <div class="ninebox-cell-label">Star</div>
+            <div class="ninebox-cell-sub">Exceptional — ready to lead</div>
+          </div>
+          <!-- Row 2 (mid potential) -->
+          <div class="ninebox-cell cell-mid-low" id="cell-4">
+            <div class="ninebox-cell-label">Inconsistent Player</div>
+            <div class="ninebox-cell-sub">Needs attention</div>
+          </div>
+          <div class="ninebox-cell cell-mid-mid" id="cell-5">
+            <div class="ninebox-cell-label">Core Player</div>
+            <div class="ninebox-cell-sub">Solid contributor</div>
+          </div>
+          <div class="ninebox-cell cell-mid-high" id="cell-6">
+            <div class="ninebox-cell-label">High Performer</div>
+            <div class="ninebox-cell-sub">Delivers, limited upside</div>
+          </div>
+          <!-- Row 1 (low potential) -->
+          <div class="ninebox-cell cell-low-low" id="cell-1">
+            <div class="ninebox-cell-label">Risk</div>
+            <div class="ninebox-cell-sub">Immediate action needed</div>
+          </div>
+          <div class="ninebox-cell cell-low-mid" id="cell-2">
+            <div class="ninebox-cell-label">Effective but Limited</div>
+            <div class="ninebox-cell-sub">Reliable, low ceiling</div>
+          </div>
+          <div class="ninebox-cell cell-low-high" id="cell-3">
+            <div class="ninebox-cell-label">Effective but Limited</div>
+            <div class="ninebox-cell-sub">Strong delivery, low growth</div>
+          </div>
+        </div>
+        <div class="axis-labels-x">
+          <div class="axis-label-x">Low</div>
+          <div class="axis-label-x">Mid</div>
+          <div class="axis-label-x">High</div>
+        </div>
+        <div class="ninebox-x-label" id="x-label">Performance</div>
+      </div>
+
+      <!-- SIDE: LEGEND + RATIONALE -->
+      <div class="ninebox-side">
+        <div class="legend-card">
+          <div class="legend-title">Direct reports</div>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="legend-dot legend-dot-a"></div>
+              <div class="legend-item-text"><span class="legend-item-name">Jordan Mills</span> — Senior Engineer</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot legend-dot-b"></div>
+              <div class="legend-item-text"><span class="legend-item-name">Priya Anand</span> — Product Manager</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rationale-card" id="rationale-card">
+          <div class="rationale-title">Placement rationale</div>
+          <div id="rationale-content">
+            <div class="rationale-dr" id="rationale-a" style="display:none;">
+              <div class="rationale-dr-header">
+                <div class="rationale-dot rationale-dot-a"></div>
+                <div class="rationale-dr-name">Jordan Mills</div>
+                <span class="rationale-placement placement-a" id="placement-label-a">High Performer</span>
+              </div>
+              <div class="rationale-text" id="rationale-text-a"></div>
+            </div>
+            <div class="rationale-dr" id="rationale-b" style="display:none;">
+              <div class="rationale-dr-header">
+                <div class="rationale-dot rationale-dot-b"></div>
+                <div class="ratiya-dr-name">Priya Anand</div>
+                <span class="rationale-placement placement-b" id="placement-label-b">High Potential</span>
+              </div>
+              <div class="rationale-text" id="rationale-text-b"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BIAS TRANSFORMATION -->
+    <div class="bias-section" id="bias-section" style="display:none;">
+      <div class="bias-header">
+        <span class="panel-title">Bias reduction — language transformation</span>
+        <span class="panel-sub">Subjective input → behavioral evidence</span>
+      </div>
+      <div class="bias-body" id="bias-body"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Succession Planning Tool · CP | 5.26</span>
+</footer>
+
+<script>
+
+let currentDR = 'a';
+let currentView = 'traditional';
+let synthesized = { a: false, b: false };
+
+const DATA = {
+  a: {
+    name: 'Jordan Mills',
+    role: 'Senior Engineer',
+    traditional: { cell: 6, placement: 'High Performer', xLabel: 'Performance', yLabel: 'Potential' },
+    stripe: { cell: 5, placement: 'Core Player — developing', xLabel: 'The what (Results delivery)', yLabel: 'The how (Growth trajectory)' },
+    traditionalRationale: 'Jordan demonstrates consistently high performance — shipping clean, reliable work on schedule with minimal oversight. His technical execution places him firmly in the high-performance column. However, observable behaviors around collaboration, communication in planning contexts, and peer engagement suggest limited demonstrated potential for the next level at this stage. The data supports High Performer placement: exceptional delivery, with growth investment needed before a leadership trajectory is defensible.',
+    stripeRationale: 'Against the Stripe Success Model, Jordan\'s "The what" competencies (Drives Results, Decision Quality) are strong. His "The how" signals — particularly Collaborates, Communicates Effectively, and Interpersonal Savvy — show a gap between individual contribution and organizational influence. Core Player placement reflects genuine delivery strength alongside a development opportunity in the culture-differentiating behaviors that Stripe weights for senior progression.',
+    strengths: [
+      { comp: 'Drives Results', tier: 'what', text: 'Demonstrates consistent, high-quality delivery against technical commitments with minimal oversight required.' },
+      { comp: 'Decision Quality', tier: 'what', text: 'Technical judgment is trusted by peers — produces reliable, well-reasoned solutions under time constraints.' },
+    ],
+    opportunities: [
+      { comp: 'Collaborates', tier: 'what', text: 'Observable behavior indicates a preference for independent problem-solving over shared progress — peers report discovering completed work that had been a collaborative focus area.' },
+      { comp: 'Communicates Effectively', tier: 'how', text: 'Withholds perspective in planning contexts despite subject matter expertise — limiting organizational impact and visibility of high-quality thinking.' },
+    ],
+    actions: [
+      { comp: 'Interpersonal Savvy', tier: 'how', text: 'Assign Jordan a cross-functional initiative where peer coordination is required for delivery — create structured accountability for collaborative outcomes, not just technical ones.' },
+      { comp: 'Communicates Effectively', tier: 'how', text: 'In the next 3 planning cycles, ask Jordan to open or summarize discussion on one agenda item — building visible communication behavior in a low-stakes setting.' },
+    ],
+    biasTransforms: [
+      { raw: '"He\'s not the most collaborative though."', structured: 'Peers report discovering completed work on items flagged as collaborative — suggesting a default toward independent resolution over shared progress.', comp: 'Collaborates' },
+      { raw: '"I\'m not sure he\'s ready to lead yet."', structured: 'Observable behaviors in planning sessions and cross-functional contexts do not yet evidence the influence and communication patterns associated with leadership readiness at the next level.', comp: 'Communicates Effectively · Interpersonal Savvy' },
+    ]
+  },
+  b: {
+    name: 'Priya Anand',
+    role: 'Product Manager',
+    traditional: { cell: 8, placement: 'High Potential', xLabel: 'Performance', yLabel: 'Potential' },
+    stripe: { cell: 8, placement: 'High Potential', xLabel: 'The what (Results delivery)', yLabel: 'The how (Growth trajectory)' },
+    traditionalRationale: 'Priya demonstrates a strong performance trajectory — leading a product area within 6 months signals accelerated ramp and high cognitive capability. Performance sits in the mid-to-high range: instincts are strong but execution consistency is still developing. Potential is clearly high — learning agility, strategic orientation, and leadership instinct place her firmly in the upper tier. High Potential placement reflects a leader on a steep upward curve who needs process coaching rather than motivation.',
+    stripeRationale: 'Against the Stripe Success Model, Priya\'s "The how" signals are exceptional — Learning Agility, Strategic Mindset, and Self-Development all evidence strong Stripe cultural alignment. Her "The what" gap sits in Decision Quality and Collaborates: strong instincts but direction changes create friction with engineering partners. High Potential placement holds across both views — the investment case is clear, with coaching focused on translating instinct into durable, cross-functional trust.',
+    strengths: [
+      { comp: 'Learning Agility', tier: 'how', text: 'Led an independent product area within 6 months of joining — demonstrating accelerated domain absorption and application under real organizational conditions.' },
+      { comp: 'Strategic Mindset', tier: 'what', text: 'Instincts on product direction are consistently validated over time — evidencing a strong ability to connect near-term decisions to longer-horizon outcomes.' },
+    ],
+    opportunities: [
+      { comp: 'Collaborates', tier: 'what', text: 'Engineering partners report friction around direction changes mid-cycle — suggesting a gap between individual conviction and cross-functional alignment practices.' },
+      { comp: 'Decision Quality', tier: 'what', text: 'Speed of movement creates downstream rework for adjacent teams — observable in the frequency of mid-sprint pivots flagged by engineering in retrospectives.' },
+    ],
+    actions: [
+      { comp: 'Collaborates', tier: 'what', text: 'Introduce a structured alignment checkpoint with engineering lead before any directional shift — building the habit of shared decision-making as a complement to strong individual instinct.' },
+      { comp: 'Decision Quality', tier: 'what', text: 'In the next planning cycle, ask Priya to write a one-page decision brief before any major pivot — making reasoning visible and reviewable before action.' },
+    ],
+    biasTransforms: [
+      { raw: '"She can be a bit much sometimes."', structured: 'Engineering partners report operational friction around direction changes mid-cycle — surfacing a gap between pace of movement and cross-functional alignment practices.', comp: 'Collaborates' },
+      { raw: '"Maybe too ambitious."', structured: 'Demonstrates a high rate of initiative and proactive scope-taking — creating organizational value and occasional coordination overhead that merits structured alignment practices.', comp: 'Decision Quality · Self-Development' },
+    ]
+  }
+};
+
+function selectDR(dr) {
+  currentDR = dr;
+  document.getElementById('tab-a').classList.toggle('active', dr === 'a');
+  document.getElementById('tab-b').classList.toggle('active', dr === 'b');
+  document.getElementById('field-b').classList.toggle('hidden', dr === 'a');
+
+  const labelA = document.querySelector('#field-b').previousElementSibling?.querySelector('label');
+
+  if (synthesized[dr]) {
+    renderOutput(dr);
+    renderNinebox();
+  } else {
+    resetOutput();
+  }
+}
+
+function synthesize() {
+  const btn = document.getElementById('synthesize-btn');
+  btn.disabled = true;
+  btn.textContent = 'Synthesizing...';
+
+  showLoading();
+
+  setTimeout(() => {
+    synthesized[currentDR] = true;
+
+    // Also mark both as synthesized if both tabs visited
+    renderOutput(currentDR);
+
+    if (!synthesized['a'] || !synthesized['b']) {
+      // Synthesize both for full 9-box demo
+      synthesized['a'] = true;
+      synthesized['b'] = true;
+    }
+
+    renderNinebox();
+    document.getElementById('ninebox-section').classList.remove('hidden');
+
+    btn.disabled = false;
+    btn.textContent = 'Synthesize & place';
+  }, 1800);
+}
+
+function showLoading() {
+  const panel = document.getElementById('output-panel');
+  clearOutput(panel);
+  const el = document.createElement('div');
+  el.className = 'loading-state';
+  el.innerHTML = `
+    <div class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+    <div class="loading-label">Synthesizing observations...</div>
+  `;
+  panel.appendChild(el);
+}
+
+function clearOutput(panel) {
+  const existing = panel.querySelector('.output-content, .output-empty, .loading-state');
+  if (existing) existing.remove();
+}
+
+function resetOutput() {
+  const panel = document.getElementById('output-panel');
+  clearOutput(panel);
+  const el = document.createElement('div');
+  el.className = 'output-empty';
+  el.id = 'output-empty';
+  el.innerHTML = `
+    <div class="output-empty-icon">◎</div>
+    <div class="output-empty-title">Awaiting synthesis</div>
+    <div class="output-empty-desc">Submit observations to generate behavior-anchored output and 9-box placement.</div>
+  `;
+  panel.appendChild(el);
+}
+
+function renderOutput(dr) {
+  const d = DATA[dr];
+  const panel = document.getElementById('output-panel');
+  clearOutput(panel);
+
+  const el = document.createElement('div');
+  el.className = 'output-content';
+
+  const renderItems = (items, badgeClass, badgeLabel, sectionTitle, type) => `
+    <div class="output-section">
+      <div class="output-section-header">
+        <span class="badge ${badgeClass}">${badgeLabel}</span>
+        <span class="output-section-title">${sectionTitle}</span>
+      </div>
+      <div class="output-items">
+        ${items.map(item => `
+          <div class="output-item">
+            <div class="output-item-comp comp-${item.tier}">${item.tier === 'what' ? 'The what' : 'The how'} · ${item.comp}</div>
+            <div class="output-item-text">${type === 'action' ? item.text : item.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  el.innerHTML = `
+    ${renderItems(d.strengths, 'badge-strengths', 'Strengths', 'What\'s working', 'insight')}
+    ${renderItems(d.opportunities, 'badge-opportunities', 'Opportunities', 'Areas for growth', 'insight')}
+    ${renderItems(d.actions, 'badge-actions', 'Recommended actions', 'Next steps', 'action')}
+  `;
+
+  panel.appendChild(el);
+}
+
+function renderNinebox() {
+  // Clear existing markers
+  document.querySelectorAll('.dr-marker').forEach(m => m.remove());
+
+  const view = currentView;
+
+  // Update axis labels
+  const dA = DATA['a'][view];
+  const dB = DATA['b'][view];
+
+  document.getElementById('x-label').textContent = dA.xLabel;
+  document.getElementById('y-label').textContent = dA.yLabel;
+
+  // Place markers
+  placeMarker('a', dA.cell);
+  placeMarker('b', dB.cell);
+
+  // Rationale
+  document.getElementById('rationale-a').style.display = 'flex';
+  document.getElementById('rationale-a').style.flexDirection = 'column';
+  document.getElementById('rationale-b').style.display = 'flex';
+  document.getElementById('rationale-b').style.flexDirection = 'column';
+
+  document.getElementById('rationale-text-a').textContent = view === 'traditional' ? DATA['a'].traditionalRationale : DATA['a'].stripeRationale;
+  document.getElementById('rationale-text-b').textContent = view === 'traditional' ? DATA['b'].traditionalRationale : DATA['b'].stripeRationale;
+
+  document.getElementById('placement-label-a').textContent = DATA['a'][view].placement;
+  document.getElementById('placement-label-b').textContent = DATA['b'][view].placement;
+
+  // Bias section
+  renderBiasSection();
+}
+
+function placeMarker(dr, cell) {
+  const cellEl = document.getElementById(`cell-${cell}`);
+  if (!cellEl) return;
+
+  const marker = document.createElement('div');
+  marker.className = `dr-marker marker-${dr}`;
+  marker.textContent = dr === 'a' ? 'JM' : 'PA';
+  marker.title = dr === 'a' ? 'Jordan Mills' : 'Priya Anand';
+
+  // Offset markers slightly if in same cell
+  if (dr === 'b') {
+    marker.style.transform = 'translate(-20%, -70%)';
+  } else {
+    marker.style.transform = 'translate(-80%, -30%)';
+  }
+
+  cellEl.appendChild(marker);
+}
+
+function setView(view) {
+  currentView = view;
+  document.getElementById('btn-traditional').classList.toggle('active', view === 'traditional');
+  document.getElementById('btn-stripe').classList.toggle('active', view === 'stripe');
+  renderNinebox();
+}
+
+function renderBiasSection() {
+  const section = document.getElementById('bias-section');
+  const body = document.getElementById('bias-body');
+  section.style.display = 'block';
+
+  const allTransforms = [
+    ...DATA['a'].biasTransforms.map(t => ({ ...t, dr: 'Jordan Mills' })),
+    ...DATA['b'].biasTransforms.map(t => ({ ...t, dr: 'Priya Anand' }))
+  ];
+
+  body.innerHTML = `
+    <div class="bias-transform-grid">
+      <div>
+        <div class="bias-col-label">Raw input — subjective language</div>
+        <div class="bias-items">
+          ${allTransforms.map(t => `<div class="bias-item-raw">${t.raw}</div>`).join('')}
+        </div>
+      </div>
+      <div class="bias-arrow">→</div>
+      <div>
+        <div class="bias-col-label">Structured output — behavioral evidence</div>
+        <div class="bias-items">
+          ${allTransforms.map(t => `
+            <div class="bias-item-structured">
+              <div class="bias-item-comp">${t.comp}</div>
+              ${t.structured}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

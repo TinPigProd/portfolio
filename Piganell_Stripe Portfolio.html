@@ -26,8 +26,8 @@
     --gold-dim: rgba(74,143,212,0.15);
     --teal: #2DB896;
     --teal-dim: rgba(45,184,150,0.12);
-    --blue: #635BFF;
-    --blue-dim: rgba(99,91,255,0.12);
+    --blue: #4A8FD4;
+    --blue-dim: rgba(74,143,212,0.12);
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 14px;
@@ -269,8 +269,8 @@
   .cs-card-accent { height: 3px; }
   .acc-gold { background: linear-gradient(90deg, #4A8FD4, #7AB8F0); }
   .acc-teal { background: linear-gradient(90deg, var(--teal), #4DD4A8); }
-  .acc-blue { background: linear-gradient(90deg, #635BFF, #9B96FF); }
-  .acc-purple { background: linear-gradient(90deg, #9B7FD4, #C4A8F0); }
+  .acc-blue { background: linear-gradient(90deg, #4A8FD4, #7AB8F0); }
+  .acc-purple { background: linear-gradient(90deg, #2DB896, #4DD4A8); }
 
   .cs-card-body { padding: 1.5rem; }
 
@@ -537,7 +537,7 @@
     <span class="nav-link active" id="nav-home" onclick="showPage('home')">Home</span>
     <span class="nav-link" id="nav-framework" onclick="showPage('framework')">Framework</span>
     <span class="nav-link" id="nav-tools" onclick="showPage('tools')">Tools</span>
-    <span class="nav-link" id="nav-ecosystem" onclick="showPage('ecosystem')">In-Platform</span>
+    <span class="nav-link" id="nav-ecosystem" onclick="showPage('ecosystem')">Learning Delivery</span>
     <span class="nav-link" id="nav-about" onclick="showPage('about')">About</span>
     <span class="nav-link" id="nav-stripe" onclick="showPage('stripe')" style="color:var(--gold);font-weight:600;">For Stripe</span>
   </div>
@@ -587,7 +587,7 @@
       <div class="diagram-arrow">→</div>
       <div class="diagram-node" onclick="showPage('ecosystem')">
         <div class="diagram-node-num">04 · 05</div>
-        <div class="diagram-node-name">In-Platform</div>
+        <div class="diagram-node-name">Learning Delivery</div>
         <div class="diagram-node-tag">Beacon · FictionalPig LXP</div>
       </div>
     </div>
@@ -654,7 +654,7 @@
         <div class="cs-card-accent acc-purple"></div>
         <div class="cs-card-body">
           <div class="cs-card-num">Case studies · 04 + 05</div>
-          <div class="cs-card-title">In-Platform Ecosystem</div>
+          <div class="cs-card-title">Learning Delivery</div>
           <div class="cs-card-desc">Beacon surfaces targeted learning in Slack, triggered by a completed feedback synthesis. FictionalPig LXP provides the pathway infrastructure underneath it. Two artifacts, one connected loop.</div>
           <div class="cs-card-tags">
             <span class="cs-tag">Slack</span>
@@ -823,7 +823,7 @@
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
       <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('framework')">← The Framework</span>
-      <span style="cursor:pointer;color:var(--ink-soft);" onclick="showPage('ecosystem')">In-Platform →</span>
+      <span style="cursor:pointer;color:var(--ink-soft);" onclick="showPage('ecosystem')">Learning Delivery →</span>
     </div>
   </footer>
 </div>
@@ -834,12 +834,13 @@
 <div class="page" id="page-ecosystem">
   <div class="inner-page">
     <div class="page-breadcrumb" onclick="showPage('home')">
-      ← <a>Home</a> <span>/</span> In-Platform
+      ← <a>Home</a> <span>/</span> Learning Delivery
     </div>
     <div class="inner-page-header">
-      <div class="inner-page-eyebrow">In-Platform · Case studies 04 + 05</div>
+      <div class="inner-page-eyebrow">Learning Delivery · Case studies 04 + 05</div>
       <h1 class="inner-page-title">The <em>Ecosystem</em></h1>
-      <p class="inner-page-desc">Two artifacts. One ecosystem loop. Beacon surfaces learning in Slack at the moment of need. FictionalPig LXP provides the pathway infrastructure underneath it.</p>
+      <p class="inner-page-desc">Two artifacts. One ecosystem loop.</p>
+      <p class="inner-page-desc" style="margin-top:0.75rem;">These aren't tools for their own sake. They're the infrastructure that turns a feedback moment into a structured, competency-anchored capability-building journey, delivered where leaders already work.</p>
       <p class="inner-page-desc">The most architecturally forward piece in the portfolio. Beacon closes the loop between feedback synthesis and development action, delivering learning in the flow of work, not redirected away from it.</p>
     </div>
 
@@ -1013,7 +1014,7 @@
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
-      <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('ecosystem')">← In-Platform</span>
+      <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('ecosystem')">← Learning Delivery</span>
       <span style="cursor:pointer;color:var(--gold);font-weight:600;" onclick="showPage('stripe')">A note for Stripe →</span>
     </div>
   </footer>

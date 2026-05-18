@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CP — Portfolio: Succession Planning Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #18180F;
+    --ink-mid: #4A4A40;
+    --ink-soft: #8A8A80;
+    --ink-ghost: #C2C2B8;
+    --paper: #F7F6F2;
+    --paper-warm: #EFEDE7;
+    --white: #FFFFFF;
+    --rule: rgba(0,0,0,0.10);
+    --rule-strong: rgba(0,0,0,0.16);
+    --blue-50: #E6F1FB;
+    --blue-400: #378ADD;
+    --blue-800: #0C447C;
+    --teal-50: #E1F5EE;
+    --teal-400: #1D9E75;
+    --teal-800: #085041;
+    --amber-50: #FAEEDA;
+    --amber-400: #BA7517;
+    --amber-800: #633806;
+    --purple-50: #F0EBFB;
+    --purple-400: #7C5CBF;
+    --purple-800: #3B1F7A;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247,246,242,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid var(--rule-strong);
+    padding: 0 2rem; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+
+  .nav-initials {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--ink); color: var(--white);
+    font-size: 11px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-label { font-size: 13px; color: var(--ink-mid); }
+  .nav-label strong { font-weight: 500; color: var(--ink); }
+
+  .nav-tag {
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 3px 9px;
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+  }
+
+  .hero {
+    max-width: 900px; margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    display: grid; grid-template-columns: 1fr 280px;
+    gap: 3rem; align-items: start;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px; line-height: 1.1; color: var(--ink); margin-bottom: 1.25rem;
+  }
+
+  .hero-title em { font-style: italic; color: var(--ink-mid); }
+
+  .hero-desc {
+    font-size: 16px; line-height: 1.7; color: var(--ink-mid); max-width: 480px;
+  }
+
+  .hero-meta { display: flex; flex-direction: column; gap: 1rem; padding-top: 0.5rem; }
+
+  .meta-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1rem 1.1rem;
+  }
+
+  .meta-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.3rem;
+  }
+
+  .meta-value { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .meta-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  .section { max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+  .section-rule { height: 0.5px; background: var(--rule-strong); margin-bottom: 2.5rem; }
+
+  .section-header {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 2rem; margin-bottom: 2rem;
+  }
+
+  .section-num {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); padding-top: 3px;
+  }
+
+  .section-content { grid-column: 2; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px; color: var(--ink); margin-bottom: 0.6rem;
+  }
+
+  .section-body { font-size: 14px; line-height: 1.75; color: var(--ink-mid); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+
+  .content-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+  }
+
+  .content-card-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.75rem;
+  }
+
+  .content-card p { font-size: 14px; line-height: 1.7; color: var(--ink-mid); }
+
+  .process-steps { display: flex; flex-direction: column; margin-top: 1.5rem; }
+
+  .process-step {
+    display: grid; grid-template-columns: 32px 1fr;
+    gap: 1rem; padding: 1.25rem 0;
+    border-bottom: 0.5px solid var(--rule);
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--ink-mid);
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+  .deliverable-frame {
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-xl); padding: 2rem; margin-top: 1.5rem;
+  }
+
+  .frame-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .frame-label::after {
+    content: ''; flex: 1; height: 0.5px; background: var(--rule-strong);
+  }
+
+  /* EMBEDDED TOOL STYLES */
+  .tool-wrap {
+    background: var(--white); border-radius: var(--radius-lg);
+    border: 0.5px solid var(--rule); padding: 1.75rem;
+  }
+
+  .dr-selector { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; }
+
+  .dr-tab {
+    flex: 1; padding: 0.85rem 1rem;
+    background: var(--paper); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); cursor: pointer; transition: border-color 0.15s;
+  }
+
+  .dr-tab:hover { border-color: var(--rule-strong); }
+  .dr-tab.active { border: 1.5px solid var(--ink); background: var(--white); }
+
+  .dr-tab-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .dr-tab-role { font-size: 11px; color: var(--ink-soft); }
+
+  .tool-main { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+
+  .t-panel {
+    background: var(--paper); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); overflow: hidden;
+  }
+
+  .t-panel-header {
+    padding: 0.75rem 1rem; border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .t-panel-title { font-size: 12px; font-weight: 500; color: var(--ink); }
+  .t-panel-sub { font-size: 11px; color: var(--ink-soft); }
+  .t-panel-body { padding: 1rem; }
+
+  .t-field { margin-bottom: 0.75rem; }
+
+  .t-label {
+    display: block; font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.3rem;
+  }
+
+  .t-textarea {
+    width: 100%; font-family: 'DM Sans', sans-serif; font-size: 12px;
+    color: var(--ink); background: var(--white);
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem; outline: none; resize: none;
+    min-height: 130px; line-height: 1.6;
+  }
+
+  .bias-flag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--amber-800);
+    background: var(--amber-50); border: 0.5px solid var(--amber-400);
+    border-radius: var(--radius-sm); padding: 2px 8px; margin-top: 0.35rem;
+  }
+
+  .t-hint { font-size: 10px; color: var(--ink-ghost); margin-top: 0.3rem; line-height: 1.5; }
+
+  .t-submit {
+    width: 100%; margin-top: 0.75rem; padding: 0.6rem 1rem;
+    background: var(--ink); color: var(--white);
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    border: none; border-radius: var(--radius-sm); cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .t-submit:hover { opacity: 0.85; }
+  .t-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .t-output {
+    background: var(--paper); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); overflow: hidden;
+    min-height: 300px; display: flex; flex-direction: column;
+  }
+
+  .t-output-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 1.5rem; text-align: center;
+  }
+
+  .t-output-empty-icon { font-size: 18px; color: var(--ink-ghost); margin-bottom: 0.5rem; }
+  .t-output-empty-title { font-size: 12px; font-weight: 500; color: var(--ink-soft); margin-bottom: 0.25rem; }
+  .t-output-empty-desc { font-size: 11px; color: var(--ink-ghost); line-height: 1.5; max-width: 160px; }
+
+  .t-output-content { padding: 1rem; flex: 1; overflow-y: auto; }
+
+  .t-output-dr { padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--rule); margin-bottom: 0.85rem; }
+  .t-output-dr-name { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--ink); margin-bottom: 2px; }
+  .t-output-dr-meta { font-size: 11px; color: var(--ink-soft); }
+
+  .t-output-section { margin-bottom: 0.85rem; }
+  .t-output-section:last-child { margin-bottom: 0; }
+
+  .t-section-header { display: flex; align-items: center; gap: 6px; margin-bottom: 0.5rem; }
+
+  .t-badge {
+    font-size: 9px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 3px;
+  }
+
+  .t-badge-s { background: var(--teal-50); color: var(--teal-800); }
+  .t-badge-o { background: var(--amber-50); color: var(--amber-800); }
+  .t-badge-a { background: var(--blue-50); color: var(--blue-800); }
+
+  .t-section-title { font-size: 11px; font-weight: 500; color: var(--ink-soft); }
+
+  .t-items { display: flex; flex-direction: column; gap: 5px; }
+
+  .t-item {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-sm); padding: 0.65rem 0.85rem;
+  }
+
+  .t-item-comp { font-size: 9px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 2px; }
+  .t-comp-what { color: var(--blue-400); }
+  .t-comp-how { color: var(--teal-400); }
+  .t-item-text { font-size: 11px; color: var(--ink-mid); line-height: 1.55; }
+
+  .t-loading {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.6rem;
+  }
+
+  .t-dots { display: flex; gap: 4px; }
+
+  .t-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ink-ghost);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .t-dot:nth-child(2) { animation-delay: 0.2s; }
+  .t-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .t-loading-label { font-size: 11px; color: var(--ink-ghost); }
+
+  /* 9-BOX */
+  .ninebox-wrap { margin-top: 1.25rem; }
+
+  .ninebox-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;
+  }
+
+  .ninebox-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); }
+
+  .view-toggle {
+    display: flex; border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-md); overflow: hidden;
+  }
+
+  .view-btn {
+    padding: 5px 12px; font-size: 11px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    border: none; background: var(--white); color: var(--ink-soft);
+    transition: all 0.15s;
+  }
+
+  .view-btn.active { background: var(--ink); color: var(--white); }
+
+  .ninebox-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+
+  .ninebox-container { position: relative; }
+
+  .ninebox-y-label {
+    position: absolute; left: -2rem; top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); white-space: nowrap;
+  }
+
+  .ninebox-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 3px; padding: 0.4rem; margin-left: 0.85rem;
+    background: var(--paper-warm); border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-md);
+  }
+
+  .nb-cell {
+    aspect-ratio: 1; border-radius: var(--radius-sm);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 4px; text-align: center; position: relative;
+  }
+
+  .nb-cell-label { font-size: 8px; font-weight: 500; color: var(--ink-mid); line-height: 1.3; margin-bottom: 1px; }
+  .nb-cell-sub { font-size: 7px; color: var(--ink-soft); line-height: 1.3; }
+
+  .c-ll { background: #FEE2E2; }
+  .c-lm { background: #FEF3C7; }
+  .c-lh { background: #FEF3C7; }
+  .c-ml { background: #FEF3C7; }
+  .c-mm { background: #E0F2FE; }
+  .c-mh { background: #DCFCE7; }
+  .c-hl { background: #FEF3C7; }
+  .c-hm { background: #DCFCE7; }
+  .c-hh { background: #BBF7D0; }
+
+  .nb-marker {
+    position: absolute; width: 22px; height: 22px;
+    border-radius: 50%; border: 2px solid var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 500; color: var(--white);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .marker-a { background: var(--blue-400); transform: translate(-80%, -30%); }
+  .marker-b { background: var(--purple-400); transform: translate(-20%, -70%); }
+
+  .nb-axis-x {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    margin-left: 0.85rem; padding: 0 0.4rem; gap: 3px;
+  }
+
+  .nb-axis-x-label {
+    text-align: center; font-size: 8px; color: var(--ink-ghost);
+    letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 0;
+  }
+
+  .nb-x-title {
+    text-align: center; font-size: 9px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-ghost); margin-top: 4px;
+    margin-left: 0.85rem;
+  }
+
+  .ninebox-side { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .nb-legend {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 0.85rem 1rem;
+  }
+
+  .nb-legend-title {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.6rem;
+  }
+
+  .nb-legend-items { display: flex; flex-direction: column; gap: 5px; }
+
+  .nb-legend-item { display: flex; align-items: center; gap: 7px; }
+
+  .nb-legend-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--white); box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+
+  .nb-dot-a { background: var(--blue-400); }
+  .nb-dot-b { background: var(--purple-400); }
+
+  .nb-legend-text { font-size: 11px; color: var(--ink-mid); }
+  .nb-legend-name { font-weight: 500; color: var(--ink); }
+
+  .nb-rationale {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 0.85rem 1rem; flex: 1;
+  }
+
+  .nb-rationale-title {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.6rem;
+  }
+
+  .nb-rationale-dr { margin-bottom: 0.75rem; }
+  .nb-rationale-dr:last-child { margin-bottom: 0; }
+
+  .nb-rationale-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; flex-wrap: wrap; }
+
+  .nb-rationale-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .nb-dot-ra { background: var(--blue-400); }
+  .nb-dot-rb { background: var(--purple-400); }
+
+  .nb-rationale-name { font-size: 12px; font-weight: 500; color: var(--ink); }
+
+  .nb-placement {
+    font-size: 9px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 6px; border-radius: 3px;
+  }
+
+  .nb-p-a { background: var(--blue-50); color: var(--blue-800); }
+  .nb-p-b { background: var(--purple-50); color: var(--purple-800); }
+
+  .nb-rationale-text { font-size: 11px; color: var(--ink-mid); line-height: 1.55; }
+
+  /* BIAS SECTION */
+  .bias-section {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1rem; margin-top: 1.25rem;
+    display: none;
+  }
+
+  .bias-title {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.75rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .bias-grid {
+    display: grid; grid-template-columns: 1fr 32px 1fr; gap: 0; align-items: center;
+  }
+
+  .bias-col-label {
+    font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-ghost); margin-bottom: 0.5rem;
+  }
+
+  .bias-arrow { text-align: center; font-size: 14px; color: var(--ink-ghost); }
+
+  .bias-items { display: flex; flex-direction: column; gap: 5px; }
+
+  .bias-raw {
+    background: var(--amber-50); border: 0.5px solid rgba(186,117,23,0.2);
+    border-radius: var(--radius-sm); padding: 0.5rem 0.75rem;
+    font-size: 11px; color: var(--amber-800); line-height: 1.5; font-style: italic;
+  }
+
+  .bias-structured {
+    background: var(--teal-50); border: 0.5px solid rgba(29,158,117,0.2);
+    border-radius: var(--radius-sm); padding: 0.5rem 0.75rem;
+    font-size: 11px; color: var(--teal-800); line-height: 1.5;
+  }
+
+  .bias-comp {
+    font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-400); margin-bottom: 2px;
+  }
+
+  /* DECISIONS */
+  .decisions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+
+  .decision-card {
+    background: var(--white); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md); padding: 1.25rem;
+  }
+
+  .decision-num {
+    font-family: 'DM Serif Display', serif; font-size: 32px;
+    color: var(--ink); margin-bottom: 0.25rem;
+  }
+
+  .decision-label { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 0.3rem; }
+  .decision-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
+
+  /* REFLECTION */
+  .reflection-block {
+    background: var(--ink); color: var(--white);
+    border-radius: var(--radius-lg); padding: 2.5rem; margin-top: 1.5rem;
+  }
+
+  .reflection-block blockquote {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 22px; line-height: 1.45;
+    color: rgba(255,255,255,0.90); margin-bottom: 1.25rem;
+  }
+
+  .reflection-block p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.60); }
+
+  footer {
+    max-width: 900px; margin: 0 auto; padding: 2rem 2rem 4rem;
+    border-top: 0.5px solid var(--rule-strong);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink-ghost);
+  }
+
+  @media (max-width: 680px) {
+    .hero, .section-header { grid-template-columns: 1fr; }
+    .section-num { display: none; }
+    .section-content { grid-column: 1; }
+    .two-col, .decisions-grid, .tool-main, .ninebox-layout { grid-template-columns: 1fr; }
+    .hero-title { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-initials">CP</div>
+    <span class="nav-label"><strong>CP</strong> — Portfolio</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-tag">Succession Planning</span>
+    <span class="nav-tag">Bias Reduction</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Portfolio case study · 03</div>
+    <h1 class="hero-title">Succession <em>Planning</em><br>Tool</h1>
+    <p class="hero-desc">A simulated talent placement tool that transforms subjective leader observations into behavior-anchored insights, then places direct reports on an interactive dual 9-box viewable in both traditional 9-box and Success Model formats.</p>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-card">
+      <div class="meta-label">Core capability</div>
+      <div class="meta-value">Bias reduction via behavioral anchoring</div>
+      <div class="meta-sub">Objective over subjective</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">9-Box views</div>
+      <div class="meta-value">Traditional · Stripe Success Model</div>
+      <div class="meta-sub">Toggle between frameworks</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">Profiles</div>
+      <div class="meta-value">Two direct reports · Distinct placements</div>
+      <div class="meta-sub">Demonstrates range across performance profiles</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">01 · Problem</div>
+    <div class="section-content">
+      <h2 class="section-title">Succession decisions built on subjective language</h2>
+      <p class="section-body">Traditional succession planning relies heavily on manager narratives. And those narratives can carry bias. Additionally, phrases like "not a team player" or "too ambitious" can skew talent conversations. These describe personality impressions, not observable behaviors. When those impressions drive 9-box placement, the resulting talent pipeline reflects who leaders like, not who is actually ready for promotion.</p>
+      <div class="two-col">
+        <div class="content-card">
+          <div class="content-card-label">The gap</div>
+          <p>Subjective language in feedback creates inconsistent calibration. The same behavior described differently by two managers produces different placements and different development investments.</p>
+        </div>
+        <div class="content-card">
+          <div class="content-card-label">The opportunity</div>
+          <p>Anchor succession decisions to observable, competency-mapped behavioral evidence, reducing bias at the input layer rather than trying to correct for it after placement decisions are made.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">02 · Process</div>
+    <div class="section-content">
+      <h2 class="section-title">From observation to placement</h2>
+      <p class="section-body">The tool was designed to make the transformation from subjective language to behavioral evidence visible — not just as an output, but as an explicit step the leader can see and learn from.</p>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Raw input with bias flagging</div>
+            <div class="step-desc">Leader enters unstructured observations. The tool flags subjective language at the input layer — signaling that transformation is about to occur before output is generated.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Behavioral synthesis</div>
+            <div class="step-desc">Raw observations are mapped to the Stripe Success Model, stripped of personality language and rewritten as observable, competency-anchored behavioral evidence.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Dual 9-box placement</div>
+            <div class="step-desc">Two views of the same data with Traditional (Performance × Potential) and Success Model (The What × The How). Toggle between them to see how the framework shifts placement rationale without changing the underlying behavioral evidence.</div>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Language transformation display</div>
+            <div class="step-desc">A before/after panel shows exactly how subjective phrases became behavioral observations, making the bias reduction logic explicit and teachable for leaders using the tool.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: DELIVERABLE -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">03 · Deliverable</div>
+    <div class="section-content">
+      <h2 class="section-title">Interactive succession tool</h2>
+      <p class="section-body">Select a direct report, hit Synthesize & place, then toggle between Traditional and Success Model 9-box views. The bias transformation panel appears below placement.</p>
+    </div>
+  </div>
+
+  <div class="deliverable-frame">
+    <div class="frame-label">Live deliverable</div>
+    <div class="tool-wrap">
+
+      <!-- DR SELECTOR -->
+      <div class="dr-selector">
+        <div class="dr-tab active" id="tab-a" onclick="selectDR('a')">
+          <div class="dr-tab-name">Jordan Mills</div>
+          <div class="dr-tab-role">Senior Engineer · 4 years tenure</div>
+        </div>
+        <div class="dr-tab" id="tab-b" onclick="selectDR('b')">
+          <div class="dr-tab-name">Priya Anand</div>
+          <div class="dr-tab-role">Product Manager · 2 years tenure</div>
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="tool-main">
+        <!-- INPUT -->
+        <div class="t-panel">
+          <div class="t-panel-header">
+            <span class="t-panel-title">Leader input</span>
+            <span class="t-panel-sub">Raw observations</span>
+          </div>
+          <div class="t-panel-body">
+            <div class="t-field">
+              <label class="t-label">Observations & notes</label>
+              <textarea class="t-textarea" id="t-notes" readonly>Jordan is one of our strongest technical contributors — probably the most reliable person on the team when it comes to shipping clean code on time. He's not the most collaborative though. He tends to go heads down and sometimes the team finds out he's already solved something they were working on together. Hard worker, doesn't cause drama, just not sure he's ready to lead yet.</textarea>
+              <div class="bias-flag">⚠ Subjective language detected</div>
+              <div class="t-hint">Tool will anchor observations to behavioral evidence.</div>
+            </div>
+            <button class="t-submit" id="t-submit" onclick="tSynthesize()">Synthesize & place</button>
+          </div>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="t-output" id="t-output">
+          <div class="t-panel-header">
+            <span class="t-panel-title">Behavioral synthesis</span>
+            <span class="t-panel-sub">Objective · Competency-anchored</span>
+          </div>
+          <div class="t-output-empty" id="t-empty">
+            <div class="t-output-empty-icon">◎</div>
+            <div class="t-output-empty-title">Awaiting synthesis</div>
+            <div class="t-output-empty-desc">Submit to generate behavior-anchored output and 9-box placement.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9-BOX -->
+      <div class="ninebox-wrap" id="ninebox-wrap" style="display:none;">
+        <div class="ninebox-header">
+          <div class="ninebox-title">9-Box placement</div>
+          <div class="view-toggle">
+            <button class="view-btn active" id="btn-trad" onclick="setView('traditional')">Traditional</button>
+            <button class="view-btn" id="btn-stripe" onclick="setView('stripe')">Stripe Model</button>
+          </div>
+        </div>
+        <div class="ninebox-layout">
+          <div class="ninebox-container">
+            <div class="ninebox-y-label" id="nb-y-label">Potential</div>
+            <div class="ninebox-grid" id="nb-grid">
+              <div class="nb-cell c-hl" id="nb-7"><div class="nb-cell-label">Rough Diamond</div><div class="nb-cell-sub">High potential, lower performance</div></div>
+              <div class="nb-cell c-hm" id="nb-8"><div class="nb-cell-label">High Potential</div><div class="nb-cell-sub">Strong growth trajectory</div></div>
+              <div class="nb-cell c-hh" id="nb-9"><div class="nb-cell-label">Star</div><div class="nb-cell-sub">Exceptional — ready to lead</div></div>
+              <div class="nb-cell c-ml" id="nb-4"><div class="nb-cell-label">Inconsistent Player</div><div class="nb-cell-sub">Needs attention</div></div>
+              <div class="nb-cell c-mm" id="nb-5"><div class="nb-cell-label">Core Player</div><div class="nb-cell-sub">Solid contributor</div></div>
+              <div class="nb-cell c-mh" id="nb-6"><div class="nb-cell-label">High Performer</div><div class="nb-cell-sub">Delivers, limited upside</div></div>
+              <div class="nb-cell c-ll" id="nb-1"><div class="nb-cell-label">Risk</div><div class="nb-cell-sub">Immediate action needed</div></div>
+              <div class="nb-cell c-lm" id="nb-2"><div class="nb-cell-label">Effective but Limited</div><div class="nb-cell-sub">Reliable, low ceiling</div></div>
+              <div class="nb-cell c-lh" id="nb-3"><div class="nb-cell-label">Effective but Limited</div><div class="nb-cell-sub">Strong delivery, low growth</div></div>
+            </div>
+            <div class="nb-axis-x">
+              <div class="nb-axis-x-label">Low</div>
+              <div class="nb-axis-x-label">Mid</div>
+              <div class="nb-axis-x-label">High</div>
+            </div>
+            <div class="nb-x-title" id="nb-x-label">Performance</div>
+          </div>
+
+          <div class="ninebox-side">
+            <div class="nb-legend">
+              <div class="nb-legend-title">Direct reports</div>
+              <div class="nb-legend-items">
+                <div class="nb-legend-item">
+                  <div class="nb-legend-dot nb-dot-a"></div>
+                  <div class="nb-legend-text"><span class="nb-legend-name">Jordan Mills</span> — Senior Engineer</div>
+                </div>
+                <div class="nb-legend-item">
+                  <div class="nb-legend-dot nb-dot-b"></div>
+                  <div class="nb-legend-text"><span class="nb-legend-name">Priya Anand</span> — Product Manager</div>
+                </div>
+              </div>
+            </div>
+            <div class="nb-rationale">
+              <div class="nb-rationale-title">Placement rationale</div>
+              <div class="nb-rationale-dr">
+                <div class="nb-rationale-header">
+                  <div class="nb-rationale-dot nb-dot-ra"></div>
+                  <div class="nb-rationale-name">Jordan Mills</div>
+                  <span class="nb-placement nb-p-a" id="nb-placement-a">High Performer</span>
+                </div>
+                <div class="nb-rationale-text" id="nb-rationale-a"></div>
+              </div>
+              <div class="nb-rationale-dr">
+                <div class="nb-rationale-header">
+                  <div class="nb-rationale-dot nb-dot-rb"></div>
+                  <div class="nb-rationale-name">Priya Anand</div>
+                  <span class="nb-placement nb-p-b" id="nb-placement-b">High Potential</span>
+                </div>
+                <div class="nb-rationale-text" id="nb-rationale-b"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIAS SECTION -->
+      <div class="bias-section" id="bias-section">
+        <div class="bias-title">
+          <span>Bias reduction — language transformation</span>
+          <span style="color:var(--ink-soft);font-size:10px;font-weight:400;">Subjective input → behavioral evidence</span>
+        </div>
+        <div class="bias-grid" id="bias-grid"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">04 · Design decisions</div>
+    <div class="section-content">
+      <h2 class="section-title">Three choices that shaped the tool</h2>
+      <div class="decisions-grid">
+        <div class="decision-card">
+          <div class="decision-num">01</div>
+          <div class="decision-label">Dual 9-box, not one</div>
+          <div class="decision-desc">Leading with the familiar Traditional view earns trust with a conventional HR audience. The Stripe Model view reframes the same data through a culture-specific lens, meeting leaders where they are before asking them to think differently.</div>
+        </div>
+        <div class="decision-card">
+          <div class="decision-num">02</div>
+          <div class="decision-label">Visible transformation</div>
+          <div class="decision-desc">Making the before/after language transformation explicit — not just an invisible backend process — turns the tool into a coaching moment. Leaders learn what objective language looks like by seeing the contrast.</div>
+        </div>
+        <div class="decision-card">
+          <div class="decision-num">03</div>
+          <div class="decision-label">Two profiles, not one</div>
+          <div class="decision-desc">Jordan and Priya represent meaningfully different talent profiles: high performer vs. high potential. Showing both demonstrates that the tool responds to the input, not a template.</div>        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 -->
+<section class="section">
+  <div class="section-rule"></div>
+  <div class="section-header">
+    <div class="section-num">05 · Reflection</div>
+    <div class="section-content">
+      <h2 class="section-title">What this work demonstrates</h2>
+      <div class="reflection-block">
+        <blockquote>"The 9-box isn't the deliverable. The behavioral language underneath it is. Get the language right and the placement follows."</blockquote>
+        <p>This tool demonstrates systems-level thinking about talent, not just what to build, but why the input layer matters as much as the output. By addressing bias at the observation stage rather than the calibration stage, the tool changes the quality of the conversation, not just the format of the output. That's the difference between a learning tool and a talent system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Succession Planning Tool · CP | 5.26</span>
+</footer>
+
+<script>
+let currentDR = 'a';
+let currentView = 'traditional';
+let synthesized = false;
+let isSynthesizing = false;
+
+const NOTES = {
+  a: `Jordan is one of our strongest technical contributors — probably the most reliable person on the team when it comes to shipping clean code on time. He's not the most collaborative though. He tends to go heads down and sometimes the team finds out he's already solved something they were working on together. Hard worker, doesn't cause drama, just not sure he's ready to lead yet.`,
+  b: `Priya is one of the most impressive people I've managed. She's incredibly smart and picks things up so fast — she was leading her first product area within 6 months. She can be a bit much sometimes, like she moves so fast that she leaves people behind. Engineering gets frustrated with her because she changes direction a lot. But honestly I think she has the highest ceiling of anyone on my team.`
+};
+
+const DATA = {
+  a: {
+    traditional: { cell: 6, placement: 'High Performer', xLabel: 'Performance', yLabel: 'Potential', rationale: 'Jordan delivers consistently at a high level — shipping reliable work with minimal oversight. Performance is clearly high. However, observable behaviors around collaboration and planning communication suggest limited demonstrated potential at this stage. High Performer: exceptional delivery, development investment needed before a leadership trajectory is defensible.' },
+    stripe: { cell: 5, placement: 'Core Player — developing', xLabel: 'The what (Results delivery)', yLabel: 'The how (Growth trajectory)', rationale: 'Against the Stripe Success Model, Jordan\'s "The what" competencies (Drives Results, Decision Quality) are strong. His "The how" signals — Collaborates, Communicates Effectively, Interpersonal Savvy — show a gap between individual contribution and organizational influence. Core Player placement reflects delivery strength alongside a clear development opportunity.' }
+  },
+  b: {
+    traditional: { cell: 8, placement: 'High Potential', xLabel: 'Performance', yLabel: 'Potential', rationale: 'Priya led a product area within 6 months — strong performance trajectory. Mid-to-high performance: instincts are strong, execution consistency is still developing. Potential is clearly high — learning agility, strategic orientation, and leadership instinct place her in the upper tier. High Potential: steep upward curve, coaching focused on process, not motivation.' },
+    stripe: { cell: 8, placement: 'High Potential', xLabel: 'The what (Results delivery)', yLabel: 'The how (Growth trajectory)', rationale: 'Priya\'s "The how" signals are exceptional — Learning Agility, Strategic Mindset, and Self-Development all evidence strong Stripe alignment. "The what" gap sits in Decision Quality and Collaborates: strong instincts but directional changes create engineering friction. High Potential placement holds — coaching focused on translating instinct into durable cross-functional trust.' }
+  }
+};
+
+const OUTPUT = {
+  a: {
+    strengths: [
+      { tier: 'what', comp: 'Drives Results', text: 'Consistent, high-quality delivery against technical commitments — flagged as most reliable contributor on the team.' },
+      { tier: 'what', comp: 'Decision Quality', text: 'Technical judgment is trusted by peers; produces reliable, well-reasoned solutions under time constraints.' }
+    ],
+    opportunities: [
+      { tier: 'what', comp: 'Collaborates', text: 'Default toward independent problem-solving — peers discover completed work on items flagged as collaborative focus areas.' },
+      { tier: 'how', comp: 'Communicates Effectively', text: 'Withholds perspective in planning contexts despite subject matter expertise, limiting organizational impact.' }
+    ],
+    actions: [
+      { tier: 'what', comp: 'Collaborates', text: 'Assign a cross-functional initiative where peer coordination is a delivery requirement.' },
+      { tier: 'how', comp: 'Interpersonal Savvy', text: 'Introduce a peer-pairing rotation to build cross-functional trust and influence behaviors.' }
+    ]
+  },
+  b: {
+    strengths: [
+      { tier: 'how', comp: 'Learning Agility', text: 'Led an independent product area within 6 months — accelerated domain absorption under real organizational conditions.' },
+      { tier: 'what', comp: 'Strategic Mindset', text: 'Product instincts consistently validated over time — strong ability to connect near-term decisions to longer-horizon outcomes.' }
+    ],
+    opportunities: [
+      { tier: 'what', comp: 'Collaborates', text: 'Engineering partners report friction around direction changes mid-cycle — gap between conviction and cross-functional alignment.' },
+      { tier: 'what', comp: 'Decision Quality', text: 'Speed of movement creates downstream rework — observable in frequency of mid-sprint pivots in retrospectives.' }
+    ],
+    actions: [
+      { tier: 'what', comp: 'Collaborates', text: 'Introduce structured alignment checkpoint with engineering lead before any directional shift.' },
+      { tier: 'what', comp: 'Decision Quality', text: 'Ask Priya to write a one-page decision brief before any major pivot — making reasoning visible before action.' }
+    ]
+  }
+};
+
+const BIAS = {
+  a: [
+    { raw: '"He\'s not the most collaborative though."', structured: 'Peers report discovering completed work on items flagged as collaborative — suggesting a default toward independent resolution over shared progress.', comp: 'Collaborates' },
+    { raw: '"Just not sure he\'s ready to lead yet."', structured: 'Observable behaviors in planning and cross-functional contexts do not yet evidence the influence patterns associated with leadership readiness at the next level.', comp: 'Communicates Effectively · Interpersonal Savvy' }
+  ],
+  b: [
+    { raw: '"She can be a bit much sometimes."', structured: 'Engineering partners report operational friction around direction changes mid-cycle — surfacing a gap between pace and cross-functional alignment practices.', comp: 'Collaborates' },
+    { raw: '"Maybe too ambitious."', structured: 'Demonstrates a high rate of initiative and proactive scope-taking — creating value and occasional coordination overhead that merits structured alignment practices.', comp: 'Decision Quality · Self-Development' }
+  ]
+};
+
+function selectDR(dr) {
+  if (isSynthesizing) return;
+  currentDR = dr;
+  document.getElementById('tab-a').classList.toggle('active', dr === 'a');
+  document.getElementById('tab-b').classList.toggle('active', dr === 'b');
+  document.getElementById('t-notes').value = NOTES[dr];
+  if (!synthesized) resetTool();
+}
+
+function resetTool() {
+  const out = document.getElementById('t-output');
+  const existing = out.querySelector('.t-output-content, .t-loading');
+  if (existing) existing.remove();
+  let empty = out.querySelector('.t-output-empty');
+  if (!empty) {
+    empty = document.createElement('div');
+    empty.className = 't-output-empty';
+    empty.id = 't-empty';
+    empty.innerHTML = `<div class="t-output-empty-icon">◎</div><div class="t-output-empty-title">Awaiting synthesis</div><div class="t-output-empty-desc">Submit to generate behavior-anchored output and 9-box placement.</div>`;
+    out.appendChild(empty);
+  }
+  document.getElementById('ninebox-wrap').style.display = 'none';
+  document.getElementById('bias-section').style.display = 'none';
+  document.getElementById('t-submit').disabled = false;
+  document.getElementById('t-submit').textContent = 'Synthesize & place';
+  synthesized = false;
+}
+
+function tSynthesize() {
+  if (isSynthesizing) return;
+  isSynthesizing = true;
+  synthesized = false;
+
+  const btn = document.getElementById('t-submit');
+  btn.disabled = true;
+  btn.textContent = 'Synthesizing...';
+
+  const out = document.getElementById('t-output');
+  const existing = out.querySelector('.t-output-content, .t-output-empty');
+  if (existing) existing.remove();
+
+  const loading = document.createElement('div');
+  loading.className = 't-loading';
+  loading.innerHTML = `<div class="t-dots"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div><div class="t-loading-label">Synthesizing observations...</div>`;
+  out.appendChild(loading);
+
+  setTimeout(() => {
+    loading.remove();
+    renderOutput();
+    renderNinebox();
+    renderBias();
+    document.getElementById('ninebox-wrap').style.display = 'block';
+    document.getElementById('bias-section').style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Synthesize & place';
+    synthesized = true;
+    isSynthesizing = false;
+  }, 1800);
+}
+
+function renderOutput() {
+  const out = document.getElementById('t-output');
+  const el = document.createElement('div');
+  el.className = 't-output-content';
+  const d = OUTPUT[currentDR];
+
+  const renderItems = (items, badgeClass, badgeLabel, title) => `
+    <div class="t-output-section">
+      <div class="t-section-header">
+        <span class="t-badge ${badgeClass}">${badgeLabel}</span>
+        <span class="t-section-title">${title}</span>
+      </div>
+      <div class="t-items">
+        ${items.map(i => `
+          <div class="t-item">
+            <div class="t-item-comp t-comp-${i.tier}">${i.tier === 'what' ? 'The what' : 'The how'} · ${i.comp}</div>
+            <div class="t-item-text">${i.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  el.innerHTML = `
+    ${renderItems(d.strengths, 't-badge-s', 'Strengths', 'What\'s working')}
+    ${renderItems(d.opportunities, 't-badge-o', 'Opportunities', 'Areas for growth')}
+    ${renderItems(d.actions, 't-badge-a', 'Actions', 'Next steps')}
+  `;
+  out.appendChild(el);
+}
+
+function renderNinebox() {
+  document.querySelectorAll('.nb-marker').forEach(m => m.remove());
+
+  const view = currentView;
+  const dA = DATA['a'][view];
+  const dB = DATA['b'][view];
+
+  document.getElementById('nb-x-label').textContent = dA.xLabel;
+  document.getElementById('nb-y-label').textContent = dA.yLabel;
+
+  placeMarker('a', dA.cell);
+  placeMarker('b', dB.cell);
+
+  document.getElementById('nb-placement-a').textContent = dA.placement;
+  document.getElementById('nb-placement-b').textContent = dB.placement;
+  document.getElementById('nb-rationale-a').textContent = dA.rationale;
+  document.getElementById('nb-rationale-b').textContent = dB.rationale;
+}
+
+function placeMarker(dr, cell) {
+  const cellEl = document.getElementById(`nb-${cell}`);
+  if (!cellEl) return;
+  const marker = document.createElement('div');
+  marker.className = `nb-marker marker-${dr}`;
+  marker.textContent = dr === 'a' ? 'JM' : 'PA';
+  cellEl.appendChild(marker);
+}
+
+function setView(view) {
+  currentView = view;
+  document.getElementById('btn-trad').classList.toggle('active', view === 'traditional');
+  document.getElementById('btn-stripe').classList.toggle('active', view === 'stripe');
+  if (synthesized) renderNinebox();
+}
+
+function renderBias() {
+  const allBias = [
+    ...BIAS['a'].map(b => ({ ...b, dr: 'Jordan Mills' })),
+    ...BIAS['b'].map(b => ({ ...b, dr: 'Priya Anand' }))
+  ];
+
+  document.getElementById('bias-grid').innerHTML = `
+    <div>
+      <div class="bias-col-label">Raw input — subjective language</div>
+      <div class="bias-items">${allBias.map(b => `<div class="bias-raw">${b.raw}</div>`).join('')}</div>
+    </div>
+    <div class="bias-arrow">→</div>
+    <div>
+      <div class="bias-col-label">Structured output — behavioral evidence</div>
+      <div class="bias-items">${allBias.map(b => `<div class="bias-structured"><div class="bias-comp">${b.comp}</div>${b.structured}</div>`).join('')}</div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

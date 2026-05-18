@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beacon — Slack Simulation · CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Slack-authentic palette */
+    --slack-aubergine: #3F0E40;
+    --slack-aubergine-dark: #350D36;
+    --slack-aubergine-light: #4A154B;
+    --slack-sidebar-text: rgba(255,255,255,0.72);
+    --slack-sidebar-active: #FFFFFF;
+    --slack-sidebar-hover: rgba(255,255,255,0.10);
+    --slack-sidebar-selected: rgba(255,255,255,0.16);
+    --slack-green: #007a5a;
+    --slack-red: #e8194b;
+    --slack-content-bg: #FFFFFF;
+    --slack-border: #e8e8e8;
+    --slack-message-hover: #f8f8f8;
+    --slack-text-primary: #1d1c1d;
+    --slack-text-secondary: #616061;
+    --slack-text-tertiary: #9e9e9e;
+    --slack-link: #1264a3;
+    --slack-reaction-bg: #f2f2f2;
+    --slack-reaction-border: #d8d8d8;
+
+    /* Beacon brand */
+    --beacon-blue: #0066CC;
+    --beacon-blue-light: #E8F0FB;
+    --beacon-teal: #1D9E75;
+    --beacon-teal-light: #E1F5EE;
+    --beacon-amber: #BA7517;
+    --beacon-amber-light: #FAEEDA;
+    --beacon-purple: #7C5CBF;
+    --beacon-purple-light: #F0EBFB;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  /* ── PORTFOLIO WRAPPER ── */
+  .portfolio-wrap {
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .portfolio-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .portfolio-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .portfolio-initials {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .portfolio-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.04em;
+  }
+
+  .portfolio-label strong { color: rgba(255,255,255,0.8); font-weight: 700; }
+
+  .portfolio-tags { display: flex; gap: 0.5rem; }
+
+  .portfolio-tag {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    padding: 3px 9px;
+    border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── SLACK CHROME ── */
+  .slack-chrome {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Title bar */
+  .slack-titlebar {
+    background: var(--slack-aubergine-dark);
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .titlebar-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+
+  .titlebar-title {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* Main layout */
+  .slack-main {
+    display: flex;
+    height: 680px;
+  }
+
+  /* ── SIDEBAR ── */
+  .slack-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--slack-aubergine);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sidebar-workspace {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .workspace-name {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--slack-sidebar-active);
+    letter-spacing: -0.02em;
+  }
+
+  .workspace-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1px;
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--slack-green);
+    border: 1.5px solid var(--slack-aubergine);
+  }
+
+  .status-name { font-size: 12px; color: var(--slack-sidebar-text); }
+
+  .new-compose {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: rgba(255,255,255,0.7);
+  }
+
+  .sidebar-search {
+    margin: 8px 12px;
+    background: rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 5px 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sidebar-nav { overflow-y: auto; flex: 1; padding: 4px 0; }
+
+  .sidebar-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slack-sidebar-text);
+    padding: 12px 16px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 16px;
+    font-size: 14px;
+    color: var(--slack-sidebar-text);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    margin: 0 4px;
+    transition: background 0.1s;
+  }
+
+  .sidebar-item:hover { background: var(--slack-sidebar-hover); }
+
+  .sidebar-item.active {
+    background: var(--slack-sidebar-selected);
+    color: var(--slack-sidebar-active);
+    font-weight: 700;
+  }
+
+  .sidebar-item.unread { color: var(--slack-sidebar-active); font-weight: 700; }
+
+  .sidebar-icon { font-size: 15px; flex-shrink: 0; }
+
+  .sidebar-badge {
+    margin-left: auto;
+    background: var(--slack-red);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 8px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .sidebar-avatar {
+    width: 20px; height: 20px;
+    border-radius: var(--radius-sm);
+    background: var(--beacon-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+
+  .sidebar-avatar.green { background: var(--slack-green); }
+  .sidebar-avatar.purple { background: var(--beacon-purple); }
+  .sidebar-avatar.amber { background: var(--beacon-amber); }
+
+  /* ── CONTENT AREA ── */
+  .slack-content {
+    flex: 1;
+    background: var(--slack-content-bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Channel header */
+  .channel-header {
+    height: 52px;
+    border-bottom: 1px solid var(--slack-border);
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .channel-name {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--slack-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .channel-divider {
+    width: 1px; height: 20px;
+    background: var(--slack-border);
+  }
+
+  .channel-desc {
+    font-size: 13px;
+    color: var(--slack-text-secondary);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .channel-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .channel-action-btn {
+    font-size: 12px;
+    color: var(--slack-text-secondary);
+    padding: 4px 10px;
+    border: 1px solid var(--slack-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: none;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+  }
+
+  /* Messages */
+  .messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+  }
+
+  .date-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .date-divider-line { flex: 1; height: 1px; background: var(--slack-border); }
+
+  .date-divider-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slack-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* Standard message */
+  .message {
+    display: flex;
+    gap: 0.75rem;
+    padding: 6px 1.25rem;
+    transition: background 0.1s;
+    position: relative;
+  }
+
+  .message:hover { background: var(--slack-message-hover); }
+
+  .message-avatar {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 900; color: white;
+    margin-top: 2px;
+  }
+
+  .avatar-ac { background: #2EB67D; }
+  .avatar-beacon {
+    background: linear-gradient(135deg, var(--beacon-blue), #0047A8);
+    font-size: 12px;
+  }
+
+  .message-body { flex: 1; min-width: 0; }
+
+  .message-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 2px;
+  }
+
+  .message-sender {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--slack-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .message-sender.beacon-name { color: var(--beacon-blue); }
+
+  .message-app-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--slack-text-secondary);
+    background: var(--slack-reaction-bg);
+    border: 1px solid var(--slack-reaction-border);
+    border-radius: 3px;
+    padding: 1px 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .message-time {
+    font-size: 12px;
+    color: var(--slack-text-tertiary);
+  }
+
+  .message-text {
+    font-size: 14px;
+    color: var(--slack-text-primary);
+    line-height: 1.5;
+  }
+
+  .message-text strong { font-weight: 700; }
+  .message-text a { color: var(--slack-link); text-decoration: none; }
+  .message-text a:hover { text-decoration: underline; }
+
+  /* Context expand */
+  .context-expand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  .context-expand-btn {
+    font-size: 12px;
+    color: var(--slack-link);
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    padding: 0;
+  }
+
+  .context-detail {
+    display: none;
+    margin-top: 6px;
+    background: var(--slack-reaction-bg);
+    border-left: 3px solid var(--beacon-blue);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--slack-text-secondary);
+    line-height: 1.5;
+  }
+
+  .context-detail.visible { display: block; }
+
+  .context-detail strong { color: var(--slack-text-primary); font-weight: 700; }
+
+  /* Progress tracker */
+  .progress-tracker {
+    margin-top: 10px;
+    background: var(--slack-reaction-bg);
+    border: 1px solid var(--slack-reaction-border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slack-text-secondary);
+    white-space: nowrap;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--slack-border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--beacon-teal);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slack-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* Learning cards */
+  .learning-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .learning-card {
+    background: white;
+    border: 1px solid var(--slack-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+
+  .learning-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+  .card-accent { height: 3px; }
+  .accent-blue { background: var(--beacon-blue); }
+  .accent-teal { background: var(--beacon-teal); }
+  .accent-purple { background: var(--beacon-purple); }
+
+  .card-body { padding: 12px 14px; }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 6px;
+  }
+
+  .card-type-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .badge-article { background: var(--beacon-blue-light); color: var(--beacon-blue); }
+  .badge-framework { background: var(--beacon-teal-light); color: var(--beacon-teal); }
+  .badge-micro { background: var(--beacon-purple-light); color: var(--beacon-purple); }
+
+  .card-comp-tag {
+    font-size: 10px;
+    color: var(--slack-text-tertiary);
+    letter-spacing: 0.04em;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--slack-text-primary);
+    line-height: 1.3;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--slack-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .card-meta {
+    font-size: 12px;
+    color: var(--slack-text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--slack-text-tertiary); }
+
+  .card-actions { display: flex; gap: 6px; align-items: center; }
+
+  .card-status-btn {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.15s;
+  }
+
+  .status-unread {
+    background: white;
+    color: var(--slack-text-secondary);
+    border-color: var(--slack-reaction-border);
+  }
+
+  .status-unread:hover {
+    background: var(--beacon-blue-light);
+    color: var(--beacon-blue);
+    border-color: var(--beacon-blue);
+  }
+
+  .status-progress {
+    background: var(--beacon-amber-light);
+    color: var(--beacon-amber);
+    border-color: var(--beacon-amber);
+  }
+
+  .status-complete {
+    background: var(--beacon-teal-light);
+    color: var(--beacon-teal);
+    border-color: var(--beacon-teal);
+  }
+
+  .card-view-link {
+    font-size: 12px;
+    color: var(--slack-link);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* Micro-lesson expand */
+  .micro-lesson {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--slack-border);
+  }
+
+  .micro-lesson.visible { display: block; }
+
+  .micro-lesson-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slack-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .micro-lesson-content {
+    font-size: 13px;
+    color: var(--slack-text-primary);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .micro-reflection {
+    background: var(--beacon-purple-light);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+
+  .micro-reflection-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--beacon-purple);
+    margin-bottom: 4px;
+  }
+
+  .micro-reflection-text {
+    font-size: 13px;
+    color: var(--slack-text-primary);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Reactions */
+  .reactions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .reaction {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--slack-reaction-bg);
+    border: 1px solid var(--slack-reaction-border);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .reaction:hover { background: var(--beacon-blue-light); border-color: var(--beacon-blue); }
+  .reaction.reacted { background: var(--beacon-blue-light); border-color: var(--beacon-blue); }
+
+  .reaction-count { font-size: 12px; font-weight: 700; color: var(--slack-text-secondary); }
+
+  /* Message input */
+  .message-input-wrap {
+    padding: 0.75rem 1.25rem 1rem;
+    border-top: 1px solid var(--slack-border);
+    flex-shrink: 0;
+  }
+
+  .message-input-box {
+    border: 1px solid var(--slack-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .message-input-toolbar {
+    padding: 6px 10px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--slack-border);
+  }
+
+  .toolbar-btn {
+    font-size: 14px;
+    color: var(--slack-text-tertiary);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  .toolbar-btn:hover { background: var(--slack-reaction-bg); color: var(--slack-text-secondary); }
+
+  .message-input-field {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--slack-text-tertiary);
+    font-family: 'Lato', sans-serif;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+  }
+
+  .message-input-actions {
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .input-action-btn {
+    font-size: 13px;
+    color: var(--slack-text-tertiary);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 3px;
+  }
+
+  .send-btn {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-sm);
+    background: var(--slack-aubergine);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: white; font-size: 13px;
+  }
+
+  .portfolio-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="portfolio-wrap">
+
+  <!-- Portfolio header -->
+  <div class="portfolio-header">
+    <div class="portfolio-meta">
+      <div class="portfolio-initials">CP</div>
+      <span class="portfolio-label"><strong>CP</strong> — Portfolio · Case study 04</span>
+    </div>
+    <div class="portfolio-tags">
+      <span class="portfolio-tag">Beacon</span>
+      <span class="portfolio-tag">In-platform enablement</span>
+      <span class="portfolio-tag">Slack simulation</span>
+    </div>
+  </div>
+
+  <!-- Slack chrome -->
+  <div class="slack-chrome">
+
+    <!-- Title bar -->
+    <div class="slack-titlebar">
+      <div class="titlebar-dot dot-red"></div>
+      <div class="titlebar-dot dot-yellow"></div>
+      <div class="titlebar-dot dot-green"></div>
+      <div class="titlebar-title">Stripe — Slack</div>
+    </div>
+
+    <!-- Main -->
+    <div class="slack-main">
+
+      <!-- Sidebar -->
+      <div class="slack-sidebar">
+        <div class="sidebar-workspace">
+          <div>
+            <div class="workspace-name">Stripe</div>
+            <div class="workspace-status">
+              <div class="status-dot"></div>
+              <span class="status-name">Alex Chen</span>
+            </div>
+          </div>
+          <div class="new-compose">✏</div>
+        </div>
+
+        <div class="sidebar-search">
+          <span>🔍</span> Search Stripe
+        </div>
+
+        <div class="sidebar-nav">
+          <div class="sidebar-section-label">Channels</div>
+
+          <div class="sidebar-item">
+            <span class="sidebar-icon">#</span> general
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-icon">#</span> announcements
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-icon">#</span> engineering-leads
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-icon">#</span> product-eng-sync
+          </div>
+          <div class="sidebar-item active">
+            <span class="sidebar-icon">#</span> people-insights
+            <span class="sidebar-badge">1</span>
+          </div>
+          <div class="sidebar-item">
+            <span class="sidebar-icon">#</span> team-offsites
+          </div>
+
+          <div class="sidebar-section-label" style="margin-top:8px;">Direct messages</div>
+
+          <div class="sidebar-item">
+            <div class="sidebar-avatar green">SC</div>
+            Sarah Chen
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-avatar purple">MR</div>
+            Marcus Reid
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-avatar amber">PL</div>
+            People Lead
+          </div>
+          <div class="sidebar-item unread">
+            <div class="sidebar-avatar" style="background:linear-gradient(135deg,#0066CC,#0047A8);">⬡</div>
+            Beacon
+            <span class="sidebar-badge">1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="slack-content">
+
+        <!-- Channel header -->
+        <div class="channel-header">
+          <span class="channel-name"># people-insights</span>
+          <div class="channel-divider"></div>
+          <span class="channel-desc">AI-assisted development nudges for people leaders · Powered by Beacon</span>
+          <div class="channel-actions">
+            <button class="channel-action-btn">🔔 Notifications</button>
+            <button class="channel-action-btn">👥 3</button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages-area">
+
+          <!-- Date divider -->
+          <div class="date-divider">
+            <div class="date-divider-line"></div>
+            <div class="date-divider-text">Today — May 17, 2026</div>
+            <div class="date-divider-line"></div>
+          </div>
+
+          <!-- Manager message -->
+          <div class="message">
+            <div class="message-avatar avatar-ac">AC</div>
+            <div class="message-body">
+              <div class="message-header">
+                <span class="message-sender">Alex Chen</span>
+                <span class="message-time">9:04 AM</span>
+              </div>
+              <div class="message-text">
+                Just wrapped the feedback synthesis for <strong>Direct Report Convo 5.17.26</strong>. Flagging for the record — some good signals in there but a few development areas I want to be intentional about.
+              </div>
+            </div>
+          </div>
+
+          <!-- Beacon message -->
+          <div class="message">
+            <div class="message-avatar avatar-beacon">⬡</div>
+            <div class="message-body">
+              <div class="message-header">
+                <span class="message-sender beacon-name">Beacon</span>
+                <span class="message-app-badge">APP</span>
+                <span class="message-time">9:04 AM</span>
+              </div>
+              <div class="message-text">
+                👋 <strong>Hi Alex</strong> — I noticed you completed a feedback synthesis for <strong>Direct Report Convo 5.17.26</strong>.<br><br>
+                Based on the competency gaps identified, I've surfaced <strong>3 targeted learning resources</strong> below — anchored to the Stripe Success Model.
+              </div>
+
+              <!-- Context expand -->
+              <div class="context-expand">
+                <button class="context-expand-btn" onclick="toggleContext(this)">▶ View synthesis context</button>
+              </div>
+              <div class="context-detail" id="context-detail">
+                <strong>Direct report:</strong> Jordan Mills · Senior Engineer<br>
+                <strong>Synthesis date:</strong> May 17, 2026<br>
+                <strong>Flagged competencies:</strong> Collaborates (The what) · Communicates Effectively (The how) · Interpersonal Savvy (The how)<br>
+                <strong>Placement:</strong> High Performer — development investment recommended before leadership trajectory
+              </div>
+
+              <!-- Progress tracker -->
+              <div class="progress-tracker" id="progress-tracker">
+                <span class="progress-label">Learning progress</span>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+                </div>
+                <span class="progress-count" id="progress-count">0 of 3 complete</span>
+              </div>
+
+              <!-- Learning cards -->
+              <div class="learning-cards">
+
+                <!-- Card 1: Article -->
+                <div class="learning-card" id="card-1">
+                  <div class="card-accent accent-blue"></div>
+                  <div class="card-body">
+                    <div class="card-top">
+                      <div>
+                        <span class="card-type-badge badge-article">Article</span>
+                      </div>
+                      <span class="card-comp-tag">Collaborates · The what</span>
+                    </div>
+                    <div class="card-title">The Collaboration Paradox: Why High Performers Work Alone</div>
+                    <div class="card-desc">Research from Harvard Business Review on how top individual contributors often default to solo execution — and the specific behaviors that bridge individual excellence with team amplification.</div>
+                    <div class="card-footer">
+                      <div class="card-meta">
+                        <span>Harvard Business Review</span>
+                        <div class="card-meta-dot"></div>
+                        <span>8 min read</span>
+                      </div>
+                      <div class="card-actions">
+                        <button class="card-status-btn status-unread" id="status-1" onclick="cycleStatus(1)">Mark in progress</button>
+                        <a class="card-view-link" href="#">View →</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 2: Framework -->
+                <div class="learning-card" id="card-2">
+                  <div class="card-accent accent-teal"></div>
+                  <div class="card-body">
+                    <div class="card-top">
+                      <div>
+                        <span class="card-type-badge badge-framework">Framework</span>
+                      </div>
+                      <span class="card-comp-tag">Communicates Effectively · The how</span>
+                    </div>
+                    <div class="card-title">The PREP Model: Structuring Technical Perspective for Non-Technical Audiences</div>
+                    <div class="card-desc">A four-step communication framework — Point, Reason, Example, Point — designed for technical contributors who need to translate complex thinking into accessible, influence-ready communication in planning contexts.</div>
+                    <div class="card-footer">
+                      <div class="card-meta">
+                        <span>Stripe People Development</span>
+                        <div class="card-meta-dot"></div>
+                        <span>5 min read</span>
+                      </div>
+                      <div class="card-actions">
+                        <button class="card-status-btn status-unread" id="status-2" onclick="cycleStatus(2)">Mark in progress</button>
+                        <a class="card-view-link" href="#">View →</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 3: Micro-lesson -->
+                <div class="learning-card" id="card-3">
+                  <div class="card-accent accent-purple"></div>
+                  <div class="card-body">
+                    <div class="card-top">
+                      <div>
+                        <span class="card-type-badge badge-micro">Micro-lesson</span>
+                      </div>
+                      <span class="card-comp-tag">Interpersonal Savvy · The how</span>
+                    </div>
+                    <div class="card-title">Generating Energy Without Authority: The Exothermic Leadership Model</div>
+                    <div class="card-desc">A Beacon-generated micro-lesson on how senior individual contributors build cross-functional trust and influence without positional power — grounded in Stripe's exothermic operating principle.</div>
+
+                    <div class="micro-lesson" id="micro-1">
+                      <div class="micro-lesson-title">Micro-lesson</div>
+                      <div class="micro-lesson-content">
+                        At Stripe, <strong>Interpersonal Savvy</strong> isn't about being likeable — it's about being generative. The most influential senior ICs don't just do great work; they leave every interaction having made the people around them clearer, more capable, or more confident.<br><br>
+                        This is what Stripe calls <em>exothermic</em>: energy that releases outward, not inward. For a senior engineer, it looks like: naming what you've learned in a retro so others benefit, flagging your approach before you start rather than after you finish, or asking a PM what they need from you at the top of a planning session instead of waiting to be asked.<br><br>
+                        None of these require authority. All of them build it.
+                      </div>
+                      <div class="micro-reflection">
+                        <div class="micro-reflection-label">Reflection prompt</div>
+                        <div class="micro-reflection-text">In your next 1:1 with this direct report, ask: "When do you feel most connected to the work the broader team is doing? What gets in the way of that?"</div>
+                      </div>
+                    </div>
+
+                    <div class="card-footer" style="margin-top:10px;">
+                      <div class="card-meta">
+                        <span>Beacon · Generated</span>
+                        <div class="card-meta-dot"></div>
+                        <span>3 min</span>
+                      </div>
+                      <div class="card-actions">
+                        <button class="card-status-btn status-unread" id="status-3" onclick="cycleStatus(3)">Mark in progress</button>
+                        <a class="card-view-link" href="#" onclick="toggleMicro(event)">Read lesson →</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Reactions -->
+              <div class="reactions">
+                <div class="reaction" onclick="toggleReaction(this)"><span>👍</span><span class="reaction-count">2</span></div>
+                <div class="reaction" onclick="toggleReaction(this)"><span>✅</span><span class="reaction-count">1</span></div>
+                <div class="reaction" onclick="toggleReaction(this)"><span>🎯</span><span class="reaction-count">1</span></div>
+                <div class="reaction" onclick="toggleReaction(this)">+ Add reaction</div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Message input -->
+        <div class="message-input-wrap">
+          <div class="message-input-box">
+            <div class="message-input-toolbar">
+              <span class="toolbar-btn">𝐁</span>
+              <span class="toolbar-btn">𝐼</span>
+              <span class="toolbar-btn">S̶</span>
+              <span class="toolbar-btn">🔗</span>
+              <span class="toolbar-btn">≡</span>
+              <span class="toolbar-btn">⋯</span>
+            </div>
+            <div class="message-input-field">Message #people-insights</div>
+            <div class="message-input-actions">
+              <span class="input-action-btn">😊</span>
+              <span class="input-action-btn">📎</span>
+              <span class="input-action-btn">@</span>
+              <div class="send-btn">↑</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="portfolio-footer">
+    <span>CP — Learning Architecture Portfolio</span>
+    <span>Beacon · Slack Simulation · CP | 5.26</span>
+  </div>
+
+</div>
+
+<script>
+const statusStates = {
+  1: 'unread',
+  2: 'unread',
+  3: 'unread'
+};
+
+const statusLabels = {
+  unread: 'Mark in progress',
+  progress: 'Mark complete',
+  complete: '✓ Complete — click to reset'
+};
+
+const statusClasses = {
+  unread: 'status-unread',
+  progress: 'status-progress',
+  complete: 'status-complete'
+};
+
+function cycleStatus(cardNum) {
+  const current = statusStates[cardNum];
+  const next = current === 'unread' ? 'progress' : current === 'progress' ? 'complete' : 'unread';
+  statusStates[cardNum] = next;
+
+  const btn = document.getElementById(`status-${cardNum}`);
+  btn.textContent = statusLabels[next];
+  btn.className = `card-status-btn ${statusClasses[next]}`;
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const completed = Object.values(statusStates).filter(s => s === 'complete').length;
+  const total = 3;
+  const pct = (completed / total) * 100;
+
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = `${completed} of ${total} complete`;
+}
+
+function toggleContext(btn) {
+  const detail = document.getElementById('context-detail');
+  const isVisible = detail.classList.contains('visible');
+  detail.classList.toggle('visible');
+  btn.textContent = isVisible ? '▶ View synthesis context' : '▼ Hide synthesis context';
+}
+
+function toggleMicro(e) {
+  e.preventDefault();
+  const lesson = document.getElementById('micro-1');
+  const isVisible = lesson.classList.contains('visible');
+  lesson.classList.toggle('visible');
+  e.target.textContent = isVisible ? 'Read lesson →' : 'Hide lesson ↑';
+}
+
+function toggleReaction(el) {
+  el.classList.toggle('reacted');
+  const countEl = el.querySelector('.reaction-count');
+  if (!countEl) return;
+  const current = parseInt(countEl.textContent);
+  countEl.textContent = el.classList.contains('reacted') ? current + 1 : current - 1;
+}
+</script>
+</body>
+</html>

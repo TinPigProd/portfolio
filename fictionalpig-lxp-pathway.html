@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Learning Pathway Architecture — CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dg-navy: #1A2B4A;
+    --dg-navy-mid: #243656;
+    --dg-navy-light: #2E4268;
+    --dg-blue: #0066CC;
+    --dg-blue-light: #1A7FE8;
+    --dg-blue-dim: rgba(0,102,204,0.10);
+    --dg-teal: #00A88E;
+    --dg-teal-dim: rgba(0,168,142,0.10);
+    --dg-amber: #F59E0B;
+    --dg-amber-dim: rgba(245,158,11,0.10);
+    --dg-green: #22C55E;
+    --dg-green-dim: rgba(34,197,94,0.10);
+    --dg-red: #EF4444;
+    --dg-purple: #8B5CF6;
+    --dg-purple-dim: rgba(139,92,246,0.10);
+    --bg: #F4F6F9;
+    --bg2: #EDF0F5;
+    --white: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --border-mid: rgba(0,0,0,0.12);
+    --text: #1A2B4A;
+    --text-mid: #4A5568;
+    --text-soft: #718096;
+    --text-ghost: #A0AEC0;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── PORTFOLIO HEADER ── */
+  .portfolio-header {
+    background: #0D0E14;
+    padding: 0.75rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .ph-left { display: flex; align-items: center; gap: 0.75rem; }
+
+  .ph-monogram {
+    width: 26px; height: 26px; border-radius: 4px;
+    border: 1px solid #6A7088;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 11px; font-weight: 400; color: #6A7088;
+  }
+
+  .ph-label { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; }
+  .ph-label strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+  .ph-tags { display: flex; gap: 0.5rem; }
+
+  .ph-tag {
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); padding: 2px 8px;
+    border: 0.5px solid rgba(255,255,255,0.1); border-radius: 3px;
+  }
+
+  /* ── DEGREED CHROME ── */
+  .dg-chrome {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 0 0 0.5px var(--border-mid);
+  }
+
+  /* TOP BAR */
+  .dg-topbar {
+    background: var(--dg-navy);
+    height: 52px;
+    display: flex; align-items: center;
+    padding: 0 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .dg-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: white; letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+
+  .dg-logo span { color: var(--dg-teal); }
+
+  .dg-nav {
+    display: flex; align-items: center; gap: 0.25rem; flex: 1;
+  }
+
+  .dg-nav-item {
+    font-size: 13px; color: rgba(255,255,255,0.55);
+    padding: 6px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+
+  .dg-nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.07); }
+  .dg-nav-item.active { color: white; background: rgba(255,255,255,0.12); font-weight: 500; }
+
+  .dg-topbar-right {
+    display: flex; align-items: center; gap: 0.75rem; margin-left: auto;
+  }
+
+  .dg-search {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08); border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm); padding: 5px 10px;
+    font-size: 12px; color: rgba(255,255,255,0.4); width: 180px;
+  }
+
+  .dg-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--dg-teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: white;
+  }
+
+  /* VIEW TOGGLE */
+  .view-toggle-bar {
+    background: var(--dg-navy-mid);
+    padding: 0.6rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .view-label { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .view-toggle {
+    display: flex; border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm); overflow: hidden;
+  }
+
+  .view-btn {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+    font-family: 'DM Sans', sans-serif;
+    padding: 5px 14px; cursor: pointer; border: none;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+    transition: all 0.15s;
+  }
+
+  .view-btn.active { background: var(--dg-teal); color: white; }
+
+  .trigger-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: rgba(255,255,255,0.5);
+  }
+
+  .trigger-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--dg-teal); animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── ADMIN VIEW ── */
+  .admin-view { display: flex; min-height: 680px; }
+  .learner-view { display: none; }
+
+  /* LEFT SIDEBAR */
+  .admin-sidebar {
+    width: 220px; flex-shrink: 0;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 1.25rem 0;
+  }
+
+  .admin-sidebar-section {
+    padding: 0.4rem 1rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.25rem;
+  }
+
+  .admin-sidebar-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-ghost); margin-bottom: 0.5rem; padding: 0 0.5rem;
+  }
+
+  .admin-sidebar-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0.5rem; border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--text-mid); cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .admin-sidebar-item:hover { background: var(--bg); color: var(--text); }
+  .admin-sidebar-item.active { background: var(--dg-blue-dim); color: var(--dg-blue); font-weight: 500; }
+  .admin-sidebar-item-icon { font-size: 14px; flex-shrink: 0; }
+
+  /* MAIN CONTENT */
+  .admin-main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+  /* PATHWAY HEADER */
+  .pathway-header {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .pathway-header-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .pathway-breadcrumb {
+    font-size: 11px; color: var(--text-ghost);
+    margin-bottom: 0.4rem; display: flex; align-items: center; gap: 5px;
+  }
+
+  .pathway-breadcrumb a { color: var(--dg-blue); cursor: pointer; text-decoration: none; }
+
+  .pathway-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--text); margin-bottom: 4px;
+  }
+
+  .pathway-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--text-soft);
+  }
+
+  .pathway-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-ghost); }
+
+  .pathway-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500; padding: 3px 10px;
+    border-radius: 100px; letter-spacing: 0.04em;
+  }
+
+  .status-active { background: var(--dg-green-dim); color: var(--dg-green); }
+  .status-draft { background: var(--dg-amber-dim); color: var(--dg-amber); }
+
+  .pathway-actions { display: flex; gap: 0.5rem; }
+
+  .btn {
+    font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    cursor: pointer; border: none; transition: opacity 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary { background: var(--dg-blue); color: white; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary { background: var(--bg); color: var(--text-mid); border: 1px solid var(--border-mid); }
+  .btn-secondary:hover { background: var(--bg2); }
+  .btn-ghost { background: none; color: var(--text-soft); border: 1px solid var(--border); }
+
+  /* PATHWAY STATS */
+  .pathway-stats {
+    display: flex; gap: 1.5rem;
+  }
+
+  .stat-item { display: flex; align-items: center; gap: 6px; }
+  .stat-icon { font-size: 13px; }
+  .stat-value { font-size: 13px; font-weight: 500; color: var(--text); }
+  .stat-label { font-size: 12px; color: var(--text-soft); }
+
+  /* TABS */
+  .pathway-tabs {
+    display: flex; border-bottom: 1px solid var(--border);
+    background: white; padding: 0 1.5rem;
+  }
+
+  .pathway-tab {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-soft); padding: 10px 0;
+    margin-right: 1.5rem; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .pathway-tab:hover { color: var(--text); }
+  .pathway-tab.active { color: var(--dg-blue); border-bottom-color: var(--dg-blue); }
+
+  /* MAIN CONTENT AREA */
+  .admin-content {
+    flex: 1; overflow-y: auto;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    display: flex; gap: 1.25rem;
+  }
+
+  /* PATHWAY BUILDER */
+  .pathway-builder { flex: 1; min-width: 0; }
+
+  .builder-section { margin-bottom: 1.25rem; }
+
+  .builder-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .builder-section-title {
+    font-size: 12px; font-weight: 600; color: var(--text);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .builder-add-btn {
+    font-size: 11px; color: var(--dg-blue); cursor: pointer;
+    font-weight: 500; background: none; border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* TRIGGER CARD */
+  .trigger-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1rem 1.1rem;
+    margin-bottom: 0.75rem; position: relative;
+    border-left: 3px solid var(--dg-teal);
+  }
+
+  .trigger-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .trigger-type {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--dg-teal);
+  }
+
+  .trigger-rule {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.5rem 0.75rem;
+    font-size: 12px; color: var(--text-mid);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .trigger-rule-badge {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 100px;
+  }
+
+  .badge-teal { background: var(--dg-teal-dim); color: var(--dg-teal); }
+  .badge-blue { background: var(--dg-blue-dim); color: var(--dg-blue); }
+  .badge-amber { background: var(--dg-amber-dim); color: var(--dg-amber); }
+  .badge-purple { background: var(--dg-purple-dim); color: var(--dg-purple); }
+  .badge-green { background: var(--dg-green-dim); color: var(--dg-green); }
+
+  /* CONTENT STEPS */
+  .content-step {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); margin-bottom: 8px;
+    overflow: hidden; transition: box-shadow 0.15s;
+  }
+
+  .content-step:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+  .step-header {
+    display: flex; align-items: center; gap: 0.85rem;
+    padding: 0.85rem 1rem; cursor: pointer;
+  }
+
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--bg2); border: 1px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--text-soft);
+    flex-shrink: 0;
+  }
+
+  .step-num.complete { background: var(--dg-green-dim); border-color: var(--dg-green); color: var(--dg-green); }
+  .step-num.required { background: var(--dg-blue-dim); border-color: var(--dg-blue); color: var(--dg-blue); }
+
+  .step-icon {
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .step-body { flex: 1; min-width: 0; }
+
+  .step-title {
+    font-size: 13px; font-weight: 500; color: var(--text);
+    margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .step-meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--text-ghost);
+  }
+
+  .step-meta-dot { width: 2px; height: 2px; border-radius: 50%; background: var(--text-ghost); }
+
+  .step-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+
+  .step-required-tag {
+    font-size: 10px; font-weight: 500; padding: 2px 7px;
+    border-radius: 100px; border: 1px solid;
+  }
+
+  .step-required-tag.required { border-color: var(--dg-blue); color: var(--dg-blue); background: var(--dg-blue-dim); }
+  .step-required-tag.optional { border-color: var(--border-mid); color: var(--text-ghost); }
+
+  .step-drag { color: var(--text-ghost); font-size: 12px; cursor: grab; }
+
+  .step-detail {
+    display: none; border-top: 1px solid var(--border);
+    padding: 0.85rem 1rem 0.85rem 3.75rem; background: var(--bg);
+  }
+
+  .step-detail.open { display: block; }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .detail-field-label {
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-ghost); margin-bottom: 0.35rem;
+  }
+
+  .detail-field-value {
+    font-size: 12px; color: var(--text-mid); line-height: 1.5;
+  }
+
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 0.35rem; }
+
+  .skill-tag {
+    font-size: 10px; font-weight: 500; padding: 2px 8px;
+    border-radius: 100px; background: var(--dg-blue-dim);
+    color: var(--dg-blue); border: 1px solid rgba(0,102,204,0.15);
+  }
+
+  /* RIGHT PANEL */
+  .right-panel { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1rem; }
+
+  .panel-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+
+  .panel-card-header {
+    padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .panel-card-title { font-size: 12px; font-weight: 600; color: var(--text); }
+  .panel-card-action { font-size: 11px; color: var(--dg-blue); cursor: pointer; }
+
+  .panel-card-body { padding: 1rem; }
+
+  /* AUDIENCE RULES */
+  .audience-rule {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 0.6rem 0.75rem; background: var(--bg);
+    border-radius: var(--radius-sm); margin-bottom: 6px;
+    font-size: 12px; color: var(--text-mid); line-height: 1.45;
+  }
+
+  .rule-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+
+  /* SKILL COVERAGE */
+  .skill-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .skill-name { font-size: 12px; color: var(--text-mid); flex: 1; }
+
+  .skill-bar-wrap {
+    width: 80px; height: 5px;
+    background: var(--bg2); border-radius: 3px; overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%; border-radius: 3px;
+    background: var(--dg-blue);
+  }
+
+  .skill-pct { font-size: 11px; color: var(--text-ghost); width: 28px; text-align: right; }
+
+  /* METADATA */
+  .meta-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .meta-row:last-child { border-bottom: none; }
+  .meta-key { color: var(--text-soft); }
+  .meta-val { color: var(--text); font-weight: 500; }
+
+  /* ANALYTICS MINI */
+  .analytics-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.5rem; margin-bottom: 0.5rem;
+  }
+
+  .analytics-cell {
+    background: var(--bg); border-radius: var(--radius-sm);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .analytics-num {
+    font-size: 20px; font-weight: 600; color: var(--text); line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .analytics-label { font-size: 10px; color: var(--text-ghost); }
+
+  /* ── LEARNER VIEW ── */
+  .learner-view {
+    background: var(--bg); min-height: 680px;
+  }
+
+  .learner-header {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+  }
+
+  .learner-header-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .learner-greeting { font-size: 13px; color: var(--text-soft); margin-bottom: 4px; }
+
+  .learner-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px; color: var(--text);
+  }
+
+  .learner-progress-wrap { display: flex; align-items: center; gap: 1rem; }
+
+  .learner-progress-bar {
+    width: 200px; height: 8px;
+    background: var(--bg2); border-radius: 4px; overflow: hidden;
+  }
+
+  .learner-progress-fill {
+    height: 100%; background: var(--dg-teal);
+    border-radius: 4px; width: 0%;
+    transition: width 1s ease;
+  }
+
+  .learner-progress-label { font-size: 13px; color: var(--text-soft); }
+  .learner-progress-pct { font-weight: 600; color: var(--dg-teal); }
+
+  .learner-meta { display: flex; gap: 1.5rem; font-size: 12px; color: var(--text-soft); }
+  .learner-meta-item { display: flex; align-items: center; gap: 5px; }
+
+  /* LEARNER CONTENT */
+  .learner-content { padding: 1.5rem 2rem; }
+
+  .learner-why {
+    background: linear-gradient(135deg, #E8F4FD, #EDF9F6);
+    border: 1px solid rgba(0,168,142,0.2);
+    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem; display: flex; gap: 0.85rem; align-items: flex-start;
+  }
+
+  .learner-why-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+
+  .learner-why-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .learner-why-body { font-size: 12px; color: var(--text-mid); line-height: 1.55; }
+
+  .learner-section-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-soft); margin-bottom: 0.75rem;
+  }
+
+  .learner-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+
+  .learner-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+    display: flex; transition: box-shadow 0.15s;
+  }
+
+  .learner-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+  .learner-card-accent { width: 4px; flex-shrink: 0; }
+
+  .learner-card-body {
+    flex: 1; padding: 0.85rem 1rem;
+    display: flex; align-items: center; gap: 0.85rem;
+  }
+
+  .learner-card-icon {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .learner-card-info { flex: 1; min-width: 0; }
+
+  .learner-card-type {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 3px;
+  }
+
+  .learner-card-title {
+    font-size: 13px; font-weight: 500; color: var(--text);
+    margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .learner-card-meta { font-size: 11px; color: var(--text-ghost); display: flex; gap: 8px; }
+
+  .learner-card-action { flex-shrink: 0; }
+
+  .learner-start-btn {
+    font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    cursor: pointer; border: none; transition: opacity 0.15s;
+  }
+
+  .learner-card-complete {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--dg-green); font-weight: 500;
+  }
+
+  .learner-skills-section {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .learner-skill-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+  }
+
+  .learner-skill-row:last-child { border-bottom: none; }
+
+  .learner-skill-name { font-size: 13px; color: var(--text-mid); flex: 1; }
+
+  .learner-skill-level {
+    display: flex; gap: 3px;
+  }
+
+  .skill-pip {
+    width: 10px; height: 10px; border-radius: 2px;
+    background: var(--bg2); border: 1px solid var(--border-mid);
+  }
+
+  .skill-pip.filled { background: var(--dg-blue); border-color: var(--dg-blue); }
+  .skill-pip.target { background: var(--dg-teal-dim); border-color: var(--dg-teal); }
+
+  /* PORTFOLIO FOOTER */
+  .portfolio-footer {
+    max-width: 1200px; margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: rgba(255,255,255,0.25);
+  }
+
+  /* ANNOTATION LAYER */
+  .annotation {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--text-ghost);
+    background: var(--bg2); border: 1px dashed var(--border-mid);
+    border-radius: var(--radius-sm); padding: 3px 8px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body style="background:#0D0E14;">
+
+<!-- PORTFOLIO HEADER -->
+<div class="portfolio-header">
+  <div class="ph-left">
+    <div class="ph-monogram">CP</div>
+    <span class="ph-label"><strong>CP</strong> — Portfolio · Case study 05</span>
+  </div>
+  <div class="ph-tags">
+    <span class="ph-tag">Learning Pathway Architecture</span>
+    <span class="ph-tag">FictionalPig LXP</span>
+    <span class="ph-tag">Adaptive · Skills-based</span>
+  </div>
+</div>
+
+<!-- DEGREED CHROME -->
+<div class="dg-chrome" style="margin:1.5rem auto 0;max-width:1160px;">
+
+  <!-- TOP BAR -->
+  <div class="dg-topbar">
+    <div class="dg-logo">Fictional<span style="color:#FF6B8A;">Pig</span> LXP</div>
+    <nav class="dg-nav">
+      <div class="dg-nav-item">Home</div>
+      <div class="dg-nav-item">Learn</div>
+      <div class="dg-nav-item active">Pathways</div>
+      <div class="dg-nav-item">Skills</div>
+      <div class="dg-nav-item">People</div>
+      <div class="dg-nav-item">Insights</div>
+    </nav>
+    <div class="dg-topbar-right">
+      <div class="dg-search">🔍 Search content...</div>
+      <div class="dg-avatar">AC</div>
+    </div>
+  </div>
+
+  <!-- VIEW TOGGLE -->
+  <div class="view-toggle-bar">
+    <div class="trigger-badge">
+      <div class="trigger-dot"></div>
+      <span>Triggered by feedback synthesis · Jordan Mills · May 17, 2026</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="view-label">View as</span>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-admin" onclick="setView('admin')">Admin / Architect</button>
+        <button class="view-btn" id="btn-learner" onclick="setView('learner')">Learner (Jordan)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADMIN VIEW ══ -->
+  <div class="admin-view" id="admin-view">
+
+    <!-- SIDEBAR -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">Pathways</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">⬡</span> All pathways</div>
+        <div class="admin-sidebar-item active"><span class="admin-sidebar-item-icon">⚡</span> Active</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">✏</span> Drafts</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">📊</span> Analytics</div>
+      </div>
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">Content</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">📚</span> Library</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">🏷</span> Skills taxonomy</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">👥</span> Audiences</div>
+      </div>
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">Integrations</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">🔗</span> LMS connectors</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">⬡</span> Beacon / Slack</div>
+        <div class="admin-sidebar-item"><span class="admin-sidebar-item-icon">📡</span> HRIS sync</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="admin-main">
+
+      <!-- PATHWAY HEADER -->
+      <div class="pathway-header">
+        <div class="pathway-header-top">
+          <div>
+            <div class="pathway-breadcrumb">
+              <a>Pathways</a> / <a>Active</a> / Collaboration & Influence
+            </div>
+            <div class="pathway-name">Collaboration & Influence Pathway</div>
+            <div class="pathway-meta">
+              <span class="pathway-status status-active">● Active</span>
+              <div class="pathway-meta-dot"></div>
+              <span>Auto-assigned · Competency gap trigger</span>
+              <div class="pathway-meta-dot"></div>
+              <span>Updated May 17, 2026</span>
+            </div>
+          </div>
+          <div class="pathway-actions">
+            <button class="btn btn-ghost">Preview</button>
+            <button class="btn btn-secondary">Duplicate</button>
+            <button class="btn btn-primary">Edit pathway</button>
+          </div>
+        </div>
+        <div class="pathway-stats">
+          <div class="stat-item">
+            <span class="stat-icon">👥</span>
+            <span class="stat-value">1</span>
+            <span class="stat-label">assigned</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">📋</span>
+            <span class="stat-value">7</span>
+            <span class="stat-label">content items</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">⏱</span>
+            <span class="stat-value">3.5 hrs</span>
+            <span class="stat-label">est. duration</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-value">3</span>
+            <span class="stat-label">skills targeted</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">✅</span>
+            <span class="stat-value">0%</span>
+            <span class="stat-label">avg. completion</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="pathway-tabs">
+        <div class="pathway-tab active">Content & sequence</div>
+        <div class="pathway-tab">Trigger rules</div>
+        <div class="pathway-tab">Audience targeting</div>
+        <div class="pathway-tab">Analytics</div>
+        <div class="pathway-tab">Settings</div>
+      </div>
+
+      <!-- CONTENT AREA -->
+      <div class="admin-content">
+
+        <!-- PATHWAY BUILDER -->
+        <div class="pathway-builder">
+
+          <!-- TRIGGER -->
+          <div class="builder-section">
+            <div class="builder-section-header">
+              <div class="builder-section-title">Assignment trigger</div>
+              <button class="builder-add-btn">Edit rules</button>
+            </div>
+            <div class="trigger-card">
+              <div class="trigger-card-header">
+                <div class="trigger-type">⚡ Auto-assign rule</div>
+                <span class="pathway-status status-active" style="font-size:10px;">Active</span>
+              </div>
+              <div class="trigger-rule" style="margin-bottom:6px;">
+                <span class="trigger-rule-badge badge-teal">When</span>
+                Feedback synthesis completed via Beacon integration
+              </div>
+              <div class="trigger-rule" style="margin-bottom:6px;">
+                <span class="trigger-rule-badge badge-blue">AND</span>
+                Competency gap identified in: <strong style="margin-left:4px;">Collaborates</strong>
+                <span class="annotation" style="margin-left:8px;">The What · Success Model</span>
+              </div>
+              <div class="trigger-rule" style="margin-bottom:6px;">
+                <span class="trigger-rule-badge badge-blue">OR</span>
+                Competency gap identified in: <strong style="margin-left:4px;">Communicates Effectively · Interpersonal Savvy</strong>
+                <span class="annotation" style="margin-left:8px;">The How · Success Model</span>
+              </div>
+              <div class="trigger-rule">
+                <span class="trigger-rule-badge badge-amber">Assign to</span>
+                Direct report (Jordan Mills) · notify via Slack / Beacon
+              </div>
+            </div>
+          </div>
+
+          <!-- REQUIRED CONTENT -->
+          <div class="builder-section">
+            <div class="builder-section-header">
+              <div class="builder-section-title">Required content</div>
+              <button class="builder-add-btn">+ Add content</button>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step1')">
+                <div class="step-num required">1</div>
+                <div class="step-icon" style="background:#EBF5FF;">📖</div>
+                <div class="step-body">
+                  <div class="step-title">The Collaboration Paradox: Why High Performers Work Alone</div>
+                  <div class="step-meta">
+                    <span>Article</span><div class="step-meta-dot"></div>
+                    <span>Harvard Business Review</span><div class="step-meta-dot"></div>
+                    <span>8 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-blue">Collaborates</span>
+                  <span class="step-required-tag required">Required</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step1">
+                <div class="detail-grid">
+                  <div>
+                    <div class="detail-field-label">Content type</div>
+                    <div class="detail-field-value">Article · External source</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Duration</div>
+                    <div class="detail-field-value">8 minutes</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Skill tags</div>
+                    <div class="skill-tags">
+                      <span class="skill-tag">Collaborates</span>
+                      <span class="skill-tag">Team effectiveness</span>
+                      <span class="skill-tag">Peer trust</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Competency tier</div>
+                    <div class="detail-field-value">
+                      <span class="trigger-rule-badge badge-blue">The What · Enterprise-critical</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Success Model anchor</div>
+                    <div class="detail-field-value">Collaborates — observable behavior: pulls others in early rather than arriving with finished solutions</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Completion criteria</div>
+                    <div class="detail-field-value">Mark as read · 8 min minimum engagement</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step2')">
+                <div class="step-num required">2</div>
+                <div class="step-icon" style="background:#E8F5F2;">🧩</div>
+                <div class="step-body">
+                  <div class="step-title">The PREP Model: Structuring Technical Perspective for Non-Technical Audiences</div>
+                  <div class="step-meta">
+                    <span>Framework</span><div class="step-meta-dot"></div>
+                    <span>Internal · People Development</span><div class="step-meta-dot"></div>
+                    <span>5 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-teal">Communicates Effectively</span>
+                  <span class="step-required-tag required">Required</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step2">
+                <div class="detail-grid">
+                  <div>
+                    <div class="detail-field-label">Content type</div>
+                    <div class="detail-field-value">Framework · Internal source</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Duration</div>
+                    <div class="detail-field-value">5 minutes</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Skill tags</div>
+                    <div class="skill-tags">
+                      <span class="skill-tag">Communicates Effectively</span>
+                      <span class="skill-tag">Written communication</span>
+                      <span class="skill-tag">Influence</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Competency tier</div>
+                    <div class="detail-field-value">
+                      <span class="trigger-rule-badge badge-teal">The How · Culture-differentiating</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Success Model anchor</div>
+                    <div class="detail-field-value">Communicates Effectively — observable behavior: adapts communication register to audience without losing substance</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Completion criteria</div>
+                    <div class="detail-field-value">Mark as read · Download reference card</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step3')">
+                <div class="step-num required">3</div>
+                <div class="step-icon" style="background:#F3EEFF;">⚡</div>
+                <div class="step-body">
+                  <div class="step-title">Generating Energy Without Authority: The Exothermic Leadership Model</div>
+                  <div class="step-meta">
+                    <span>Micro-lesson</span><div class="step-meta-dot"></div>
+                    <span>Beacon · AI-generated</span><div class="step-meta-dot"></div>
+                    <span>3 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-purple">Interpersonal Savvy</span>
+                  <span class="step-required-tag required">Required</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step3">
+                <div class="detail-grid">
+                  <div>
+                    <div class="detail-field-label">Content type</div>
+                    <div class="detail-field-value">Micro-lesson · AI-generated via Beacon</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Duration</div>
+                    <div class="detail-field-value">3 minutes</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Skill tags</div>
+                    <div class="skill-tags">
+                      <span class="skill-tag">Interpersonal Savvy</span>
+                      <span class="skill-tag">Cross-functional trust</span>
+                      <span class="skill-tag">Influence without authority</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Competency tier</div>
+                    <div class="detail-field-value">
+                      <span class="trigger-rule-badge badge-teal">The How · Culture-differentiating</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Success Model anchor</div>
+                    <div class="detail-field-value">Interpersonal Savvy (The how) — observable behavior: leaves interactions with others feeling clearer, more motivated, or more capable</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Completion criteria</div>
+                    <div class="detail-field-value">Complete lesson + submit reflection response</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OPTIONAL CONTENT -->
+          <div class="builder-section">
+            <div class="builder-section-header">
+              <div class="builder-section-title">Optional: enrichment</div>
+              <button class="builder-add-btn">+ Add content</button>
+            </div>
+
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step4')">
+                <div class="step-num">4</div>
+                <div class="step-icon" style="background:#FFF7ED;">🎬</div>
+                <div class="step-body">
+                  <div class="step-title">Radical Candor: Giving Feedback That Actually Changes Behavior</div>
+                  <div class="step-meta">
+                    <span>Video</span><div class="step-meta-dot"></div>
+                    <span>LinkedIn Learning</span><div class="step-meta-dot"></div>
+                    <span>22 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-blue">Collaborates</span>
+                  <span class="step-required-tag optional">Optional</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step4">
+                <div class="detail-grid">
+                  <div>
+                    <div class="detail-field-label">Content type</div>
+                    <div class="detail-field-value">Video · LinkedIn Learning integration</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Duration</div>
+                    <div class="detail-field-value">22 minutes</div>
+                  </div>
+                  <div>
+                    <div class="detail-field-label">Skill tags</div>
+                    <div class="skill-tags">
+                      <span class="skill-tag">Collaborates</span>
+                      <span class="skill-tag">Feedback culture</span>
+                      <span class="skill-tag">Psychological safety</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step5')">
+                <div class="step-num">5</div>
+                <div class="step-icon" style="background:#F0FDF4;">📝</div>
+                <div class="step-body">
+                  <div class="step-title">Practice: Cross-functional alignment conversation guide</div>
+                  <div class="step-meta">
+                    <span>Job aid</span><div class="step-meta-dot"></div>
+                    <span>Internal · People Development</span><div class="step-meta-dot"></div>
+                    <span>10 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-teal">Communicates Effectively</span>
+                  <span class="step-required-tag optional">Optional</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step5"></div>
+            </div>
+
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step6')">
+                <div class="step-num">6</div>
+                <div class="step-icon" style="background:#FFF1F2;">🎙</div>
+                <div class="step-body">
+                  <div class="step-title">Interview: How senior ICs build influence without formal authority</div>
+                  <div class="step-meta">
+                    <span>Podcast</span><div class="step-meta-dot"></div>
+                    <span>Lenny's Newsletter</span><div class="step-meta-dot"></div>
+                    <span>45 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-purple">Interpersonal Savvy</span>
+                  <span class="step-required-tag optional">Optional</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step6"></div>
+            </div>
+
+            <div class="content-step">
+              <div class="step-header" onclick="toggleStep('step7')">
+                <div class="step-num">7</div>
+                <div class="step-icon" style="background:#F0F9FF;">🧪</div>
+                <div class="step-body">
+                  <div class="step-title">Skill check: Collaboration & influence self-assessment</div>
+                  <div class="step-meta">
+                    <span>Assessment</span><div class="step-meta-dot"></div>
+                    <span>Internal · 10 questions</span><div class="step-meta-dot"></div>
+                    <span>8 min</span>
+                  </div>
+                </div>
+                <div class="step-actions">
+                  <span class="trigger-rule-badge badge-blue">All 3 competencies</span>
+                  <span class="step-required-tag optional">Optional</span>
+                  <span class="step-drag">⋮⋮</span>
+                </div>
+              </div>
+              <div class="step-detail" id="step7"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+
+          <!-- AUDIENCE -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div class="panel-card-title">Audience targeting</div>
+              <span class="panel-card-action">Edit</span>
+            </div>
+            <div class="panel-card-body">
+              <div class="audience-rule">
+                <span class="rule-icon">⚡</span>
+                <span>Auto-assigned via Beacon feedback synthesis trigger</span>
+              </div>
+              <div class="audience-rule">
+                <span class="rule-icon">🏢</span>
+                <span>Department: Engineering</span>
+              </div>
+              <div class="audience-rule">
+                <span class="rule-icon">📊</span>
+                <span>Level: Senior IC (L4–L5)</span>
+              </div>
+              <div class="audience-rule">
+                <span class="rule-icon">🎯</span>
+                <span>Competency gap: Collaborates OR Communicates Effectively OR Interpersonal Savvy</span>
+              </div>
+              <div class="audience-rule" style="background:var(--dg-teal-dim);border:1px solid rgba(0,168,142,0.15);">
+                <span class="rule-icon">👤</span>
+                <span style="color:var(--dg-teal);font-weight:500;">1 learner currently matched · Jordan Mills</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SKILL COVERAGE -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div class="panel-card-title">Skill coverage</div>
+              <span class="panel-card-action">View taxonomy</span>
+            </div>
+            <div class="panel-card-body">
+              <div class="skill-row">
+                <span class="skill-name">Collaborates</span>
+                <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:85%;"></div></div>
+                <span class="skill-pct">85%</span>
+              </div>
+              <div class="skill-row">
+                <span class="skill-name">Communicates Effectively</span>
+                <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:75%;background:var(--dg-teal);"></div></div>
+                <span class="skill-pct">75%</span>
+              </div>
+              <div class="skill-row">
+                <span class="skill-name">Interpersonal Savvy</span>
+                <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:60%;background:var(--dg-purple);"></div></div>
+                <span class="skill-pct">60%</span>
+              </div>
+              <div style="margin-top:0.75rem;font-size:11px;color:var(--text-ghost);">Coverage = % of content items tagged to each skill</div>
+            </div>
+          </div>
+
+          <!-- METADATA -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div class="panel-card-title">Pathway metadata</div>
+              <span class="panel-card-action">Edit</span>
+            </div>
+            <div class="panel-card-body">
+              <div class="meta-row"><span class="meta-key">Framework</span><span class="meta-val">Success Model</span></div>
+              <div class="meta-row"><span class="meta-key">Tier</span><span class="meta-val">The What + The How</span></div>
+              <div class="meta-row"><span class="meta-key">Function</span><span class="meta-val">Engineering</span></div>
+              <div class="meta-row"><span class="meta-key">Level</span><span class="meta-val">Senior IC</span></div>
+              <div class="meta-row"><span class="meta-key">Language</span><span class="meta-val">English</span></div>
+              <div class="meta-row"><span class="meta-key">Integration</span><span class="meta-val">Beacon · Slack</span></div>
+              <div class="meta-row"><span class="meta-key">Expiry</span><span class="meta-val">None · Evergreen</span></div>
+            </div>
+          </div>
+
+          <!-- ANALYTICS MINI -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div class="panel-card-title">Analytics snapshot</div>
+              <span class="panel-card-action">Full report</span>
+            </div>
+            <div class="panel-card-body">
+              <div class="analytics-row">
+                <div class="analytics-cell">
+                  <div class="analytics-num">1</div>
+                  <div class="analytics-label">Assigned</div>
+                </div>
+                <div class="analytics-cell">
+                  <div class="analytics-num">0</div>
+                  <div class="analytics-label">Started</div>
+                </div>
+              </div>
+              <div class="analytics-row">
+                <div class="analytics-cell">
+                  <div class="analytics-num">0%</div>
+                  <div class="analytics-label">Avg. completion</div>
+                </div>
+                <div class="analytics-cell">
+                  <div class="analytics-num">3.5h</div>
+                  <div class="analytics-label">Est. time</div>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--text-ghost);margin-top:0.5rem;">
+                Pathway triggered May 17, 2026. Awaiting first engagement.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEARNER VIEW ══ -->
+  <div class="learner-view" id="learner-view">
+
+    <div class="learner-header">
+      <div class="learner-header-top">
+        <div>
+          <div class="learner-greeting">Assigned to you · May 17, 2026</div>
+          <div class="learner-title">Collaboration & Influence Pathway</div>
+        </div>
+        <div class="learner-progress-wrap">
+          <div class="learner-progress-bar">
+            <div class="learner-progress-fill" id="learner-progress-fill"></div>
+          </div>
+          <span class="learner-progress-label"><span class="learner-progress-pct" id="learner-pct">0%</span> complete</span>
+        </div>
+      </div>
+      <div class="learner-meta">
+        <div class="learner-meta-item">📋 7 items</div>
+        <div class="learner-meta-item">⏱ ~3.5 hours</div>
+        <div class="learner-meta-item">🎯 3 skills</div>
+        <div class="learner-meta-item">✅ 3 required · 4 optional</div>
+      </div>
+    </div>
+
+    <div class="learner-content">
+
+      <!-- WHY THIS PATHWAY -->
+      <div class="learner-why">
+        <div class="learner-why-icon">💡</div>
+        <div>
+          <div class="learner-why-title">Why this pathway was assigned</div>
+          <div class="learner-why-body">Your recent development conversation identified growth opportunities in collaboration, communication, and cross-functional influence. This pathway surfaces targeted resources to support those areas — anchored to the Success Model competencies your manager discussed with you.</div>
+        </div>
+      </div>
+
+      <!-- REQUIRED -->
+      <div class="learner-section-label">Required · Complete all 3</div>
+      <div class="learner-cards">
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#0066CC;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#EBF5FF;">📖</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#0066CC;">Article · Collaborates</div>
+              <div class="learner-card-title">The Collaboration Paradox: Why High Performers Work Alone</div>
+              <div class="learner-card-meta"><span>Harvard Business Review</span><span>8 min read</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn" style="background:#0066CC;color:white;" onclick="completeItem(this, 'req1')">Start</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#00A88E;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#E8F5F2;">🧩</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#00A88E;">Framework · Communicates Effectively</div>
+              <div class="learner-card-title">The PREP Model: Structuring Technical Perspective for Non-Technical Audiences</div>
+              <div class="learner-card-meta"><span>People Development</span><span>5 min</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn" style="background:#00A88E;color:white;" onclick="completeItem(this, 'req2')">Start</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#8B5CF6;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#F3EEFF;">⚡</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#8B5CF6;">Micro-lesson · Interpersonal Savvy</div>
+              <div class="learner-card-title">Generating Energy Without Authority: The Exothermic Leadership Model</div>
+              <div class="learner-card-meta"><span>Beacon · Generated</span><span>3 min</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn" style="background:#8B5CF6;color:white;" onclick="completeItem(this, 'req3')">Start</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- OPTIONAL -->
+      <div class="learner-section-label">Optional · Go deeper</div>
+      <div class="learner-cards">
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#F59E0B;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#FFF7ED;">🎬</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#F59E0B;">Video · Collaborates</div>
+              <div class="learner-card-title">Radical Candor: Giving Feedback That Actually Changes Behavior</div>
+              <div class="learner-card-meta"><span>LinkedIn Learning</span><span>22 min</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn btn-secondary" style="background:#F4F6F9;color:#4A5568;border:1px solid #ddd;">Start</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#22C55E;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#F0FDF4;">📝</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#22C55E;">Job aid · Communicates Effectively</div>
+              <div class="learner-card-title">Practice: Cross-functional alignment conversation guide</div>
+              <div class="learner-card-meta"><span>People Development</span><span>10 min</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn btn-secondary" style="background:#F4F6F9;color:#4A5568;border:1px solid #ddd;">Start</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#EF4444;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#FFF1F2;">🎙</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#EF4444;">Podcast · Interpersonal Savvy</div>
+              <div class="learner-card-title">How senior ICs build influence without formal authority</div>
+              <div class="learner-card-meta"><span>Lenny's Newsletter</span><span>45 min</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn btn-secondary" style="background:#F4F6F9;color:#4A5568;border:1px solid #ddd;">Start</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="learner-card">
+          <div class="learner-card-accent" style="background:#0066CC;"></div>
+          <div class="learner-card-body">
+            <div class="learner-card-icon" style="background:#F0F9FF;">🧪</div>
+            <div class="learner-card-info">
+              <div class="learner-card-type" style="color:#0066CC;">Assessment · All 3 skills</div>
+              <div class="learner-card-title">Skill check: Collaboration & influence self-assessment</div>
+              <div class="learner-card-meta"><span>Internal · 10 questions</span><span>8 min</span></div>
+            </div>
+            <div class="learner-card-action">
+              <button class="learner-start-btn btn-secondary" style="background:#F4F6F9;color:#4A5568;border:1px solid #ddd;">Start</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SKILLS PROGRESS -->
+      <div class="learner-section-label">Skills you're building</div>
+      <div class="learner-skills-section">
+        <div class="learner-skill-row">
+          <span class="learner-skill-name">Collaborates <span style="font-size:11px;color:#718096;margin-left:4px;">The What</span></span>
+          <div class="learner-skill-level">
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip target"></div>
+            <div class="skill-pip target"></div>
+          </div>
+          <span style="font-size:11px;color:#718096;margin-left:8px;">Level 3 → 4 target</span>
+        </div>
+        <div class="learner-skill-row">
+          <span class="learner-skill-name">Communicates Effectively <span style="font-size:11px;color:#718096;margin-left:4px;">The How</span></span>
+          <div class="learner-skill-level">
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip target"></div>
+            <div class="skill-pip target"></div>
+          </div>
+          <span style="font-size:11px;color:#718096;margin-left:8px;">Level 3 → 4 target</span>
+        </div>
+        <div class="learner-skill-row">
+          <span class="learner-skill-name">Interpersonal Savvy <span style="font-size:11px;color:#718096;margin-left:4px;">The How</span></span>
+          <div class="learner-skill-level">
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip filled"></div>
+            <div class="skill-pip target"></div>
+            <div class="skill-pip target"></div>
+            <div class="skill-pip target"></div>
+          </div>
+          <span style="font-size:11px;color:#718096;margin-left:8px;">Level 2 → 4 target</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- PORTFOLIO FOOTER -->
+<div class="portfolio-footer">
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Learning Pathway Architecture · FictionalPig LXP simulation · CP | 5.26</span>
+</div>
+
+<script>
+function setView(view) {
+  const adminView = document.getElementById('admin-view');
+  const learnerView = document.getElementById('learner-view');
+  const btnAdmin = document.getElementById('btn-admin');
+  const btnLearner = document.getElementById('btn-learner');
+
+  if (view === 'admin') {
+    adminView.style.display = 'flex';
+    learnerView.style.display = 'none';
+    btnAdmin.classList.add('active');
+    btnLearner.classList.remove('active');
+  } else {
+    adminView.style.display = 'none';
+    learnerView.style.display = 'block';
+    btnAdmin.classList.remove('active');
+    btnLearner.classList.add('active');
+    // Animate progress bar on first load
+    setTimeout(() => {
+      document.getElementById('learner-progress-fill').style.width = completedPct + '%';
+      document.getElementById('learner-pct').textContent = completedPct + '%';
+    }, 100);
+  }
+}
+
+function toggleStep(id) {
+  const detail = document.getElementById(id);
+  if (detail) detail.classList.toggle('open');
+}
+
+let completedItems = new Set();
+const totalRequired = 3;
+
+function completeItem(btn, id) {
+  if (completedItems.has(id)) return;
+  completedItems.add(id);
+
+  const card = btn.closest('.learner-card');
+  btn.textContent = '✓ Done';
+  btn.style.background = '#22C55E';
+  btn.style.color = 'white';
+  btn.disabled = true;
+
+  completedPct = Math.round((completedItems.size / totalRequired) * 100);
+  if (completedPct > 100) completedPct = 100;
+
+  document.getElementById('learner-progress-fill').style.width = completedPct + '%';
+  document.getElementById('learner-pct').textContent = completedPct + '%';
+}
+
+let completedPct = 0;
+</script>
+</body>
+</html>

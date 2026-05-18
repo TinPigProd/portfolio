@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Built Anyway — CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D0E14;
+    --bg2: #141720;
+    --surface: #1E2130;
+    --surface2: #252A3A;
+    --rule: rgba(255,255,255,0.07);
+    --rule-mid: rgba(255,255,255,0.12);
+    --ink: #F0F2F8;
+    --ink-mid: #A8AEBF;
+    --ink-soft: #6A7088;
+    --ink-ghost: #3A3E52;
+    --blue: #4A8FD4;
+    --blue-light: #7AB8F0;
+    --blue-dim: rgba(74,143,212,0.12);
+    --teal: #2DB896;
+    --teal-dim: rgba(45,184,150,0.10);
+    --amber: #BA7517;
+    --amber-dim: rgba(186,117,23,0.12);
+    --red: #E8194B;
+    --red-dim: rgba(232,25,75,0.10);
+    --purple: #7C5CBF;
+    --purple-dim: rgba(124,92,191,0.12);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem 4rem;
+  }
+
+  /* GRAIN */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 200;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.35;
+  }
+
+  /* PORTFOLIO HEADER */
+  .port-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 48px;
+    background: rgba(13,14,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+  }
+
+  .port-left { display: flex; align-items: center; gap: 0.75rem; }
+
+  .port-monogram {
+    width: 26px; height: 26px; border-radius: 4px;
+    border: 1px solid var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px; color: var(--ink-soft);
+  }
+
+  .port-label { font-size: 12px; color: var(--ink-soft); letter-spacing: 0.04em; }
+  .port-label strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+  .port-tag {
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-ghost); padding: 2px 8px;
+    border: 0.5px solid var(--rule-mid); border-radius: 3px;
+  }
+
+  /* MAIN CARD */
+  .main-card {
+    width: 100%; max-width: 940px;
+    background: rgba(30,33,48,0.6);
+    backdrop-filter: blur(16px);
+    border: 0.5px solid var(--rule-mid);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    display: flex;
+    min-height: 580px;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 320px; flex-shrink: 0;
+    background: rgba(13,14,20,0.6);
+    border-right: 0.5px solid var(--rule);
+    padding: 2rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+
+  .panel-eyebrow {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 0.4rem;
+  }
+
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; line-height: 1.1; color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .panel-subtitle {
+    font-size: 12px; color: var(--ink-soft);
+    margin-bottom: 1.75rem; letter-spacing: 0.02em;
+  }
+
+  /* STEP NAV */
+  .step-nav { position: relative; display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .step-track {
+    position: absolute; left: 11px; top: 6px; bottom: 6px;
+    width: 1px; background: var(--ink-ghost);
+  }
+
+  .step-progress {
+    position: absolute; left: 11px; top: 6px;
+    width: 1px; background: var(--blue);
+    transition: height 0.5s cubic-bezier(0.16,1,0.3,1);
+    height: 0%;
+  }
+
+  .step-btn {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    background: none; border: none; cursor: pointer;
+    text-align: left; width: 100%; padding: 0;
+    font-family: 'DM Sans', sans-serif;
+    opacity: 0.4; transition: opacity 0.2s;
+  }
+
+  .step-btn:hover { opacity: 0.7; }
+  .step-btn.active { opacity: 1; }
+  .step-btn.done { opacity: 0.65; }
+
+  .step-indicator {
+    width: 23px; height: 23px; border-radius: 50%; flex-shrink: 0;
+    border: 1.5px solid var(--ink-ghost);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px; transition: all 0.25s;
+    z-index: 1; position: relative;
+  }
+
+  .step-btn.active .step-indicator {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(74,143,212,0.15);
+  }
+
+  .step-btn.done .step-indicator {
+    border-color: var(--blue); background: var(--blue);
+  }
+
+  .step-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    opacity: 0; transition: opacity 0.2s;
+  }
+
+  .step-btn.active .step-dot { opacity: 1; background: var(--blue); }
+  .step-btn.done .step-dot { opacity: 1; background: var(--bg); }
+
+  .step-label { font-size: 12px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+
+  .step-sub {
+    font-size: 10px; color: var(--ink-soft);
+    margin-top: 2px; max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s;
+    opacity: 0; letter-spacing: 0.02em;
+  }
+
+  .step-btn.active .step-sub { max-height: 30px; opacity: 1; }
+
+  /* STEP COLOR ACCENTS */
+  .step-btn[data-step="3"].active .step-indicator { border-color: var(--red); box-shadow: 0 0 0 3px rgba(232,25,75,0.12); }
+  .step-btn[data-step="3"].active .step-dot { background: var(--red); }
+  .step-btn[data-step="4"].active .step-indicator { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,184,150,0.12); }
+  .step-btn[data-step="4"].active .step-dot { background: var(--teal); }
+  .step-btn[data-step="5"].active .step-indicator { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,92,191,0.12); }
+  .step-btn[data-step="5"].active .step-dot { background: var(--purple); }
+  .step-btn[data-step="6"].active .step-indicator { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(186,117,23,0.12); }
+  .step-btn[data-step="6"].active .step-dot { background: var(--amber); }
+
+  /* NARRATIVE */
+  .narrative {
+    padding-top: 1.25rem; border-top: 0.5px solid var(--rule);
+    min-height: 130px;
+  }
+
+  .narrative-act {
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 4px; transition: opacity 0.3s;
+  }
+
+  .narrative-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; color: var(--ink); margin-bottom: 0.5rem;
+    transition: opacity 0.3s;
+  }
+
+  .narrative-body {
+    font-size: 12px; color: var(--ink-mid); line-height: 1.7;
+    transition: opacity 0.3s;
+  }
+
+  .nav-btns { display: flex; gap: 0.5rem; margin-top: 0.85rem; }
+
+  .nav-btn {
+    width: 30px; height: 30px; border-radius: 6px;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    color: var(--ink-soft); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s; font-size: 13px;
+  }
+
+  .nav-btn:hover { background: var(--surface2); color: var(--ink); }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    flex: 1; background: rgba(20,23,32,0.4);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+
+  .right-panel::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px; pointer-events: none;
+  }
+
+  .visual-wrap {
+    position: relative; z-index: 1; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .visual-wrap.out { opacity: 0; transform: translateY(8px); }
+
+  /* ── VISUALS ── */
+
+  /* ACT 1 — The bottleneck */
+  .bottleneck-wrap {
+    display: flex; flex-direction: column; gap: 0.75rem; width: 100%; max-width: 320px;
+  }
+
+  .bottleneck-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+
+  .bottleneck-label { font-size: 10px; color: var(--ink-soft); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .latency-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--red); font-weight: 500;
+    background: var(--red-dim); border: 0.5px solid rgba(232,25,75,0.25);
+    padding: 3px 9px; border-radius: 100px;
+    animation: pulse-badge 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .feedback-item {
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    animation: slideIn 0.5s ease both;
+  }
+
+  .feedback-item:nth-child(3) { animation-delay: 0.15s; }
+  .feedback-item:nth-child(4) { animation-delay: 0.3s; }
+
+  .fi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .fi-from { font-size: 11px; font-weight: 500; color: var(--ink-mid); }
+
+  .fi-tag {
+    font-size: 9px; font-weight: 500; padding: 2px 7px; border-radius: 100px; letter-spacing: 0.04em;
+  }
+
+  .fi-tag-shallow { background: var(--amber-dim); color: var(--amber); border: 0.5px solid rgba(186,117,23,0.2); }
+  .fi-tag-delayed { background: var(--red-dim); color: var(--red); border: 0.5px solid rgba(232,25,75,0.2); }
+  .fi-tag-generic { background: var(--surface2); color: var(--ink-soft); border: 0.5px solid var(--rule-mid); }
+
+  .fi-lines { display: flex; flex-direction: column; gap: 4px; }
+  .fi-line { height: 5px; border-radius: 2px; background: var(--ink-ghost); }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ACT 2 — The prototype */
+  .proto-wrap {
+    display: flex; align-items: center; gap: 1rem; width: 100%; max-width: 340px;
+  }
+
+  .proto-input {
+    width: 90px; flex-shrink: 0;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    border-radius: 8px; padding: 0.75rem;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+
+  .proto-input-label { font-size: 9px; color: var(--ink-ghost); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+  .proto-raw { height: 5px; border-radius: 2px; background: var(--ink-ghost); transform: skewY(2deg); }
+
+  .proto-core {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+
+  .proto-flow-line {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--surface), var(--blue), var(--teal), var(--surface));
+    background-size: 200% 100%;
+    animation: flowLine 2s linear infinite;
+  }
+
+  .proto-engine {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--bg); border: 1.5px solid var(--blue);
+    box-shadow: 0 0 24px rgba(74,143,212,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; position: relative;
+  }
+
+  .proto-engine::before {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 1px solid transparent; border-top-color: var(--blue);
+    animation: spin 2s linear infinite;
+  }
+
+  .proto-engine-label { font-size: 9px; color: var(--blue-light); letter-spacing: 0.06em; }
+
+  .proto-output {
+    width: 110px; flex-shrink: 0;
+    background: var(--surface); border: 0.5px solid rgba(45,184,150,0.3);
+    border-radius: 8px; padding: 0.75rem;
+    box-shadow: 0 0 16px rgba(45,184,150,0.08);
+    display: flex; flex-direction: column; gap: 5px;
+  }
+
+  .proto-output-label { font-size: 9px; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+
+  .proto-out-item {
+    padding: 4px 6px; border-radius: 4px; display: flex; align-items: center; gap: 5px;
+  }
+
+  .proto-out-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  .proto-out-line { flex: 1; height: 4px; border-radius: 2px; }
+
+  .out-strength { background: var(--teal-dim); }
+  .out-strength .proto-out-dot { background: var(--teal); }
+  .out-strength .proto-out-line { background: var(--teal); opacity: 0.5; }
+
+  .out-opp { background: var(--blue-dim); }
+  .out-opp .proto-out-dot { background: var(--blue); }
+  .out-opp .proto-out-line { background: var(--blue); opacity: 0.5; }
+
+  .out-action { background: var(--amber-dim); }
+  .out-action .proto-out-dot { background: var(--amber); }
+  .out-action .proto-out-line { background: var(--amber); opacity: 0.5; }
+
+  @keyframes flowLine {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ACT 3 — The block */
+  .block-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%; max-width: 300px;
+  }
+
+  .block-card {
+    background: var(--red-dim); border: 1px solid rgba(232,25,75,0.3);
+    border-radius: 10px; padding: 1.25rem 1.5rem;
+    text-align: center;
+    animation: shake 0.6s cubic-bezier(0.36,0.07,0.19,0.97) 0.3s both;
+  }
+
+  .block-icon { font-size: 28px; margin-bottom: 0.5rem; }
+  .block-title { font-size: 14px; font-weight: 600; color: var(--red); margin-bottom: 4px; }
+  .block-body { font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
+
+  .block-pivot {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--ink-soft);
+  }
+
+  .block-pivot-arrow {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--teal);
+    animation: bounce 1s ease-in-out 1s infinite;
+  }
+
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(3px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  /* ACT 4 — The rebuild */
+  .rebuild-wrap {
+    display: flex; flex-direction: column; gap: 0.6rem; width: 100%; max-width: 320px;
+  }
+
+  .rebuild-header {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+
+  .rebuild-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-badge 1.5s ease-in-out infinite; }
+
+  .rebuild-tool {
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    animation: slideIn 0.4s ease both;
+  }
+
+  .rebuild-tool:nth-child(3) { animation-delay: 0.12s; }
+  .rebuild-tool:nth-child(4) { animation-delay: 0.24s; }
+  .rebuild-tool:nth-child(5) { animation-delay: 0.36s; }
+
+  .rebuild-tool-icon {
+    width: 32px; height: 32px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+
+  .rebuild-tool-name { font-size: 12px; font-weight: 500; color: var(--ink); }
+  .rebuild-tool-role { font-size: 10px; color: var(--ink-soft); margin-top: 1px; }
+
+  .rebuild-connector {
+    display: flex; align-items: center; gap: 6px;
+    padding-left: 20px; font-size: 10px; color: var(--ink-ghost);
+  }
+
+  .rebuild-line { flex: 1; height: 1px; background: var(--rule-mid); }
+
+  /* ACT 5 — The framework */
+  .framework-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%; max-width: 320px;
+  }
+
+  .framework-prompt {
+    background: var(--surface); border: 0.5px solid var(--purple);
+    border-radius: 10px; padding: 1rem; width: 100%;
+    box-shadow: 0 0 20px rgba(124,92,191,0.1);
+  }
+
+  .fp-label { font-size: 9px; color: var(--purple); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; }
+
+  .fp-line {
+    height: 5px; border-radius: 2px; margin-bottom: 4px;
+    animation: growWidth 0.8s ease both;
+  }
+
+  .fp-line:nth-child(3) { animation-delay: 0.1s; }
+  .fp-line:nth-child(4) { animation-delay: 0.2s; }
+  .fp-line:nth-child(5) { animation-delay: 0.3s; }
+
+  @keyframes growWidth { from { width: 0 !important; } }
+
+  .framework-arrow { font-size: 18px; color: var(--ink-ghost); }
+
+  .framework-output {
+    background: var(--surface); border: 0.5px solid var(--teal);
+    border-radius: 10px; padding: 1rem; width: 100%;
+    box-shadow: 0 0 20px rgba(45,184,150,0.08);
+  }
+
+  .fo-label { font-size: 9px; color: var(--teal); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; }
+
+  .fo-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
+  }
+
+  .fo-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .fo-text { font-size: 11px; color: var(--ink-mid); }
+
+  /* ACT 6 — The reality */
+  .reality-wrap {
+    display: flex; flex-direction: column; gap: 0.75rem; width: 100%; max-width: 320px;
+  }
+
+  .reality-card {
+    border-radius: 8px; padding: 0.85rem 1rem;
+    border: 0.5px solid;
+  }
+
+  .reality-card-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; font-weight: 600; }
+  .reality-card-body { font-size: 12px; line-height: 1.55; }
+
+  .rc-shipped { background: var(--teal-dim); border-color: rgba(45,184,150,0.25); }
+  .rc-shipped .reality-card-label { color: var(--teal); }
+  .rc-shipped .reality-card-body { color: var(--ink-mid); }
+
+  .rc-advocating { background: var(--amber-dim); border-color: rgba(186,117,23,0.25); }
+  .rc-advocating .reality-card-label { color: var(--amber); }
+  .rc-advocating .reality-card-body { color: var(--ink-mid); }
+
+  .rc-learning { background: var(--blue-dim); border-color: rgba(74,143,212,0.2); }
+  .rc-learning .reality-card-label { color: var(--blue-light); }
+  .rc-learning .reality-card-body { color: var(--ink-mid); }
+
+  .reality-note {
+    font-size: 11px; color: var(--ink-soft); text-align: center;
+    font-style: italic; line-height: 1.5;
+    padding: 0.6rem; border-top: 0.5px solid var(--rule);
+    margin-top: 0.25rem;
+  }
+
+  /* PORTFOLIO FOOTER */
+  .port-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 0.6rem 2rem;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--ink-ghost);
+    background: rgba(13,14,20,0.85);
+    backdrop-filter: blur(8px);
+    border-top: 0.5px solid var(--rule);
+  }
+
+  @media (max-width: 700px) {
+    .main-card { flex-direction: column; min-height: auto; }
+    .left-panel { width: 100%; border-right: none; border-bottom: 0.5px solid var(--rule); }
+    .right-panel { min-height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTFOLIO HEADER -->
+<header class="port-header">
+  <div class="port-left">
+    <div class="port-monogram">CP</div>
+    <span class="port-label"><strong>CP</strong> — Case Study</span>
+  </div>
+  <span class="port-tag">Built Anyway · Process documentation</span>
+</header>
+
+<!-- MAIN CARD -->
+<div class="main-card">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div>
+      <div class="panel-eyebrow">Case study</div>
+      <h1 class="panel-title">Built<br>Anyway.</h1>
+      <p class="panel-subtitle">A feedback tool that hit a wall — and what came next.</p>
+
+      <!-- STEP NAV -->
+      <div class="step-nav">
+        <div class="step-track"></div>
+        <div class="step-progress" id="step-progress"></div>
+
+        <button class="step-btn" data-step="1" onclick="setStep(1)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">The bottleneck</div>
+            <div class="step-sub">Shallow feedback, high lag</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="2" onclick="setStep(2)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">The prototype</div>
+            <div class="step-sub">AI-assisted synthesis agent</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="3" onclick="setStep(3)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">The block</div>
+            <div class="step-sub">Licensing killed the plan</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="4" onclick="setStep(4)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">The rebuild</div>
+            <div class="step-sub">Different tools, better system</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="5" onclick="setStep(5)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">The architecture</div>
+            <div class="step-sub">Framework as prompt engine</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="6" onclick="setStep(6)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">The reality</div>
+            <div class="step-sub">What shipped. What's advocating.</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- NARRATIVE -->
+    <div class="narrative">
+      <div class="narrative-act" id="narrative-act"></div>
+      <div class="narrative-title" id="narrative-title"></div>
+      <div class="narrative-body" id="narrative-body"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" onclick="prevStep()">←</button>
+        <button class="nav-btn" onclick="nextStep()">→</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="visual-wrap" id="visual-wrap"></div>
+  </div>
+
+</div>
+
+<!-- PORTFOLIO FOOTER -->
+<footer class="port-footer">
+  <span>CP — Learning Architecture Portfolio · CP | 5.26</span>
+  <span>Built Anyway · Case study</span>
+</footer>
+
+<script>
+const ACTS = {
+  1: {
+    act: 'Act 01 · The problem',
+    color: 'var(--ink-soft)',
+    title: 'Feedback was broken before it arrived.',
+    body: 'Leaders were asked to provide development feedback on direct reports. What came back was late, shallow, and disconnected from any shared framework. The lag was high. The signal was low. The system needed to change.',
+    visual: () => `
+      <div class="bottleneck-wrap">
+        <div class="bottleneck-header">
+          <span class="bottleneck-label">Incoming feedback</span>
+          <span class="latency-badge">⏱ High lag</span>
+        </div>
+        <div class="feedback-item">
+          <div class="fi-header">
+            <span class="fi-from">Leader A</span>
+            <span class="fi-tag fi-tag-delayed">3 weeks late</span>
+          </div>
+          <div class="fi-lines">
+            <div class="fi-line" style="width:40%;"></div>
+            <div class="fi-line" style="width:25%;"></div>
+          </div>
+        </div>
+        <div class="feedback-item">
+          <div class="fi-header">
+            <span class="fi-from">Leader B</span>
+            <span class="fi-tag fi-tag-shallow">Shallow</span>
+          </div>
+          <div class="fi-lines">
+            <div class="fi-line" style="width:60%;"></div>
+            <div class="fi-line" style="width:30%;"></div>
+          </div>
+        </div>
+        <div class="feedback-item">
+          <div class="fi-header">
+            <span class="fi-from">Leader C</span>
+            <span class="fi-tag fi-tag-generic">No framework</span>
+          </div>
+          <div class="fi-lines">
+            <div class="fi-line" style="width:50%;"></div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  2: {
+    act: 'Act 02 · The prototype',
+    color: 'var(--blue-light)',
+    title: 'An AI agent grounded in the framework.',
+    body: 'Experimented with a Copilot-based synthesis agent anchored in a Korn Ferry success model. Leaders dropped raw, unpolished notes. The agent returned structured output: strengths, development opportunities, and specific action items, competency-anchored throughout.',
+    visual: () => `
+      <div class="proto-wrap">
+        <div class="proto-input">
+          <div class="proto-input-label">Raw notes</div>
+          <div class="proto-raw" style="width:80%;"></div>
+          <div class="proto-raw" style="width:60%;transform:skewY(-1deg);"></div>
+          <div class="proto-raw" style="width:90%;transform:skewY(1deg);"></div>
+          <div class="proto-raw" style="width:50%;"></div>
+        </div>
+        <div class="proto-core">
+          <div class="proto-flow-line"></div>
+          <div class="proto-engine">⬡<div style="position:absolute;inset:-4px;border-radius:50%;border:1px solid transparent;border-top-color:var(--blue);animation:spin 2s linear infinite;"></div></div>
+          <div class="proto-engine-label">KF model</div>
+          <div class="proto-flow-line"></div>
+        </div>
+        <div class="proto-output">
+          <div class="proto-output-label">Structured output</div>
+          <div class="proto-out-item out-strength">
+            <div class="proto-out-dot"></div>
+            <div class="proto-out-line" style="width:70%;"></div>
+          </div>
+          <div class="proto-out-item out-opp">
+            <div class="proto-out-dot"></div>
+            <div class="proto-out-line" style="width:85%;"></div>
+          </div>
+          <div class="proto-out-item out-action">
+            <div class="proto-out-dot"></div>
+            <div class="proto-out-line" style="width:60%;"></div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  3: {
+    act: 'Act 03 · The block',
+    color: 'var(--red)',
+    title: 'Licensing killed the plan.',
+    body: 'A Copilot licensing constraint blocked deployment. The tool was built. The framework was sound. The system worked. But it couldn\'t ship on the platform it was designed for. This is where a lot of projects stop.',
+    visual: () => `
+      <div class="block-wrap">
+        <div class="block-card">
+          <div class="block-icon">🔒</div>
+          <div class="block-title">Licensing constraint</div>
+          <div class="block-body">Copilot deployment blocked.<br>Tool built. Can't ship.</div>
+        </div>
+        <div class="block-pivot">
+          <span style="font-size:12px;color:var(--ink-soft);">Most projects stop here.</span>
+        </div>
+        <div class="block-pivot">
+          <div class="block-pivot-arrow">↻</div>
+          <span style="color:var(--teal);font-weight:500;">This one didn't.</span>
+        </div>
+      </div>
+    `
+  },
+  4: {
+    act: 'Act 04 · The rebuild',
+    color: 'var(--teal)',
+    title: 'Different tools. Better system.',
+    body: 'Rather than waiting for licensing resolution, the tool was rebuilt using a different stack — Claude for synthesis and code generation, Gemini for QA. The constraint forced a more flexible architecture. What emerged was more portable and more sophisticated than the original.',
+    visual: () => `
+      <div class="rebuild-wrap">
+        <div class="rebuild-header">
+          <div class="rebuild-dot"></div>
+          Rebuilt stack
+        </div>
+        <div class="rebuild-tool">
+          <div class="rebuild-tool-icon" style="background:var(--purple-dim);">⬡</div>
+          <div>
+            <div class="rebuild-tool-name">Claude API</div>
+            <div class="rebuild-tool-role">Synthesis engine · Code generation · System prompt architecture</div>
+          </div>
+        </div>
+        <div class="rebuild-connector">
+          <div class="rebuild-line"></div>
+          <span>+</span>
+          <div class="rebuild-line"></div>
+        </div>
+        <div class="rebuild-tool">
+          <div class="rebuild-tool-icon" style="background:var(--blue-dim);">◈</div>
+          <div>
+            <div class="rebuild-tool-name">Gemini</div>
+            <div class="rebuild-tool-role">QA layer · Output validation · Edge case testing</div>
+          </div>
+        </div>
+        <div class="rebuild-connector">
+          <div class="rebuild-line"></div>
+          <span>→</span>
+          <div class="rebuild-line"></div>
+        </div>
+        <div class="rebuild-tool" style="border-color:rgba(45,184,150,0.3);">
+          <div class="rebuild-tool-icon" style="background:var(--teal-dim);">✓</div>
+          <div>
+            <div class="rebuild-tool-name" style="color:var(--teal);">More portable. More capable.</div>
+            <div class="rebuild-tool-role">Platform-agnostic · Framework-native · Scalable</div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  5: {
+    act: 'Act 05 · The architecture',
+    color: 'var(--purple)',
+    title: 'The framework became the prompt.',
+    body: 'The key architectural insight: embedding the competency framework directly into the system prompt — not as a post-processing filter, but as the interpretive lens the AI uses during synthesis. The framework doesn\'t label the output. It shapes it from the inside.',
+    visual: () => `
+      <div class="framework-wrap">
+        <div class="framework-prompt">
+          <div class="fp-label">System prompt: framework embedded</div>
+          <div class="fp-line" style="width:90%;background:var(--purple);opacity:0.3;"></div>
+          <div class="fp-line" style="width:70%;background:var(--purple);opacity:0.25;"></div>
+          <div class="fp-line" style="width:85%;background:var(--purple);opacity:0.3;"></div>
+          <div class="fp-line" style="width:60%;background:var(--purple);opacity:0.2;"></div>
+        </div>
+        <div class="framework-arrow">↓</div>
+        <div class="framework-output">
+          <div class="fo-label">Competency-anchored output</div>
+          <div class="fo-row">
+            <div class="fo-dot" style="background:var(--teal);"></div>
+            <div class="fo-text">Strength · Drives Results · The What</div>
+          </div>
+          <div class="fo-row">
+            <div class="fo-dot" style="background:var(--blue);"></div>
+            <div class="fo-text">Opportunity · Collaborates · The What</div>
+          </div>
+          <div class="fo-row">
+            <div class="fo-dot" style="background:var(--amber);"></div>
+            <div class="fo-text">Action · Interpersonal Savvy · The How</div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  6: {
+    act: 'Act 06 · The reality',
+    color: 'var(--amber)',
+    title: 'What shipped. What\'s still advocating.',
+    body: 'The tool was introduced and demonstrated. Adoption is a work in progress. Organizational inertia is real, and change management takes time. The architecture is sound. The case is being made. This is what honest design documentation looks like.',
+    visual: () => `
+      <div class="reality-wrap">
+        <div class="reality-card rc-shipped">
+          <div class="reality-card-label">✓ Shipped</div>
+          <div class="reality-card-body">Tool built, demonstrated, and introduced. AI-assisted synthesis working end-to-end. Framework embedding validated through output quality.</div>
+        </div>
+        <div class="reality-card rc-advocating">
+          <div class="reality-card-label">⟳ Advocating</div>
+          <div class="reality-card-body">Broader adoption in progress. Organizational change management takes time. The licensing constraint created a new architecture that's more portable than the original plan.</div>
+        </div>
+        <div class="reality-card rc-learning">
+          <div class="reality-card-label">→ What it taught</div>
+          <div class="reality-card-body">Constraints are design inputs. The block forced a better stack. The advocacy process is teaching as much about change management as the tool taught about AI architecture.</div>
+        </div>
+        <div class="reality-note">"Built anyway" isn't just a name. It's the posture.</div>
+      </div>
+    `
+  }
+};
+
+const TOTAL = Object.keys(ACTS).length;
+let current = 1;
+
+function setStep(n) {
+  current = n;
+
+  // Update buttons
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    const s = parseInt(btn.dataset.step);
+    btn.classList.remove('active', 'done');
+    const ind = btn.querySelector('.step-indicator');
+    if (s === n) {
+      btn.classList.add('active');
+    } else if (s < n) {
+      btn.classList.add('done');
+      ind.style.borderColor = 'var(--blue)';
+      ind.style.background = 'var(--blue)';
+    } else {
+      ind.style.borderColor = 'var(--ink-ghost)';
+      ind.style.background = 'var(--bg)';
+    }
+  });
+
+  // Progress line
+  const pct = ((n - 1) / (TOTAL - 1)) * 100;
+  document.getElementById('step-progress').style.height = pct + '%';
+
+  // Narrative fade
+  const actEl = document.getElementById('narrative-act');
+  const titleEl = document.getElementById('narrative-title');
+  const bodyEl = document.getElementById('narrative-body');
+
+  [actEl, titleEl, bodyEl].forEach(el => el.style.opacity = '0');
+
+  setTimeout(() => {
+    const d = ACTS[n];
+    actEl.textContent = d.act;
+    actEl.style.color = d.color;
+    titleEl.textContent = d.title;
+    bodyEl.textContent = d.body;
+    [actEl, titleEl, bodyEl].forEach(el => {
+      el.style.transition = 'opacity 0.35s ease';
+      el.style.opacity = '1';
+    });
+  }, 130);
+
+  // Visual fade
+  const wrap = document.getElementById('visual-wrap');
+  wrap.classList.add('out');
+  setTimeout(() => {
+    wrap.innerHTML = ACTS[n].visual();
+    wrap.classList.remove('out');
+  }, 220);
+}
+
+function nextStep() { if (current < TOTAL) setStep(current + 1); }
+function prevStep() { if (current > 1) setStep(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextStep();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevStep();
+});
+
+window.onload = () => setStep(1);
+</script>
+</body>
+</html>

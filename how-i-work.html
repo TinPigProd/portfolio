@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How I Work — CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D0E14;
+    --bg2: #141720;
+    --surface: #1E2130;
+    --surface2: #252A3A;
+    --rule: rgba(255,255,255,0.07);
+    --rule-mid: rgba(255,255,255,0.12);
+    --ink: #F0F2F8;
+    --ink-mid: #A8AEBF;
+    --ink-soft: #6A7088;
+    --ink-ghost: #3A3E52;
+    --blue: #4A8FD4;
+    --blue-light: #7AB8F0;
+    --blue-dim: rgba(74,143,212,0.12);
+    --teal: #2DB896;
+    --teal-dim: rgba(45,184,150,0.10);
+    --amber: #BA7517;
+    --amber-dim: rgba(186,117,23,0.10);
+    --pink: #FF6B8A;
+    --pink-dim: rgba(255,107,138,0.10);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  /* ── PORTFOLIO HEADER ── */
+  .port-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 48px;
+    background: rgba(13,14,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+  }
+
+  .port-header-left { display: flex; align-items: center; gap: 0.75rem; }
+
+  .port-monogram {
+    width: 26px; height: 26px; border-radius: 4px;
+    border: 1px solid var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px; color: var(--ink-soft);
+  }
+
+  .port-label { font-size: 12px; color: var(--ink-soft); letter-spacing: 0.04em; }
+  .port-label strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+  .port-tag {
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-ghost); padding: 2px 8px;
+    border: 0.5px solid var(--rule-mid); border-radius: 3px;
+  }
+
+  /* ── MAIN CARD ── */
+  .main-card {
+    width: 100%; max-width: 920px;
+    margin-top: 48px;
+    background: rgba(30,33,48,0.6);
+    backdrop-filter: blur(16px);
+    border: 0.5px solid var(--rule-mid);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    display: flex;
+    min-height: 560px;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    width: 340px; flex-shrink: 0;
+    background: rgba(13,14,20,0.6);
+    border-right: 0.5px solid var(--rule);
+    padding: 2rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+
+  .panel-eyebrow {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 0.5rem;
+  }
+
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; line-height: 1.15; color: var(--ink);
+    margin-bottom: 2rem;
+  }
+
+  .panel-title em { font-style: italic; color: var(--ink-mid); }
+
+  /* STEP NAV */
+  .step-nav { position: relative; display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .step-track {
+    position: absolute; left: 11px; top: 6px; bottom: 6px;
+    width: 1px; background: var(--ink-ghost);
+  }
+
+  .step-progress {
+    position: absolute; left: 11px; top: 6px;
+    width: 1px; background: var(--blue);
+    transition: height 0.5s cubic-bezier(0.16,1,0.3,1);
+    height: 0%;
+  }
+
+  .step-btn {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    background: none; border: none; cursor: pointer;
+    text-align: left; width: 100%; padding: 0;
+    font-family: 'DM Sans', sans-serif;
+    opacity: 0.45; transition: opacity 0.2s;
+  }
+
+  .step-btn:hover { opacity: 0.75; }
+  .step-btn.active { opacity: 1; }
+  .step-btn.done { opacity: 0.7; }
+
+  .step-indicator {
+    width: 23px; height: 23px; border-radius: 50%; flex-shrink: 0;
+    border: 1.5px solid var(--ink-ghost);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px; transition: all 0.25s;
+    z-index: 1; position: relative;
+  }
+
+  .step-btn.active .step-indicator {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(74,143,212,0.15);
+  }
+
+  .step-btn.done .step-indicator {
+    border-color: var(--blue); background: var(--blue);
+  }
+
+  .step-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--blue); opacity: 0; transition: opacity 0.2s;
+  }
+
+  .step-btn.active .step-dot { opacity: 1; }
+  .step-btn.done .step-dot { opacity: 1; background: var(--bg); }
+
+  .step-label { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .step-sub {
+    font-size: 11px; color: var(--ink-soft);
+    margin-top: 2px; max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s;
+    opacity: 0;
+  }
+
+  .step-btn.active .step-sub { max-height: 40px; opacity: 1; }
+
+  /* NARRATIVE */
+  .narrative {
+    padding-top: 1.5rem; border-top: 0.5px solid var(--rule);
+  }
+
+  .narrative-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; color: var(--ink); margin-bottom: 0.6rem;
+    transition: opacity 0.3s;
+  }
+
+  .narrative-body {
+    font-size: 13px; color: var(--ink-mid); line-height: 1.7;
+    transition: opacity 0.3s;
+  }
+
+  .nav-btns { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+  .nav-btn {
+    width: 32px; height: 32px; border-radius: 6px;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    color: var(--ink-soft); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s;
+    font-size: 14px;
+  }
+
+  .nav-btn:hover { background: var(--surface2); color: var(--ink); }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    flex: 1;
+    background: rgba(20,23,32,0.4);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+
+  /* Grid bg */
+  .right-panel::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  .visual-wrap {
+    position: relative; z-index: 1; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .visual-wrap.fade-out { opacity: 0; transform: translateY(8px); }
+
+  /* ── VISUAL COMPONENTS ── */
+
+  /* Step 1 — Diagnostic map */
+  .diag-wrap {
+    position: relative; width: 280px; height: 280px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .diag-center {
+    width: 110px; height: 110px;
+    background: var(--bg);
+    border: 1.5px solid var(--blue);
+    border-radius: 14px;
+    box-shadow: 0 0 40px rgba(74,143,212,0.15), inset 0 0 20px rgba(74,143,212,0.05);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+    z-index: 2; position: relative;
+  }
+
+  .diag-center-label { font-size: 11px; color: var(--blue-light); font-weight: 500; }
+
+  .diag-node {
+    position: absolute; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+  }
+
+  .node-symptom {
+    background: rgba(186,117,23,0.1); border: 1px solid rgba(186,117,23,0.3);
+    color: var(--amber); padding: 6px 10px;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .node-symptom:nth-child(2) { animation-delay: 0.8s; }
+  .node-symptom:nth-child(3) { animation-delay: 1.6s; }
+  .node-symptom:nth-child(4) { animation-delay: 2.4s; }
+
+  .diag-line {
+    position: absolute; background: var(--blue);
+    opacity: 0.15; transform-origin: left center;
+    height: 1px;
+  }
+
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    animation: scan 3s linear infinite; opacity: 0.4;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes scan {
+    0% { top: 10%; opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { top: 90%; opacity: 0; }
+  }
+
+  /* Step 2 — Build/Test loop */
+  .loop-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%;
+  }
+
+  .loop-row {
+    display: flex; align-items: center; gap: 1rem; width: 100%; max-width: 320px;
+  }
+
+  .loop-box {
+    flex: 1; height: 48px; background: var(--surface);
+    border: 0.5px solid var(--rule-mid); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--ink-mid);
+    position: relative; overflow: hidden;
+  }
+
+  .loop-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    border-radius: 8px; width: 0%;
+    animation: fillBar 2s ease-out forwards;
+  }
+
+  .fill-blue { background: rgba(74,143,212,0.2); }
+  .fill-teal { background: rgba(45,184,150,0.2); animation-delay: 0.8s; }
+
+  .loop-arrow { color: var(--ink-ghost); font-size: 16px; flex-shrink: 0; }
+
+  .loop-gear-wrap {
+    position: relative; width: 64px; height: 64px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .loop-gear-ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 1.5px solid transparent;
+    border-top-color: var(--blue);
+    animation: spin 3s linear infinite;
+  }
+
+  .loop-gear-inner {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  .loop-label {
+    font-size: 10px; color: var(--ink-ghost);
+    letter-spacing: 0.12em; text-transform: uppercase; text-align: center;
+  }
+
+  @keyframes fillBar { to { width: 100%; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Step 3 — Ecosystem */
+  .eco-wrap {
+    width: 100%; max-width: 340px;
+  }
+
+  .eco-card {
+    background: var(--surface);
+    border: 0.5px solid var(--rule-mid);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .eco-topbar {
+    background: var(--bg2); padding: 0.6rem 0.85rem;
+    border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .eco-dots { display: flex; gap: 5px; }
+  .eco-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .eco-ai-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 9px; color: var(--blue-light);
+    background: var(--blue-dim); border: 0.5px solid rgba(74,143,212,0.2);
+    padding: 2px 7px; border-radius: 100px; letter-spacing: 0.04em;
+  }
+
+  .eco-body { padding: 0.85rem; display: flex; gap: 0.75rem; }
+
+  .eco-sidebar { width: 60px; display: flex; flex-direction: column; gap: 5px; }
+  .eco-sidebar-item { height: 18px; background: var(--bg2); border-radius: 3px; }
+
+  .eco-main {
+    flex: 1; background: var(--bg2); border-radius: 6px;
+    padding: 0.6rem; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px;
+  }
+
+  .eco-bars { display: flex; align-items: flex-end; gap: 4px; height: 70px; }
+
+  .eco-bar {
+    flex: 1; border-radius: 3px 3px 0 0;
+    animation: growBar 1s ease-out forwards;
+  }
+
+  @keyframes growBar { from { height: 0 !important; } }
+
+  /* Step 4 — AI Companion */
+  .ai-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 100%; max-width: 320px;
+  }
+
+  .ai-pipeline {
+    width: 100%; display: flex; flex-direction: column; gap: 6px;
+  }
+
+  .ai-step {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    border-radius: 8px; padding: 0.6rem 0.85rem;
+    animation: slideIn 0.4s ease both;
+  }
+
+  .ai-step:nth-child(1) { animation-delay: 0s; }
+  .ai-step:nth-child(2) { animation-delay: 0.15s; }
+  .ai-step:nth-child(3) { animation-delay: 0.3s; }
+  .ai-step:nth-child(4) { animation-delay: 0.45s; }
+
+  .ai-step-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+
+  .ai-step-label { font-size: 12px; font-weight: 500; color: var(--ink); }
+  .ai-step-sub { font-size: 10px; color: var(--ink-soft); margin-top: 1px; }
+
+  .ai-connector {
+    width: 1px; height: 12px; background: var(--rule-mid);
+    margin-left: 14px;
+  }
+
+  .ai-human-note {
+    font-size: 11px; color: var(--ink-soft); text-align: center;
+    padding: 0.6rem 1rem; background: var(--teal-dim);
+    border: 0.5px solid rgba(45,184,150,0.2); border-radius: 8px;
+    line-height: 1.5;
+  }
+
+  .ai-human-note strong { color: var(--teal); font-weight: 500; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Step 5 — People first */
+  .people-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 1.25rem; width: 100%; max-width: 300px;
+  }
+
+  .people-center-node {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--surface); border: 1.5px solid var(--teal);
+    box-shadow: 0 0 30px rgba(45,184,150,0.15);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    font-size: 24px;
+  }
+
+  .people-center-label { font-size: 10px; color: var(--teal); font-weight: 500; }
+
+  .people-ring {
+    position: relative; width: 220px; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .people-spoke {
+    position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .people-spoke:nth-child(2) { animation-delay: 1s; }
+  .people-spoke:nth-child(3) { animation-delay: 2s; }
+  .people-spoke:nth-child(4) { animation-delay: 3s; }
+
+  .people-node {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--surface); border: 0.5px solid var(--rule-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .people-node-label { font-size: 9px; color: var(--ink-soft); text-align: center; }
+
+  .people-tagline {
+    font-size: 12px; color: var(--ink-soft); text-align: center; line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* ── PORTFOLIO FOOTER ── */
+  .port-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 0.75rem 2rem;
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--ink-ghost);
+    background: rgba(13,14,20,0.8);
+    backdrop-filter: blur(8px);
+    border-top: 0.5px solid var(--rule);
+  }
+
+  /* GRAIN */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 200;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.35;
+  }
+
+  @media (max-width: 700px) {
+    .main-card { flex-direction: column; min-height: auto; }
+    .left-panel { width: 100%; border-right: none; border-bottom: 0.5px solid var(--rule); }
+    .right-panel { min-height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTFOLIO HEADER -->
+<header class="port-header">
+  <div class="port-header-left">
+    <div class="port-monogram">CP</div>
+    <span class="port-label"><strong>CP</strong> — How I Work</span>
+  </div>
+  <span class="port-tag">Process · Methodology</span>
+</header>
+
+<!-- MAIN CARD -->
+<div class="main-card">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div>
+      <div class="panel-eyebrow">Methodology</div>
+      <h1 class="panel-title">How I <em>think</em><br>and build.</h1>
+
+      <!-- STEP NAV -->
+      <div class="step-nav">
+        <div class="step-track"></div>
+        <div class="step-progress" id="step-progress"></div>
+
+        <button class="step-btn" data-step="1" onclick="setStep(1)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">Understand first</div>
+            <div class="step-sub">Root cause over surface symptoms</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="2" onclick="setStep(2)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">Prototype fast</div>
+            <div class="step-sub">Lightweight, workflow-native experiences</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="3" onclick="setStep(3)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">Scale intentionally</div>
+            <div class="step-sub">Feedback loops over big releases</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="4" onclick="setStep(4)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">AI as companion</div>
+            <div class="step-sub">Not a final sign-off — a thinking tool</div>
+          </div>
+        </button>
+
+        <button class="step-btn" data-step="5" onclick="setStep(5)">
+          <div class="step-indicator"><div class="step-dot"></div></div>
+          <div>
+            <div class="step-label">People first, always</div>
+            <div class="step-sub">Open dialogue, strongest solution together</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- NARRATIVE + CONTROLS -->
+    <div class="narrative">
+      <div class="narrative-title" id="narrative-title"></div>
+      <div class="narrative-body" id="narrative-body"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" onclick="prevStep()">←</button>
+        <button class="nav-btn" onclick="nextStep()">→</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="visual-wrap" id="visual-wrap"></div>
+  </div>
+
+</div>
+
+<!-- PORTFOLIO FOOTER -->
+<footer class="port-footer">
+  <span>CP — Learning Architecture Portfolio · CP | 5.26</span>
+  <span>How I Work · Process visualization</span>
+</footer>
+
+<script>
+const STEPS = {
+  1: {
+    title: "Understand first.",
+    body: "I cringe over training for training's sake. Before any strategy is considered, I investigate the root cause, treating every intake request with systems thinking to uncover what's actually driving the friction, not just what's visible on the surface.",
+    visual: () => `
+      <div class="diag-wrap">
+        <div class="scan-line"></div>
+        <div class="diag-node node-symptom" style="top:20px;left:10px;">Gap signal</div>
+        <div class="diag-node node-symptom" style="top:10px;right:20px;">Stakeholder ask</div>
+        <div class="diag-node node-symptom" style="bottom:20px;left:20px;">Behavior data</div>
+        <div class="diag-node node-symptom" style="bottom:30px;right:10px;">Survey noise</div>
+        <div class="diag-center">
+          <span style="font-size:22px;">🔍</span>
+          <div class="diag-center-label">Root cause</div>
+        </div>
+      </div>
+    `
+  },
+  2: {
+    title: "Prototype fast.",
+    body: "Once direction is clear, I move quickly from ambiguity into structure using agile cycles — building lightweight, workflow-native experiences that can be tested early and refined through use, without overbuilding upfront.",
+    visual: () => `
+      <div class="loop-wrap">
+        <div class="loop-row">
+          <div class="loop-box">
+            <div class="loop-fill fill-blue"></div>
+            <span style="position:relative;z-index:1;">Build</span>
+          </div>
+          <div class="loop-arrow">→</div>
+          <div class="loop-box">
+            <div class="loop-fill fill-teal"></div>
+            <span style="position:relative;z-index:1;">Test</span>
+          </div>
+          <div class="loop-arrow">→</div>
+          <div class="loop-box">
+            <div class="loop-fill" style="background:rgba(186,117,23,0.2);animation-delay:1.6s;"></div>
+            <span style="position:relative;z-index:1;">Refine</span>
+          </div>
+        </div>
+        <div class="loop-gear-wrap">
+          <div class="loop-gear-ring"></div>
+          <div class="loop-gear-inner">⚙️</div>
+        </div>
+        <div class="loop-label">Agile · Iterative · Workflow-native</div>
+      </div>
+    `
+  },
+  3: {
+    title: "Scale intentionally.",
+    body: "I rely on short feedback loops to understand what is actually landing in practice — adjusting direction incrementally rather than through large, infrequent releases. The goal is a self-sustaining system, not a one-time event.",
+    visual: () => `
+      <div class="eco-wrap">
+        <div class="eco-card">
+          <div class="eco-topbar">
+            <div class="eco-dots">
+              <div class="eco-dot" style="background:#FF5F57;"></div>
+              <div class="eco-dot" style="background:#FEBC2E;"></div>
+              <div class="eco-dot" style="background:#28C840;"></div>
+            </div>
+            <div class="eco-ai-badge">⚡ Feedback loop active</div>
+          </div>
+          <div class="eco-body">
+            <div class="eco-sidebar">
+              <div class="eco-sidebar-item"></div>
+              <div class="eco-sidebar-item" style="width:70%;"></div>
+              <div class="eco-sidebar-item"></div>
+              <div class="eco-sidebar-item" style="width:80%;"></div>
+            </div>
+            <div class="eco-main">
+              <div style="font-size:9px;color:var(--ink-ghost);margin-bottom:4px;letter-spacing:0.06em;">ITERATION VELOCITY</div>
+              <div class="eco-bars">
+                <div class="eco-bar" style="height:30%;background:var(--blue);opacity:0.5;"></div>
+                <div class="eco-bar" style="height:45%;background:var(--blue);opacity:0.65;"></div>
+                <div class="eco-bar" style="height:55%;background:var(--blue);opacity:0.75;"></div>
+                <div class="eco-bar" style="height:70%;background:var(--blue);opacity:0.85;"></div>
+                <div class="eco-bar" style="height:85%;background:var(--blue);"></div>
+                <div class="eco-bar" style="height:100%;background:var(--teal);box-shadow:0 0 12px rgba(45,184,150,0.4);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--ink-ghost);text-align:center;margin-top:0.75rem;letter-spacing:0.08em;text-transform:uppercase;">Incremental release · Continuous refinement</div>
+      </div>
+    `
+  },
+  4: {
+    title: "AI as companion.",
+    body: "With AI as a companion and not a final sign-off, I embed it throughout my process, a practical tool for synthesis, structuring complex inputs, and accelerating how expert knowledge becomes something others can actually use.",
+    visual: () => `
+      <div class="ai-wrap">
+        <div class="ai-pipeline">
+          <div class="ai-step">
+            <div class="ai-step-icon" style="background:var(--amber-dim);">📝</div>
+            <div>
+              <div class="ai-step-label">Complex input</div>
+              <div class="ai-step-sub">SME knowledge · Raw observations · Ambiguous briefs</div>
+            </div>
+          </div>
+          <div class="ai-connector"></div>
+          <div class="ai-step">
+            <div class="ai-step-icon" style="background:var(--blue-dim);">⬡</div>
+            <div>
+              <div class="ai-step-label">AI synthesis</div>
+              <div class="ai-step-sub">Structure · Pattern recognition · Acceleration</div>
+            </div>
+          </div>
+          <div class="ai-connector"></div>
+          <div class="ai-step">
+            <div class="ai-step-icon" style="background:var(--teal-dim);">✓</div>
+            <div>
+              <div class="ai-step-label">Human judgment</div>
+              <div class="ai-step-sub">Review · Refine · Approve · Own the outcome</div>
+            </div>
+          </div>
+        </div>
+        <div class="ai-human-note">
+          <strong>AI accelerates. People decide.</strong><br>
+          The sign-off is always human.
+        </div>
+      </div>
+    `
+  },
+  5: {
+    title: "People first, always.",
+    body: "I prioritize people and the user experience across every deliverable. My best work happens in open dialogue, examining angles, pushing toward the strongest solution together, and making sure the people the system serves are visible in every design decision.",
+    visual: () => `
+      <div class="people-wrap">
+        <div class="people-ring">
+          <div class="people-spoke" style="left:0;">
+            <div class="people-node">👤</div>
+            <div class="people-node-label">Learner</div>
+          </div>
+          <div class="people-spoke" style="left:50%;transform:translateX(-50%);">
+            <div class="people-node">🧑‍💼</div>
+            <div class="people-node-label">Leader</div>
+          </div>
+          <div class="people-spoke" style="right:0;">
+            <div class="people-node">🤝</div>
+            <div class="people-node-label">Partner</div>
+          </div>
+        </div>
+        <div class="people-center-node">
+          <span>💡</span>
+          <div class="people-center-label">Design</div>
+        </div>
+        <div class="people-tagline">
+          "I do my best work in open dialogue,<br>pushing toward the strongest solution together."
+        </div>
+      </div>
+    `
+  }
+};
+
+const TOTAL = Object.keys(STEPS).length;
+let current = 1;
+
+function setStep(n) {
+  current = n;
+
+  // Update step buttons
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    const s = parseInt(btn.dataset.step);
+    btn.classList.remove('active', 'done');
+    const ind = btn.querySelector('.step-indicator');
+    if (s === n) {
+      btn.classList.add('active');
+      ind.style.borderColor = 'var(--blue)';
+      ind.style.background = 'var(--bg)';
+    } else if (s < n) {
+      btn.classList.add('done');
+      ind.style.borderColor = 'var(--blue)';
+      ind.style.background = 'var(--blue)';
+    } else {
+      ind.style.borderColor = 'var(--ink-ghost)';
+      ind.style.background = 'var(--bg)';
+    }
+  });
+
+  // Progress line
+  const pct = ((n - 1) / (TOTAL - 1)) * 100;
+  document.getElementById('step-progress').style.height = pct + '%';
+
+  // Narrative
+  const title = document.getElementById('narrative-title');
+  const body = document.getElementById('narrative-body');
+  title.style.opacity = '0';
+  body.style.opacity = '0';
+  setTimeout(() => {
+    title.textContent = STEPS[n].title;
+    body.textContent = STEPS[n].body;
+    title.style.transition = 'opacity 0.35s ease';
+    body.style.transition = 'opacity 0.35s ease';
+    title.style.opacity = '1';
+    body.style.opacity = '1';
+  }, 120);
+
+  // Visual
+  const wrap = document.getElementById('visual-wrap');
+  wrap.classList.add('fade-out');
+  setTimeout(() => {
+    wrap.innerHTML = STEPS[n].visual();
+    wrap.classList.remove('fade-out');
+  }, 250);
+}
+
+function nextStep() { if (current < TOTAL) setStep(current + 1); }
+function prevStep() { if (current > 1) setStep(current - 1); }
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextStep();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevStep();
+});
+
+window.onload = () => setStep(1);
+</script>
+</body>
+</html>

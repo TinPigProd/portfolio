@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Feedback Synthesis Tool — CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #18180F;
+    --ink-mid: #4A4A40;
+    --ink-soft: #8A8A80;
+    --ink-ghost: #C2C2B8;
+    --paper: #F7F6F2;
+    --paper-warm: #EFEDE7;
+    --white: #FFFFFF;
+    --rule: rgba(0,0,0,0.10);
+    --rule-strong: rgba(0,0,0,0.16);
+    --blue-50: #E6F1FB;
+    --blue-400: #378ADD;
+    --blue-800: #0C447C;
+    --teal-50: #E1F5EE;
+    --teal-400: #1D9E75;
+    --teal-800: #085041;
+    --amber-50: #FAEEDA;
+    --amber-400: #BA7517;
+    --amber-800: #633806;
+    --coral-50: #FAECE7;
+    --coral-400: #D85A30;
+    --coral-800: #4A1B0C;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(247,246,242,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid var(--rule-strong);
+    padding: 0 2rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+
+  .nav-initials {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-label { font-size: 13px; color: var(--ink-mid); }
+  .nav-label strong { font-weight: 500; color: var(--ink); }
+
+  .nav-tag {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 3px 9px;
+    border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .page-header { margin-bottom: 2.5rem; }
+
+  .page-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-desc {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.65;
+    max-width: 580px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .panel {
+    background: var(--white);
+    border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 0.5px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .panel-sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .panel-body { padding: 1.5rem; }
+
+  .field { margin-bottom: 1.1rem; }
+
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  input[type="text"], select, textarea {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: var(--ink-soft);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 200px;
+    line-height: 1.65;
+  }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--ink-ghost);
+    margin-top: 0.35rem;
+    line-height: 1.5;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .submit-btn:hover { opacity: 0.85; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .output-panel {
+    background: var(--white);
+    border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .output-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .output-empty-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--paper-warm);
+    border: 0.5px solid var(--rule-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 1rem;
+    color: var(--ink-ghost);
+  }
+
+  .output-empty-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .output-empty-desc {
+    font-size: 13px;
+    color: var(--ink-ghost);
+    line-height: 1.6;
+    max-width: 220px;
+  }
+
+  .output-content { padding: 1.5rem; flex: 1; }
+
+  .output-dr-header {
+    padding-bottom: 1rem;
+    border-bottom: 0.5px solid var(--rule);
+    margin-bottom: 1.25rem;
+  }
+
+  .output-dr-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .output-dr-meta { font-size: 12px; color: var(--ink-soft); }
+
+  .output-section { margin-bottom: 1.5rem; }
+
+  .output-section:last-child { margin-bottom: 0; }
+
+  .output-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+  }
+
+  .output-section-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: var(--radius-sm);
+  }
+
+  .badge-strengths { background: var(--teal-50); color: var(--teal-800); }
+  .badge-opportunities { background: var(--amber-50); color: var(--amber-800); }
+  .badge-actions { background: var(--blue-50); color: var(--blue-800); }
+
+  .output-section-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .output-items { display: flex; flex-direction: column; gap: 10px; }
+
+  .output-item {
+    background: var(--paper);
+    border: 0.5px solid var(--rule);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+  }
+
+  .output-item-comp {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .comp-what { color: var(--blue-400); }
+  .comp-how { color: var(--teal-400); }
+
+  .output-item-text {
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.65;
+  }
+
+  .loading-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    gap: 1rem;
+  }
+
+  .loading-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .loading-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink-ghost);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .loading-label {
+    font-size: 13px;
+    color: var(--ink-ghost);
+  }
+
+  .error-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .error-text {
+    font-size: 13px;
+    color: var(--coral-400);
+    line-height: 1.6;
+    max-width: 260px;
+  }
+
+  .reset-btn {
+    margin-top: 1rem;
+    font-size: 13px;
+    color: var(--ink-soft);
+    background: none;
+    border: 0.5px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .reset-btn:hover { color: var(--ink); }
+
+  .context-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.5rem;
+  }
+
+  .context-pill {
+    font-size: 12px;
+    color: var(--ink-mid);
+    background: var(--paper-warm);
+    border: 0.5px solid var(--rule-strong);
+    border-radius: 100px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background 0.12s;
+    user-select: none;
+  }
+
+  .context-pill:hover { background: var(--paper); }
+  .context-pill.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+  footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 3rem;
+    border-top: 0.5px solid var(--rule-strong);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--ink-ghost);
+  }
+
+  @media (max-width: 680px) {
+    .layout { grid-template-columns: 1fr; }
+    .page-title { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-initials">CP</div>
+    <span class="nav-label"><strong>CP</strong> — Portfolio</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-tag">Feedback Synthesis</span>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Portfolio case study · 02</div>
+    <h1 class="page-title">Feedback Synthesis Tool</h1>
+    <p class="page-desc">Add raw observations, notes, or feedback on a direct report. The tool synthesizes your input into structured strengths, opportunities, and recommended actions — anchored to the Stripe Success Model competency framework.</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- INPUT PANEL -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Leader input</span>
+        <span class="panel-sub">Raw notes → structured feedback</span>
+      </div>
+      <div class="panel-body">
+        <div class="field">
+          <label>Direct report name</label>
+          <input type="text" id="dr-name" placeholder="e.g. Alex Rivera" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <input type="text" id="dr-role" placeholder="e.g. Senior Product Manager" />
+        </div>
+        <div class="field">
+          <label>Context</label>
+          <div class="context-pills">
+            <span class="context-pill" data-value="Performance review cycle">Performance review</span>
+            <span class="context-pill" data-value="Post-project debrief">Project debrief</span>
+            <span class="context-pill" data-value="360 feedback input">360 input</span>
+            <span class="context-pill" data-value="Mid-year check-in">Mid-year check-in</span>
+            <span class="context-pill" data-value="Ongoing coaching notes">Coaching notes</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Observations & notes</label>
+          <textarea id="raw-notes" placeholder="Paste or type your raw observations here. Don't worry about structure or polish — write however feels natural. Examples: 'Great in cross-functional meetings, tends to drive to decisions quickly. Sometimes skips the details and the team catches errors downstream. Reluctant to ask for help even when stretched thin.'""></textarea>
+          <div class="field-hint">The tool will handle structure. Focus on what you've observed.</div>
+        </div>
+        <button class="submit-btn" id="submit-btn" onclick="synthesize()">
+          <span id="btn-label">Synthesize feedback</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="output-panel" id="output-panel">
+      <div class="panel-header">
+        <span class="panel-title">Synthesized output</span>
+        <span class="panel-sub">Anchored to Stripe Success Model</span>
+      </div>
+      <div class="output-empty" id="output-empty">
+        <div class="output-empty-icon">◎</div>
+        <div class="output-empty-title">Awaiting input</div>
+        <div class="output-empty-desc">Complete the form and submit to generate a competency-anchored feedback summary.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Feedback Synthesis Tool · CP | 5.26</span>
+</footer>
+
+<script>
+let selectedContext = '';
+
+document.querySelectorAll('.context-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.context-pill').forEach(p => p.classList.remove('selected'));
+    if (selectedContext === pill.dataset.value) {
+      selectedContext = '';
+    } else {
+      pill.classList.add('selected');
+      selectedContext = pill.dataset.value;
+    }
+  });
+});
+
+const SYSTEM_PROMPT = `You are a talent development synthesis engine used by people leaders at Stripe. Your role is to take raw, unstructured leader observations about a direct report and transform them into a structured, actionable feedback summary.
+
+You anchor all output to the Stripe Success Model — a competency framework built on two tiers:
+
+THE WHAT (Enterprise-Critical Competencies — how high performers deliver at Stripe):
+1. Customer Focus — merchant/user empathy drives prioritization; observable in how someone centers user impact in decisions
+2. Drives Results — consistent delivery against ambitious goals; observable in accountability to outcomes not just effort
+3. Strategic Mindset — holds near-term execution and long-term systems thinking simultaneously; connects daily decisions to multi-year implications
+4. Decision Quality — precision and rigor in judgment; makes reasoning explicit, revisits decisions with new information
+5. Collaborates — low-ego teamwork; gives credit generously, pulls others in early, adjusts based on feedback
+
+THE HOW (Culture-Differentiating Competencies — what makes delivery feel distinctly Stripe):
+6. Learning Agility — absorbs new domains quickly; treats mistakes as learning, brings outside-in perspective
+7. Being Resilient — sustains performance through ambiguity and pressure; rebounds from setbacks without extended loss of momentum
+8. Tech Savvy — understands technical constraints well enough to make better decisions; engages credibly with engineering partners
+9. Communicates Effectively — writes with clarity and economy; adapts to audience without losing substance; invites critical feedback
+10. Self-Development — accurately identifies own development edges; takes deliberate action on feedback; seeks stretch proactively
+11. Interpersonal Savvy (The how) — generates energy and trust in others; reads group dynamics; moves people forward without formal authority
+
+Your output must be valid JSON only — no preamble, no markdown, no explanation outside the JSON structure.
+
+Return exactly this structure:
+{
+  "strengths": [
+    { "competency": "competency name", "tier": "what" or "how", "insight": "2-3 sentence observation grounded in the leader's notes" }
+  ],
+  "opportunities": [
+    { "competency": "competency name", "tier": "what" or "how", "insight": "2-3 sentence observation grounded in the leader's notes" }
+  ],
+  "actions": [
+    { "competency": "competency name", "tier": "what" or "how", "action": "Specific, concrete recommended action item for the leader or direct report" }
+  ]
+}
+
+Guidelines:
+- Identify 2-4 strengths, 2-3 opportunities, and 2-3 action items
+- Every item must map to a named competency from the Success Model
+- Insights should feel grounded in the specific observations provided, not generic
+- Action items should be specific and immediately usable in a coaching conversation
+- Write in third person, professional but human tone
+- If notes are very thin, still synthesize what you can and note where more observation would help
+- Never invent observations not present in the raw notes`;
+
+async function synthesize() {
+  const name = document.getElementById('dr-name').value.trim();
+  const role = document.getElementById('dr-role').value.trim();
+  const notes = document.getElementById('raw-notes').value.trim();
+
+  if (!notes) {
+    document.getElementById('raw-notes').focus();
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  document.getElementById('btn-label').textContent = 'Synthesizing...';
+
+  showLoading();
+
+  const userMessage = `
+Direct report: ${name || 'Not specified'}
+Role: ${role || 'Not specified'}
+Context: ${selectedContext || 'General feedback'}
+
+Raw observations:
+${notes}
+  `.trim();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userMessage }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content.map(b => b.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    showOutput(parsed, name, role);
+  } catch (err) {
+    showError();
+  } finally {
+    btn.disabled = false;
+    document.getElementById('btn-label').textContent = 'Synthesize feedback';
+  }
+}
+
+function showLoading() {
+  const panel = document.getElementById('output-panel');
+  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.className = 'loading-state';
+  el.innerHTML = `
+    <div class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+    <div class="loading-label">Synthesizing observations...</div>
+  `;
+  panel.appendChild(el);
+}
+
+function showError() {
+  const panel = document.getElementById('output-panel');
+  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.className = 'error-state';
+  el.innerHTML = `
+    <div class="error-text">Something went wrong during synthesis. Please check your input and try again.</div>
+    <button class="reset-btn" onclick="resetOutput()">Reset</button>
+  `;
+  panel.appendChild(el);
+}
+
+function resetOutput() {
+  const panel = document.getElementById('output-panel');
+  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.className = 'output-empty';
+  el.id = 'output-empty';
+  el.innerHTML = `
+    <div class="output-empty-icon">◎</div>
+    <div class="output-empty-title">Awaiting input</div>
+    <div class="output-empty-desc">Complete the form and submit to generate a competency-anchored feedback summary.</div>
+  `;
+  panel.appendChild(el);
+}
+
+function showOutput(data, name, role) {
+  const panel = document.getElementById('output-panel');
+  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.className = 'output-content';
+
+  const header = (name || role) ? `
+    <div class="output-dr-header">
+      <div class="output-dr-name">${name || 'Direct report'}</div>
+      <div class="output-dr-meta">${[role, selectedContext].filter(Boolean).join(' · ')}</div>
+    </div>
+  ` : '';
+
+  const renderItems = (items, type) => items.map(item => {
+    const tierClass = item.tier === 'what' ? 'comp-what' : 'comp-how';
+    const tierLabel = item.tier === 'what' ? 'The what' : 'The how';
+    const text = type === 'actions' ? item.action : item.insight;
+    return `
+      <div class="output-item">
+        <div class="output-item-comp ${tierClass}">${tierLabel} · ${item.competency}</div>
+        <div class="output-item-text">${text}</div>
+      </div>
+    `;
+  }).join('');
+
+  el.innerHTML = `
+    ${header}
+    <div class="output-section">
+      <div class="output-section-header">
+        <span class="output-section-badge badge-strengths">Strengths</span>
+        <span class="output-section-title">What's working</span>
+      </div>
+      <div class="output-items">${renderItems(data.strengths, 'strengths')}</div>
+    </div>
+    <div class="output-section">
+      <div class="output-section-header">
+        <span class="output-section-badge badge-opportunities">Opportunities</span>
+        <span class="output-section-title">Areas for growth</span>
+      </div>
+      <div class="output-items">${renderItems(data.opportunities, 'opportunities')}</div>
+    </div>
+    <div class="output-section">
+      <div class="output-section-header">
+        <span class="output-section-badge badge-actions">Recommended actions</span>
+        <span class="output-section-title">Next steps</span>
+      </div>
+      <div class="output-items">${renderItems(data.actions, 'actions')}</div>
+    </div>
+  `;
+
+  panel.appendChild(el);
+}
+</script>
+</body>
+</html>
