@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prior Work — CP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0D0E14;
+  --bg2: #141720;
+  --surface: #1E2130;
+  --surface2: #252A3A;
+  --rule: rgba(255,255,255,0.07);
+  --rule-mid: rgba(255,255,255,0.12);
+  --ink: #F0F2F8;
+  --ink-mid: #A8AEBF;
+  --ink-soft: #6A7088;
+  --ink-ghost: #3A3E52;
+  --blue: #4A8FD4;
+  --blue-dim: rgba(74,143,212,0.12);
+  --teal: #2DB896;
+  --teal-dim: rgba(45,184,150,0.10);
+  --amber: #BA7517;
+  --amber-dim: rgba(186,117,23,0.10);
+}
+
+body { padding-top: 44px;
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 300;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.35;
+}
+
+/* HEADER */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,14,20,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--rule);
+  padding: 0 2rem; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+
+.header-monogram {
+  width: 26px; height: 26px; border-radius: 4px;
+  border: 1px solid var(--ink-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 11px; color: var(--ink-soft);
+}
+
+.header-label { font-size: 12px; color: var(--ink-soft); letter-spacing: 0.04em; }
+.header-label strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+.header-tag {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-ghost); padding: 2px 8px;
+  border: 0.5px solid var(--rule-mid); border-radius: 3px;
+}
+
+/* HERO */
+.hero {
+  max-width: 900px; margin: 0 auto;
+  padding: 4rem 2rem 3rem;
+}
+
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+
+.eyebrow-line { width: 24px; height: 0.5px; background: var(--blue); opacity: 0.5; }
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.1; color: var(--ink); margin-bottom: 1rem;
+}
+
+.hero-title em { font-style: italic; color: var(--ink-mid); }
+
+.hero-desc {
+  font-size: 15px; color: var(--ink-mid);
+  line-height: 1.75; max-width: 560px;
+}
+
+/* FILTER BAR */
+.filter-bar {
+  max-width: 900px; margin: 0 auto;
+  padding: 0 2rem 2rem;
+  display: flex; gap: 0.5rem; flex-wrap: wrap;
+}
+
+.filter-btn {
+  font-size: 11px; font-weight: 500; padding: 5px 14px;
+  border-radius: 100px; cursor: pointer;
+  border: 0.5px solid var(--rule-mid);
+  background: var(--surface); color: var(--ink-soft);
+  font-family: 'Instrument Sans', sans-serif;
+  transition: all 0.15s; letter-spacing: 0.02em;
+}
+
+.filter-btn:hover { color: var(--ink); border-color: var(--rule-mid); }
+.filter-btn.active { background: var(--blue-dim); color: var(--blue); border-color: rgba(74,143,212,0.25); }
+
+/* WORK GRID */
+.work-grid {
+  max-width: 900px; margin: 0 auto;
+  padding: 0 2rem 6rem;
+  display: flex; flex-direction: column; gap: 1px;
+}
+
+/* SECTION DIVIDER */
+.section-divider {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 2rem 0 1rem;
+}
+
+.section-divider-label {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-ghost); white-space: nowrap;
+}
+
+.section-divider-line { flex: 1; height: 0.5px; background: var(--rule); }
+
+/* WORK CARD */
+.work-card {
+  background: var(--surface);
+  border: 0.5px solid var(--rule);
+  border-radius: 12px; overflow: hidden;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s;
+}
+
+.work-card:hover { border-color: var(--rule-mid); }
+
+.work-card-header {
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 1rem;
+  cursor: pointer;
+}
+
+.work-card-left { display: flex; align-items: flex-start; gap: 1rem; flex: 1; }
+
+.work-card-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; margin-top: 2px;
+}
+
+.work-card-type {
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-ghost); margin-bottom: 4px;
+}
+
+.work-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--ink); line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.work-card-subtitle {
+  font-size: 12px; color: var(--ink-soft); line-height: 1.5;
+}
+
+.work-card-right {
+  display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;
+}
+
+.format-tag {
+  font-size: 10px; font-weight: 500; padding: 3px 10px;
+  border-radius: 100px; letter-spacing: 0.04em;
+}
+
+.fmt-elearning { background: var(--blue-dim); color: var(--blue); border: 0.5px solid rgba(74,143,212,0.2); }
+.fmt-video { background: var(--teal-dim); color: var(--teal); border: 0.5px solid rgba(45,184,150,0.2); }
+.fmt-presentation { background: var(--amber-dim); color: var(--amber); border: 0.5px solid rgba(186,117,23,0.2); }
+.fmt-writing { background: rgba(160,100,220,0.10); color: #B87FE8; border: 0.5px solid rgba(160,100,220,0.2); }
+
+.expand-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--surface2); border: 0.5px solid var(--rule-mid);
+  color: var(--ink-soft); cursor: pointer; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0;
+}
+
+.work-card.open .expand-btn { background: var(--blue-dim); color: var(--blue); transform: rotate(45deg); }
+
+/* CARD DETAIL */
+.work-card-detail {
+  display: none; border-top: 0.5px solid var(--rule);
+  padding: 1.25rem 1.5rem 1.25rem 4rem;
+  background: var(--bg2);
+}
+
+.work-card.open .work-card-detail { display: block; }
+
+.detail-desc {
+  font-size: 13px; color: var(--ink-mid); line-height: 1.75;
+  margin-bottom: 1.25rem; max-width: 520px;
+}
+
+.detail-demonstrates {
+  margin-bottom: 1.25rem;
+}
+
+.detail-demonstrates-label {
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-ghost); margin-bottom: 0.5rem;
+}
+
+.demonstrates-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.demonstrates-tag {
+  font-size: 10px; padding: 2px 9px; border-radius: 100px;
+  background: var(--surface); color: var(--ink-soft);
+  border: 0.5px solid var(--rule-mid);
+}
+
+/* LINKS */
+.work-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.work-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 500;
+  padding: 6px 16px; border-radius: 6px;
+  text-decoration: none; transition: opacity 0.15s; cursor: pointer;
+  border: none; font-family: 'Instrument Sans', sans-serif;
+}
+
+.work-link:hover { opacity: 0.8; }
+
+.link-primary { background: var(--blue); color: #0D0E14; }
+.link-secondary { background: var(--surface2); color: var(--ink-mid); border: 0.5px solid var(--rule-mid); }
+
+/* PAIRED CARD — storyboard + final */
+.paired-card {
+  background: var(--surface);
+  border: 0.5px solid var(--rule);
+  border-radius: 12px; overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.paired-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 0.5px solid var(--rule);
+}
+
+.paired-label {
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 0.4rem;
+}
+
+.paired-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--ink); margin-bottom: 4px;
+}
+
+.paired-subtitle { font-size: 12px; color: var(--ink-soft); }
+
+.paired-body { padding-top: 44px;
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+
+.paired-item {
+  padding: 1.1rem 1.5rem;
+  border-right: 0.5px solid var(--rule);
+}
+
+.paired-item:last-child { border-right: none; }
+
+.paired-item-label {
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-ghost); margin-bottom: 0.5rem;
+}
+
+.paired-item-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 0.4rem; }
+.paired-item-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 0.85rem; }
+
+/* NARRATIVE PLACEHOLDER */
+.narrative-placeholder {
+  background: var(--surface2); border: 0.5px dashed var(--rule-mid);
+  border-radius: 8px; padding: 0.75rem 1rem;
+  font-size: 12px; color: var(--ink-ghost); font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+/* FOOTER */
+.site-footer {
+  border-top: 0.5px solid var(--rule);
+  padding: 1.5rem 2rem;
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--ink-soft);
+  max-width: 900px; margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .paired-body { padding-top: 44px; grid-template-columns: 1fr; }
+  .paired-item { border-right: none; border-bottom: 0.5px solid var(--rule); }
+  .paired-item:last-child { border-bottom: none; }
+}
+</style>
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(13,14,20,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid rgba(255,255,255,0.08);padding:0 1.5rem;height:44px;display:flex;align-items:center;">
+  <a href="index.html" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s;" onmouseover="this.style.color='rgba(255,255,255,0.85)'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">← Portfolio</a>
+</div>
+
+<header class="site-header">
+  <div class="header-left">
+    <div class="header-monogram">CP</div>
+    <span class="header-label"><strong>CP</strong> — Prior Work</span>
+  </div>
+  <span class="header-tag">Instructional design · Production samples</span>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow"><div class="eyebrow-line"></div>Prior work</div>
+  <h1 class="hero-title">Where the systems<br>thinking <em>came from.</em></h1>
+  <p class="hero-desc">Before the frameworks and AI-enabled tools, there was the craft. These samples represent earlier work across eLearning development, video production, presentation design, and facilitator writing — the foundation that informs how I design systems today.</p>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterWork('all')">All</button>
+  <button class="filter-btn" onclick="filterWork('elearning')">eLearning</button>
+  <button class="filter-btn" onclick="filterWork('video')">Video</button>
+  <button class="filter-btn" onclick="filterWork('presentation')">Presentation</button>
+  <button class="filter-btn" onclick="filterWork('writing')">Writing</button>
+</div>
+
+<!-- WORK GRID -->
+<div class="work-grid">
+
+  <!-- SECTION: eLEARNING -->
+  <div class="section-divider" data-category="elearning">
+    <div class="section-divider-label">eLearning development</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- HARDWIRED — PAIRED -->
+  <div class="paired-card" data-category="elearning">
+    <div class="paired-card-header">
+      <div class="paired-label">Full production process · Storyboard to final</div>
+      <div class="paired-title">Hardwired</div>
+      <div class="paired-subtitle">eLearning module · Articulate Storyline · Cognitive neuroscience and learning design</div>
+    </div>
+    <div class="paired-body">
+      <div class="paired-item">
+        <div class="paired-item-label">01 · Storyboard</div>
+        <div class="paired-item-title">Design blueprint</div>
+        <div class="paired-item-desc">The storyboard shows the instructional architecture, building the story and ensuring learning needs are addressed before any design happens. The storyboard creates a touchpoint for subject matter expert alignment and sign off before design work begins.</div>
+        <a class="work-link link-secondary" href="https://docs.google.com/document/d/1T0gdbNH6BU-rl6qyCV5nqLOf2YvfZRsY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">View storyboard →</a>
+      </div>
+      <div class="paired-item">
+        <div class="paired-item-label">02 · Final product</div>
+        <div class="paired-item-title">Published module</div>
+        <div class="paired-item-desc">The completed eLearning experience, built in Articulate Storyline and shared in the Articulate review tool.</div>
+        <a class="work-link link-primary" href="https://360.articulate.com/review/content/ad3d6639-a81f-4ba0-bd42-2c290de26b68/review" target="_blank" rel="noopener noreferrer">View final module →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: VIDEO -->
+  <div class="section-divider" data-category="video">
+    <div class="section-divider-label">Video production</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- VIDEO 1 -->
+  <div class="work-card" data-category="video">
+    <div class="work-card-header" onclick="toggleCard(this)">
+      <div class="work-card-left">
+        <div class="work-card-icon" style="background:var(--teal-dim);color:var(--teal);">▷</div>
+        <div>
+          <div class="work-card-type">Video production</div>
+          <div class="work-card-title">Enablement Offering Promo</div>
+          <div class="work-card-subtitle">Promotional video · Internal enablement program launch</div>
+        </div>
+      </div>
+      <div class="work-card-right">
+        <span class="format-tag fmt-video">Video</span>
+        <div class="expand-btn">+</div>
+      </div>
+    </div>
+    <div class="work-card-detail">
+      <div class="narrative-placeholder" style="display:none;"></div>
+      <div class="detail-desc">Sizzle reel built to demonstrate enablement content offering. Played in booth at customer event. Built using Canva.</div>
+      <div class="detail-demonstrates">
+        <div class="detail-demonstrates-label">Demonstrates</div>
+        <div class="demonstrates-tags">
+          <span class="demonstrates-tag">Video scripting</span>
+          <span class="demonstrates-tag">Production design</span>
+          <span class="demonstrates-tag">Enablement marketing</span>
+          <span class="demonstrates-tag">Audience awareness</span>
+        </div>
+      </div>
+      <div class="work-links">
+        <a class="work-link link-primary" href="https://drive.google.com/file/d/11prBvGOX1Q7nGg3NVMXY9l7RzwlIH8uH/view?usp=drive_link" target="_blank" rel="noopener noreferrer">View video →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 2 -->
+  <div class="work-card" data-category="video">
+    <div class="work-card-header" onclick="toggleCard(this)">
+      <div class="work-card-left">
+        <div class="work-card-icon" style="background:var(--teal-dim);color:var(--teal);">▷</div>
+        <div>
+          <div class="work-card-type">Video production</div>
+          <div class="work-card-title">First Touch Launch Teaser</div>
+          <div class="work-card-subtitle">Launch teaser video · Product or program introduction</div>
+        </div>
+      </div>
+      <div class="work-card-right">
+        <span class="format-tag fmt-video">Video</span>
+        <div class="expand-btn">+</div>
+      </div>
+    </div>
+    <div class="work-card-detail">
+      <div class="narrative-placeholder" style="display:none;"></div>
+      <div class="detail-desc">Video built to create buzz for an upcoming system launch. Packaged with part of a bigger change management communication portfolio.</div>
+      <div class="detail-demonstrates">
+        <div class="detail-demonstrates-label">Demonstrates</div>
+        <div class="demonstrates-tags">
+          <span class="demonstrates-tag">Video production</span>
+          <span class="demonstrates-tag">Launch communication</span>
+          <span class="demonstrates-tag">Learner engagement</span>
+          <span class="demonstrates-tag">Creative direction</span>
+        </div>
+      </div>
+      <div class="work-links">
+        <a class="work-link link-primary" href="https://drive.google.com/file/d/1jmuTSsRdO46rF7rBXTeX5Yd23_YE2abg/view?usp=drive_link" target="_blank" rel="noopener noreferrer">View video →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: PRESENTATION -->
+  <div class="section-divider" data-category="presentation">
+    <div class="section-divider-label">Presentation design</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- PRESENTATION 1 -->
+  <div class="work-card" data-category="presentation">
+    <div class="work-card-header" onclick="toggleCard(this)">
+      <div class="work-card-left">
+        <div class="work-card-icon" style="background:var(--amber-dim);color:var(--amber);">⬡</div>
+        <div>
+          <div class="work-card-type">Presentation design</div>
+          <div class="work-card-title">New Hire Orientation Deck</div>
+          <div class="work-card-subtitle">Facilitated presentation · Onboarding experience design</div>
+        </div>
+      </div>
+      <div class="work-card-right">
+        <span class="format-tag fmt-presentation">Presentation</span>
+        <div class="expand-btn">+</div>
+      </div>
+    </div>
+    <div class="work-card-detail">
+      <div class="narrative-placeholder" style="display:none;"></div>
+      <div class="detail-desc">Presentation materials created for new employee onboarding. Designed to fill a material void as well as create consistent onboarding for all CX new hires.</div>
+      <div class="detail-demonstrates">
+        <div class="detail-demonstrates-label">Demonstrates</div>
+        <div class="demonstrates-tags">
+          <span class="demonstrates-tag">Onboarding design</span>
+          <span class="demonstrates-tag">Slide architecture</span>
+          <span class="demonstrates-tag">Facilitation support</span>
+          <span class="demonstrates-tag">Visual communication</span>
+          <span class="demonstrates-tag">Cognitive load reduction</span>
+        </div>
+      </div>
+      <div class="work-links">
+        <a class="work-link link-primary" href="https://docs.google.com/presentation/d/1xryJ3vzQxhw72yNCJfBN173jANnZWj5y/edit?usp=drive_link" target="_blank" rel="noopener noreferrer">View deck →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRESENTATION 2 -->
+  <div class="work-card" data-category="presentation">
+    <div class="work-card-header" onclick="toggleCard(this)">
+      <div class="work-card-left">
+        <div class="work-card-icon" style="background:var(--amber-dim);color:var(--amber);">⬡</div>
+        <div>
+          <div class="work-card-type">Presentation design</div>
+          <div class="work-card-title">Team Development Session</div>
+          <div class="work-card-subtitle">Facilitated presentation · Ongoing team learning design</div>
+        </div>
+      </div>
+      <div class="work-card-right">
+        <span class="format-tag fmt-presentation">Presentation</span>
+        <div class="expand-btn">+</div>
+      </div>
+    </div>
+    <div class="work-card-detail">
+      <div class="narrative-placeholder" style="display:none;"></div>
+      <div class="detail-desc">Training session co-designed with senior instructional designer peer to refresh and align design basics with instructional design and graphics team.</div>
+      <div class="detail-demonstrates">
+        <div class="detail-demonstrates-label">Demonstrates</div>
+        <div class="demonstrates-tags">
+          <span class="demonstrates-tag">Team learning design</span>
+          <span class="demonstrates-tag">Facilitation structure</span>
+          <span class="demonstrates-tag">Content design</span>
+          <span class="demonstrates-tag">Engagement design</span>
+        </div>
+      </div>
+      <div class="work-links">
+        <a class="work-link link-primary" href="https://docs.google.com/presentation/d/1dTL2ILdMvFZ58xn1RtE8Zs7ZPNxTC5k-/edit?usp=drive_link" target="_blank" rel="noopener noreferrer">View deck →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: WRITING -->
+  <div class="section-divider" data-category="writing">
+    <div class="section-divider-label">Writing and facilitation</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- FACILITATOR GUIDE -->
+  <div class="work-card" data-category="writing">
+    <div class="work-card-header" onclick="toggleCard(this)">
+      <div class="work-card-left">
+        <div class="work-card-icon" style="background:rgba(160,100,220,0.10);color:#B87FE8;">✍</div>
+        <div>
+          <div class="work-card-type">Writing sample</div>
+          <div class="work-card-title">Scripted Facilitator Guide</div>
+          <div class="work-card-subtitle">Facilitation writing · Full-script guide for instructor-led delivery</div>
+        </div>
+      </div>
+      <div class="work-card-right">
+        <span class="format-tag fmt-writing">Writing</span>
+        <div class="expand-btn">+</div>
+      </div>
+    </div>
+    <div class="work-card-detail">
+      <div class="narrative-placeholder" style="display:none;"></div>
+      <div class="detail-desc">A guide designed for distribution to non-training professionals. The guide provides suggested direction and activity instructions, as well as conversational prompts to support an interactive training session for a technical audience.</div>
+      <div class="detail-demonstrates">
+        <div class="detail-demonstrates-label">Demonstrates</div>
+        <div class="demonstrates-tags">
+          <span class="demonstrates-tag">Instructional writing</span>
+          <span class="demonstrates-tag">SME translation</span>
+          <span class="demonstrates-tag">Facilitator enablement</span>
+          <span class="demonstrates-tag">Scripting and voice</span>
+          <span class="demonstrates-tag">ILT design</span>
+        </div>
+      </div>
+      <div class="work-links">
+        <a class="work-link link-primary" href="https://drive.google.com/file/d/18bkks-CMqTXZaSIWI7v7lLTUtdsJEBPZ/view?usp=drive_link" target="_blank" rel="noopener noreferrer">View guide →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span>CP — Learning Architecture Portfolio</span>
+  <span>Prior Work · Instructional design samples</span>
+</footer>
+
+<script>
+function toggleCard(header) {
+  const card = header.closest('.work-card');
+  card.classList.toggle('open');
+}
+
+function filterWork(category) {
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().replace(/\s/g,'') === category || (category === 'all' && b.textContent === 'All'));
+  });
+
+  document.querySelectorAll('[data-category]').forEach(el => {
+    if (category === 'all' || el.dataset.category === category) {
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

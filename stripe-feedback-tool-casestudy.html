@@ -36,7 +36,7 @@
     --radius-xl: 24px;
   }
 
-  body {
+  body { padding-top: 44px;
     font-family: 'DM Sans', sans-serif;
     font-weight: 400;
     background: var(--paper);
@@ -176,7 +176,7 @@
     margin-bottom: 0.6rem;
   }
 
-  .section-body {
+  .section-body { padding-top: 44px;
     font-size: 14px;
     line-height: 1.75;
     color: var(--ink-mid);
@@ -290,7 +290,7 @@
   .tool-panel-title { font-size: 12px; font-weight: 500; color: var(--ink); }
   .tool-panel-sub { font-size: 11px; color: var(--ink-soft); }
 
-  .tool-panel-body { padding: 1.1rem; }
+  .tool-panel-body { padding-top: 44px; padding: 1.1rem; }
 
   .t-field { margin-bottom: 0.85rem; }
   .t-field:last-of-type { margin-bottom: 0; }
@@ -579,6 +579,9 @@
 </style>
 </head>
 <body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(13,14,20,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid rgba(255,255,255,0.08);padding:0 1.5rem;height:44px;display:flex;align-items:center;">
+  <a href="index.html" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s;" onmouseover="this.style.color='rgba(255,255,255,0.85)'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">← Portfolio</a>
+</div>
 
 <nav>
   <div class="nav-left">

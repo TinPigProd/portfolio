@@ -44,7 +44,11 @@
     overflow-x: hidden;
   }
 
-  /* ── GRAIN OVERLAY ── */
+  *:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
   body::before {
     content: '';
     position: fixed; inset: 0; z-index: 0;
@@ -53,7 +57,6 @@
     opacity: 0.4;
   }
 
-  /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     height: 56px;
@@ -61,12 +64,13 @@
     padding: 0 2.5rem;
     background: rgba(13,13,11,0.85);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 0.5px solid var(--rule);
   }
 
   .nav-logo {
     display: flex; align-items: center; gap: 0.75rem;
-    text-decoration: none;
+    text-decoration: none; flex-shrink: 0;
   }
 
   .nav-monogram {
@@ -76,59 +80,43 @@
     display: flex; align-items: center; justify-content: center;
     font-family: 'Playfair Display', serif;
     font-size: 14px; font-weight: 700;
-    color: #6A7088;
-    letter-spacing: 0.02em;
+    color: #6A7088; letter-spacing: 0.02em;
   }
 
-  .nav-wordmark {
-    font-size: 13px; font-weight: 500;
-    color: #6A7088; letter-spacing: 0.04em;
-  }
+  .nav-wordmark { font-size: 13px; font-weight: 500; color: #6A7088; letter-spacing: 0.04em; }
 
   .nav-links {
     display: flex; align-items: center; gap: 0.25rem;
+    overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+    padding: 0 1rem;
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
   }
+  .nav-links::-webkit-scrollbar { display: none; }
 
   .nav-link {
     font-size: 12px; font-weight: 500;
     color: var(--ink-soft); letter-spacing: 0.04em;
     padding: 6px 14px; border-radius: var(--radius-sm);
     text-decoration: none; transition: color 0.15s, font-weight 0.15s;
-    cursor: pointer;
+    cursor: pointer; white-space: nowrap;
   }
 
   .nav-link:hover { color: var(--ink); font-weight: 700; }
   .nav-link.active { color: var(--ink-mid); font-weight: 700; }
-  .nav-link#nav-about { color: var(--ink-soft); }
-  .nav-link#nav-about:hover { color: var(--ink); font-weight: 700; }
 
-  .nav-cta {
-    font-size: 12px; font-weight: 600;
-    color: var(--bg); background: var(--gold);
-    padding: 6px 16px; border-radius: var(--radius-sm);
-    text-decoration: none; letter-spacing: 0.04em;
-    transition: opacity 0.15s; margin-left: 0.5rem;
-  }
-
-  .nav-cta:hover { opacity: 0.85; }
-
-  /* ── PAGES ── */
   .page { display: none; min-height: 100vh; padding-top: 56px; position: relative; z-index: 1; }
   .page.active { display: block; }
 
-  /* ── HOME PAGE ── */
   .home-hero {
     min-height: calc(100vh - 56px);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 4rem 2rem;
-    text-align: center;
-    position: relative;
+    padding: 4rem 2rem; text-align: center; position: relative;
   }
 
   .home-hero::before {
-    content: '';
-    position: absolute; inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(74,143,212,0.08) 0%, transparent 70%);
     pointer-events: none;
   }
@@ -150,9 +138,7 @@
     animation: fadeUp 0.6s 0.1s ease both;
   }
 
-  .hero-title em {
-    font-style: italic; color: var(--gold);
-  }
+  .hero-title em { font-style: italic; color: var(--gold); }
 
   .hero-desc {
     font-size: 17px; line-height: 1.7;
@@ -174,7 +160,6 @@
     transition: opacity 0.15s; cursor: pointer; border: none;
     font-family: 'Instrument Sans', sans-serif;
   }
-
   .btn-primary:hover { opacity: 0.85; }
 
   .btn-secondary {
@@ -186,153 +171,16 @@
     transition: color 0.15s, border-color 0.15s; cursor: pointer;
     font-family: 'Instrument Sans', sans-serif;
   }
-
   .btn-secondary:hover { color: var(--ink); border-color: var(--rule-strong); }
 
-  /* SYSTEM DIAGRAM */
-  .system-diagram {
-    max-width: 900px; margin: 0 auto;
-    padding: 4rem 2rem 2rem;
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-
-  .diagram-label {
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--ink-ghost); text-align: center; margin-bottom: 1.5rem;
-  }
-
-  .diagram-flow {
-    display: flex; align-items: center; justify-content: center;
-    gap: 0; flex-wrap: wrap;
-  }
-
-  .diagram-node {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 0.4rem; padding: 1rem 1.25rem;
-    background: var(--surface); border: 0.5px solid var(--rule-strong);
-    border-radius: var(--radius-md); min-width: 140px; text-align: center;
-    cursor: pointer; transition: border-color 0.15s, background 0.15s;
-  }
-
-  .diagram-node:hover { border-color: var(--gold); background: var(--surface-2); }
-
-  .diagram-node-num {
-    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--ink-ghost);
-  }
-
-  .diagram-node-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px; color: var(--ink); line-height: 1.2;
-  }
-
-  .diagram-node-tag {
-    font-size: 10px; color: var(--ink-soft); letter-spacing: 0.04em;
-  }
-
-  .diagram-arrow {
-    font-size: 14px; color: var(--ink-ghost);
-    padding: 0 0.5rem; flex-shrink: 0;
-  }
-
-  /* CASE STUDY GRID */
-  .case-studies {
-    max-width: 960px; margin: 0 auto;
-    padding: 3rem 2rem 5rem;
-  }
-
-  .cs-section-header {
-    display: flex; align-items: baseline; gap: 1rem;
-    margin-bottom: 2rem; padding-bottom: 1rem;
-    border-bottom: 0.5px solid var(--rule);
-  }
-
-  .cs-section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; color: var(--ink);
-  }
-
-  .cs-section-desc { font-size: 13px; color: var(--ink-soft); }
-
-  .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-
-  .cs-card {
-    background: #F8F9FC;
-    border: 0.5px solid rgba(0,0,0,0.08);
-    border-radius: var(--radius-lg); overflow: hidden;
-    cursor: pointer; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
-    text-decoration: none; display: block; position: relative;
-  }
-
-  .cs-card:hover { border-color: rgba(0,0,0,0.14); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.22); }
-
-  .cs-card-accent { height: 3px; }
-  .acc-gold { background: linear-gradient(90deg, #4A8FD4, #7AB8F0); }
-  .acc-teal { background: linear-gradient(90deg, var(--teal), #4DD4A8); }
-  .acc-blue { background: linear-gradient(90deg, #4A8FD4, #7AB8F0); }
-  .acc-purple { background: linear-gradient(90deg, #2DB896, #4DD4A8); }
-
-  .cs-card-body { padding: 1.5rem; position: relative; z-index: 1; }
-
-  .cs-card-bg-num {
-    position: absolute;
-    top: -0.75rem; left: 0.75rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 120px; font-weight: 700;
-    line-height: 1; letter-spacing: -0.04em;
-    color: rgba(0,0,0,0.12);
-    user-select: none; pointer-events: none;
-    z-index: 0;
-  }
-
-  .cs-card-num {
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: #9A9EB8; margin-bottom: 0.6rem;
-  }
-
-  .cs-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px; color: #18181F; line-height: 1.2; margin-bottom: 0.5rem;
-  }
-
-  .cs-card-desc { font-size: 13px; color: #5A5E72; line-height: 1.6; margin-bottom: 1rem; }
-
-  .cs-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1rem; }
-
-  .cs-tag {
-    font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
-    color: #6A6E88; background: #EDEEF5;
-    border: 0.5px solid rgba(0,0,0,0.07); border-radius: var(--radius-sm);
-    padding: 2px 8px;
-  }
-
-  .cs-card-cta {
-    font-size: 12px; font-weight: 600; color: #4A8FD4;
-    letter-spacing: 0.04em; display: flex; align-items: center; gap: 5px;
-    transition: gap 0.15s;
-  }
-
-  .cs-card:hover .cs-card-cta { gap: 8px; }
-
-  .cs-card-full {
-    grid-column: 1 / -1;
-  }
-
-  /* ── WORK LIST ── */
-  .work-list-wrap {
-    max-width: 680px; margin: 0 auto;
-    padding: 0 2rem 3rem;
-  }
+  .work-list-wrap { max-width: 680px; margin: 0 auto; padding: 0 2rem 3rem; }
 
   .work-list-label {
     font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--ink-soft); margin-bottom: 1rem;
     display: flex; align-items: center; gap: 0.75rem;
   }
-
-  .work-list-label::after {
-    content: ''; flex: 1; height: 0.5px; background: var(--rule-strong);
-  }
+  .work-list-label::after { content: ''; flex: 1; height: 0.5px; background: var(--rule-strong); }
 
   .work-list { display: flex; flex-direction: column; }
 
@@ -341,11 +189,8 @@
     padding: 1.1rem 0;
     border-bottom: 0.5px solid var(--rule-strong);
     cursor: pointer; transition: background 0.15s;
-    border-radius: 0;
   }
-
   .work-list-item:first-child { border-top: 0.5px solid var(--rule-strong); }
-
   .work-list-item:hover .work-list-num { color: var(--blue); }
   .work-list-item:hover .work-list-title { color: var(--blue); }
   .work-list-item:hover .work-list-cta { color: var(--blue); transform: translateX(4px); }
@@ -353,24 +198,13 @@
   .work-list-num {
     font-family: 'Playfair Display', serif;
     font-size: 28px; font-weight: 400; color: var(--ink-ghost);
-    width: 48px; flex-shrink: 0; line-height: 1;
-    transition: color 0.15s;
+    width: 48px; flex-shrink: 0; line-height: 1; transition: color 0.15s;
   }
 
   .work-list-body { flex: 1; min-width: 0; }
-
-  .work-list-title {
-    font-size: 15px; font-weight: 600; color: var(--ink);
-    margin-bottom: 2px; transition: color 0.15s;
-  }
-
-  .work-list-desc {
-    font-size: 12px; color: var(--ink-soft); line-height: 1.5;
-  }
-
-  .work-list-tags {
-    display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0;
-  }
+  .work-list-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 2px; transition: color 0.15s; }
+  .work-list-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+  .work-list-tags { display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0; }
 
   .wl-tag {
     font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase;
@@ -379,20 +213,14 @@
     padding: 2px 7px;
   }
 
-  .work-list-cta {
-    font-size: 16px; color: var(--ink-ghost);
-    flex-shrink: 0; transition: color 0.15s, transform 0.15s;
-  }
-  .inner-page {
-    max-width: 960px; margin: 0 auto; padding: 3rem 2rem 5rem;
-  }
+  .work-list-cta { font-size: 16px; color: var(--ink-ghost); flex-shrink: 0; transition: color 0.15s, transform 0.15s; }
+
+  .inner-page { max-width: 960px; margin: 0 auto; padding: 3rem 2rem 5rem; }
 
   .page-breadcrumb {
     font-size: 12px; color: var(--ink-soft);
-    margin-bottom: 2rem; display: flex; align-items: center; gap: 6px;
-    cursor: pointer;
+    margin-bottom: 2rem; display: flex; align-items: center; gap: 6px; cursor: pointer;
   }
-
   .page-breadcrumb span { color: var(--ink-ghost); }
   .page-breadcrumb a { color: var(--ink-soft); text-decoration: none; }
   .page-breadcrumb a:hover { color: var(--gold); }
@@ -409,14 +237,9 @@
     font-size: clamp(32px, 4vw, 54px); line-height: 1.1;
     color: var(--ink); margin-bottom: 0.75rem;
   }
-
   .inner-page-title em { font-style: italic; color: var(--ink-mid); }
+  .inner-page-desc { font-size: 15px; color: var(--ink-mid); line-height: 1.7; max-width: 560px; }
 
-  .inner-page-desc {
-    font-size: 15px; color: var(--ink-mid); line-height: 1.7; max-width: 560px;
-  }
-
-  /* ARTIFACT CARDS ON INNER PAGES */
   .artifact-cards { display: flex; flex-direction: column; gap: 1.25rem; }
 
   .artifact-card {
@@ -429,16 +252,10 @@
     display: flex; align-items: center; justify-content: space-between;
   }
 
-  .artifact-card-title {
-    font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink);
-  }
-
+  .artifact-card-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); }
   .artifact-card-meta { font-size: 12px; color: var(--ink-soft); }
-
   .artifact-card-body { padding: 1.25rem 1.5rem; }
-
   .artifact-card-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.65; margin-bottom: 1.25rem; }
-
   .artifact-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
   .artifact-link {
@@ -446,30 +263,21 @@
     padding: 7px 16px; border-radius: var(--radius-sm);
     text-decoration: none; cursor: pointer; border: none;
     font-family: 'Instrument Sans', sans-serif; transition: opacity 0.15s;
+    display: inline-block;
   }
 
   .artifact-link-primary { background: var(--gold); color: var(--bg); }
   .artifact-link-primary:hover { opacity: 0.85; }
+  .artifact-link-secondary { background: var(--bg-3); color: var(--ink-mid); border: 0.5px solid var(--rule-strong); }
+  .artifact-link-secondary:hover { color: var(--ink); }
 
-  .artifact-link-secondary {
-    background: var(--bg-3); color: var(--ink-mid);
-    border: 0.5px solid var(--rule-strong);
-  }
-
-  .artifact-link-secondary:hover { color: var(--ink); border-color: var(--rule-strong); }
-
-  /* ── ABOUT PAGE ── */
-  .about-grid {
-    display: grid; grid-template-columns: 1fr 320px;
-    gap: 3rem; align-items: start;
-  }
+  .about-grid { display: grid; grid-template-columns: 1fr 320px; gap: 3rem; align-items: start; }
 
   .about-title {
     font-family: 'Playfair Display', serif;
     font-size: clamp(28px, 3vw, 42px); color: var(--ink);
     line-height: 1.15; margin-bottom: 1.25rem;
   }
-
   .about-title em { font-style: italic; color: var(--gold); }
 
   .about-body { font-size: 15px; color: var(--ink-mid); line-height: 1.8; }
@@ -490,7 +298,6 @@
   }
 
   .about-card-content { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
-
   .about-card-content strong { color: var(--ink); font-weight: 600; }
 
   .capabilities-list { display: flex; flex-direction: column; gap: 5px; }
@@ -505,7 +312,6 @@
     background: var(--gold); flex-shrink: 0; margin-top: 6px;
   }
 
-  /* ── FOOTER ── */
   .site-footer {
     border-top: 0.5px solid var(--rule);
     padding: 2rem 2.5rem;
@@ -516,7 +322,6 @@
   .footer-left { font-size: 12px; color: var(--ink-ghost); }
   .footer-right { font-size: 12px; color: var(--ink-ghost); }
 
-  /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
@@ -524,13 +329,6 @@
 
   .animate-in { animation: fadeUp 0.5s ease both; }
 
-  /* ── DIVIDERS ── */
-  .section-divider {
-    height: 0.5px; background: var(--rule);
-    margin: 2.5rem 0;
-  }
-
-  /* TOOL GROUPS */
   .tool-group {
     background: var(--surface); border: 0.5px solid var(--rule);
     border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem;
@@ -541,26 +339,16 @@
     display: flex; align-items: center; gap: 1rem;
   }
 
-  .tool-group-accent {
-    width: 3px; height: 32px; border-radius: 2px; flex-shrink: 0;
-  }
-
-  .tool-group-title {
-    font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink);
-    margin-bottom: 2px;
-  }
-
+  .tool-group-accent { width: 3px; height: 32px; border-radius: 2px; flex-shrink: 0; }
+  .tool-group-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); margin-bottom: 2px; }
   .tool-group-desc { font-size: 12px; color: var(--ink-soft); }
-
   .tool-group-body { padding: 1.25rem 1.5rem; }
-
   .tool-list { display: flex; flex-direction: column; gap: 1rem; }
 
   .tool-item {
     display: flex; align-items: flex-start; gap: 1rem;
     padding-bottom: 1rem; border-bottom: 0.5px solid var(--rule);
   }
-
   .tool-item:last-child { border-bottom: none; padding-bottom: 0; }
 
   .tool-item-icon {
@@ -571,10 +359,8 @@
   }
 
   .tool-item-body { flex: 1; }
-
   .tool-item-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
   .tool-item-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 8px; }
-
   .tool-item-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
   .tool-link {
@@ -582,6 +368,7 @@
     padding: 4px 12px; border-radius: var(--radius-sm);
     text-decoration: none; cursor: pointer; border: none;
     font-family: 'Instrument Sans', sans-serif; transition: opacity 0.15s;
+    display: inline-block;
   }
 
   .tl-gold { background: var(--gold); color: var(--bg); }
@@ -589,53 +376,44 @@
   .tl-dim { background: var(--bg-3); color: var(--ink-mid); border: 0.5px solid var(--rule-strong); }
   .tl-dim:hover { color: var(--ink); }
 
-  @media (max-width: 700px) {
-    .cs-grid { grid-template-columns: 1fr; }
+  @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; }
-    .diagram-flow { flex-direction: column; }
-    .diagram-arrow { transform: rotate(90deg); }
-    nav { padding: 0 1.25rem; }
-    .nav-links { gap: 0; }
-    .nav-link { padding: 6px 8px; font-size: 11px; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.5rem; padding-left: 1rem; mask-image: none; -webkit-mask-image: none; }
+    .nav-link { padding: 6px 10px; font-size: 12px; }
+    .inner-page { padding: 2rem 1rem 4rem; }
+    .artifact-card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <nav>
-  <a class="nav-logo" href="#" onclick="showPage('home')">
+  <a class="nav-logo" href="#home" onclick="showPage('home'); return false;">
     <div class="nav-monogram">CP</div>
     <span class="nav-wordmark">Learning Architecture</span>
   </a>
   <div class="nav-links">
-    <span class="nav-link active" id="nav-home" onclick="showPage('home')">Home</span>
-    <span class="nav-link" id="nav-framework" onclick="showPage('framework')">Framework</span>
-    <span class="nav-link" id="nav-tools" onclick="showPage('tools')">Tools</span>
-    <span class="nav-link" id="nav-ecosystem" onclick="showPage('ecosystem')">Learning Delivery</span>
-    <span class="nav-link" id="nav-priorwork" onclick="showPage('priorwork')">Prior Work</span>
-    <span class="nav-link" id="nav-about" onclick="showPage('about')">About</span>
-    <span class="nav-link" id="nav-stripe" onclick="showPage('stripe')" style="color:var(--gold);font-weight:600;">For Stripe</span>
+    <a href="#home" class="nav-link active" id="nav-home" onclick="showPage('home'); return false;">Home</a>
+    <a href="#framework" class="nav-link" id="nav-framework" onclick="showPage('framework'); return false;">Framework</a>
+    <a href="#tools" class="nav-link" id="nav-tools" onclick="showPage('tools'); return false;">Tools</a>
+    <a href="#ecosystem" class="nav-link" id="nav-ecosystem" onclick="showPage('ecosystem'); return false;">Learning Delivery</a>
+    <a href="#priorwork" class="nav-link" id="nav-priorwork" onclick="showPage('priorwork'); return false;">Prior Work</a>
+    <a href="#about" class="nav-link" id="nav-about" onclick="showPage('about'); return false;">About</a>
+    <a href="#stripe" class="nav-link" id="nav-stripe" onclick="showPage('stripe'); return false;" style="color:var(--gold);font-weight:600;">For Stripe</a>
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════════
-     PAGE 1 — HOME
-══════════════════════════════════════════ -->
-<div class="page active" id="page-home">
-
+<!-- PAGE 1 — HOME -->
+<main class="page active" id="page-home">
   <div class="home-hero">
     <div class="hero-eyebrow">
       <div class="hero-eyebrow-line"></div>
       Learning Architecture · Talent Systems · AI Enablement
       <div class="hero-eyebrow-line"></div>
     </div>
-    <h1 class="hero-title">
-      Chasing <em>Human Capability</em>
-    </h1>
-    <p class="hero-desc">
-      Systems for scale. Experiences for impact.
-    </p>
+    <h1 class="hero-title">Chasing <em>Human Capability</em></h1>
+    <p class="hero-desc">Systems for scale. Experiences for impact.</p>
     <p style="font-size:15px;color:var(--ink-mid);line-height:1.75;max-width:620px;margin-bottom:1.5rem;text-align:center;">
       Your talent infrastructure shouldn't stand still. I build the underlying learning architectures and contextual systems that meet high-performing teams exactly where they build, addressing skills-based needs and turning organizational competency frameworks into a continuous pursuit of growth.
     </p>
@@ -647,12 +425,10 @@
     </div>
   </div>
 
-  <!-- WORK LIST -->
   <div class="work-list-wrap">
     <div class="work-list-label">The work</div>
     <div class="work-list">
-
-      <div class="work-list-item" onclick="showPage('framework')">
+      <div class="work-list-item" tabindex="0" onclick="showPage('framework')" onkeydown="if(event.key==='Enter')showPage('framework')">
         <div class="work-list-num">01</div>
         <div class="work-list-body">
           <div class="work-list-title">Success Model</div>
@@ -665,8 +441,7 @@
         </div>
         <div class="work-list-cta">→</div>
       </div>
-
-      <div class="work-list-item" onclick="showPage('tools')">
+      <div class="work-list-item" tabindex="0" onclick="showPage('tools')" onkeydown="if(event.key==='Enter')showPage('tools')">
         <div class="work-list-num">02</div>
         <div class="work-list-body">
           <div class="work-list-title">Feedback Synthesis Tool</div>
@@ -679,8 +454,7 @@
         </div>
         <div class="work-list-cta">→</div>
       </div>
-
-      <div class="work-list-item" onclick="showPage('tools')">
+      <div class="work-list-item" tabindex="0" onclick="showPage('tools')" onkeydown="if(event.key==='Enter')showPage('tools')">
         <div class="work-list-num">03</div>
         <div class="work-list-body">
           <div class="work-list-title">Succession Planning Tool</div>
@@ -693,8 +467,7 @@
         </div>
         <div class="work-list-cta">→</div>
       </div>
-
-      <div class="work-list-item" onclick="showPage('ecosystem')">
+      <div class="work-list-item" tabindex="0" onclick="showPage('ecosystem')" onkeydown="if(event.key==='Enter')showPage('ecosystem')">
         <div class="work-list-num">04</div>
         <div class="work-list-body">
           <div class="work-list-title">Learning Delivery</div>
@@ -707,8 +480,7 @@
         </div>
         <div class="work-list-cta">→</div>
       </div>
-
-      <div class="work-list-item" onclick="showPage('priorwork')">
+      <div class="work-list-item" tabindex="0" onclick="showPage('priorwork')" onkeydown="if(event.key==='Enter')showPage('priorwork')">
         <div class="work-list-num">05</div>
         <div class="work-list-body">
           <div class="work-list-title">Prior Work</div>
@@ -722,7 +494,6 @@
         </div>
         <div class="work-list-cta">→</div>
       </div>
-
     </div>
   </div>
 
@@ -730,14 +501,12 @@
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">Built for Stripe · Learning Architect</div>
   </footer>
-</div>
+</main>
 
-<!-- ══════════════════════════════════════════
-     PAGE 2 — FRAMEWORK
-══════════════════════════════════════════ -->
-<div class="page" id="page-framework">
+<!-- PAGE 2 — FRAMEWORK -->
+<section class="page" id="page-framework">
   <div class="inner-page">
-    <div class="page-breadcrumb" onclick="showPage('home')">
+    <div class="page-breadcrumb" tabindex="0" onclick="showPage('home')" onkeydown="if(event.key==='Enter')showPage('home')">
       ← <a>Home</a> <span>/</span> The Framework
     </div>
     <div class="inner-page-header">
@@ -745,7 +514,6 @@
       <h1 class="inner-page-title">The <em>Foundation</em></h1>
       <p class="inner-page-desc">The Success Model is the interpretive engine underneath every other tool in this portfolio. Built first based on public facing information, referenced by everything that follows.</p>
     </div>
-
     <div class="artifact-cards">
       <div class="artifact-card">
         <div class="artifact-card-header">
@@ -756,9 +524,7 @@
           <div style="font-size:11px;color:var(--ink-ghost);">Case study 01</div>
         </div>
         <div class="artifact-card-body">
-          <div class="artifact-card-desc">
-            Maps Stripe's 10 cultural operating principles to 11 Korn Ferry competencies across two tiers: "The What" (Enterprise-critical) and "The How" (Culture-differentiating). Each competency includes observable behavioral indicators for use in hiring, calibration, promotion, and succession decisions, creating consistency across all stages of the employee lifecycle. Click any competency card to explore the behavioral evidence layer.
-          </div>
+          <div class="artifact-card-desc">Maps Stripe's 10 cultural operating principles to 11 Korn Ferry competencies across two tiers: "The What" (Enterprise-critical) and "The How" (Culture-differentiating). Each competency includes observable behavioral indicators for use in hiring, calibration, promotion, and succession decisions, creating consistency across all stages of the employee lifecycle. Click any competency card to explore the behavioral evidence layer.</div>
           <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;">
             <div style="background:var(--bg-3);border:0.5px solid var(--rule);border-radius:var(--radius-sm);padding:0.75rem 1rem;flex:1;min-width:140px;">
               <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:3px;">Tier 1</div>
@@ -777,38 +543,34 @@
             </div>
           </div>
           <div class="artifact-links">
-            <a class="artifact-link artifact-link-primary" href="stripe-success-model-casestudy.html" target="_blank">View case study →</a>
-            <a class="artifact-link artifact-link-secondary" href="stripe-success-model.html" target="_blank">Open standalone tool</a>
+            <a class="artifact-link artifact-link-primary" href="stripe-success-model-casestudy.html" target="_blank" rel="noopener noreferrer">View case study →</a>
+            <a class="artifact-link artifact-link-secondary" href="stripe-success-model.html" target="_blank" rel="noopener noreferrer">Open standalone tool</a>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
       <span style="font-size:12px;color:var(--ink-soft);margin-right:1rem;font-style:italic;">The framework is the engine. Case study 02 shows it running.</span>
-      <span style="cursor:pointer;color:var(--blue);font-weight:500;" onclick="showPage('tools')">Next: The Tools →</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--blue);font-weight:500;" onclick="showPage('tools')" onkeydown="if(event.key==='Enter')showPage('tools')">Next: The Tools →</span>
     </div>
   </footer>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 3 — TOOLS
-══════════════════════════════════════════ -->
-<div class="page" id="page-tools">
+<!-- PAGE 3 — TOOLS -->
+<section class="page" id="page-tools">
   <div class="inner-page">
-    <div class="page-breadcrumb" onclick="showPage('home')">
+    <div class="page-breadcrumb" tabindex="0" onclick="showPage('home')" onkeydown="if(event.key==='Enter')showPage('home')">
       ← <a>Home</a> <span>/</span> The Tools
     </div>
     <div class="inner-page-header">
-      <div class="inner-page-eyebrow">The Tools · Case studies 02 & 03</div>
+      <div class="inner-page-eyebrow">The Tools · Case studies 02 &amp; 03</div>
       <h1 class="inner-page-title">The <em>Engine</em></h1>
       <p class="inner-page-desc">Two tools that operationalize the Success Model, turning a static framework into active talent infrastructure. The Feedback Synthesis Tool and the Succession Planning Tool share the same competency engine and tell a connected story.</p>
     </div>
 
-    <!-- Tool Group 1: Feedback -->
     <div class="tool-group">
       <div class="tool-group-header">
         <div class="tool-group-accent" style="background:linear-gradient(180deg,var(--teal),#4DD4A8);"></div>
@@ -818,9 +580,7 @@
         </div>
       </div>
       <div class="tool-group-body">
-        <p style="font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:1.25rem;">
-          Transforms raw, unstructured observations into competency-anchored strengths, opportunities, and recommended actions. The system prompt embeds the full Success Model so every output is genuinely anchored to the framework, not labeled after the fact. Available in two versions: a live API-powered tool and a pre-loaded simulation.
-        </p>
+        <p style="font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:1.25rem;">Transforms raw, unstructured observations into competency-anchored strengths, opportunities, and recommended actions. The system prompt embeds the full Success Model so every output is genuinely anchored to the framework, not labeled after the fact. Available in two versions: a live API-powered tool and a pre-loaded simulation.</p>
         <div class="tool-list">
           <div class="tool-item">
             <div class="tool-item-icon">⚡</div>
@@ -828,8 +588,8 @@
               <div class="tool-item-name">Live API version</div>
               <div class="tool-item-desc">Powered by Claude Sonnet. Enter any observations to see how the tool synthesizes in real time using the Success Model as its interpretive framework. Best for demonstrating live capability.</div>
               <div class="tool-item-links">
-                <a class="tool-link tl-gold" href="stripe-feedback-tool-casestudy.html" target="_blank">View case study →</a>
-                <a class="tool-link tl-dim" href="stripe-feedback-tool.jsx" target="_blank">Open live tool</a>
+                <a class="tool-link tl-gold" href="stripe-feedback-tool-casestudy.html" target="_blank" rel="noopener noreferrer">View case study →</a>
+                <a class="tool-link tl-dim" href="stripe-feedback-tool.html" target="_blank" rel="noopener noreferrer">Open live tool</a>
               </div>
             </div>
           </div>
@@ -839,18 +599,17 @@
               <div class="tool-item-name">Simulated version</div>
               <div class="tool-item-desc">Two pre-loaded scenarios: fictional employees Jordan Mills and Priya Anand, with animated synthesis steps and staggered output reveal. Works without API access. Best for presentations and review.</div>
               <div class="tool-item-links">
-                <a class="tool-link tl-gold" href="stripe-feedback-simulated.html" target="_blank">Open simulation →</a>
+                <a class="tool-link tl-gold" href="stripe-feedback-simulated.html" target="_blank" rel="noopener noreferrer">Open simulation →</a>
               </div>
             </div>
           </div>
         </div>
         <div style="margin-top:1rem;padding:0.75rem 1rem;background:var(--bg-3);border:0.5px solid var(--rule);border-radius:var(--radius-sm);font-size:12px;color:var(--ink-soft);line-height:1.6;">
-          <strong style="color:var(--ink-mid);">Two ways to experience the tool —</strong> Simulation option: pre-loaded scenarios, no setup required. Live tool option: enter your own observations, powered by Claude in real time.
+          <strong style="color:var(--ink-mid);">Two ways to experience the tool.</strong> Simulation option: pre-loaded scenarios, no setup required. Live tool option: enter your own observations, powered by Claude in real time.
         </div>
       </div>
     </div>
 
-    <!-- Tool Group 2: Succession -->
     <div class="tool-group">
       <div class="tool-group-header">
         <div class="tool-group-accent" style="background:linear-gradient(180deg,var(--blue),#7AB8F0);"></div>
@@ -860,9 +619,7 @@
         </div>
       </div>
       <div class="tool-group-body">
-        <p style="font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:1.25rem;">
-          Extends the feedback synthesis into succession planning, transforming subjective language into behavioral evidence, then placing direct reports on an interactive dual 9-box. Toggle between Traditional (Performance × Potential) and Success Model (The What × The How) views. The bias transformation panel shows exactly how subjective phrases became behavioral observations.
-        </p>
+        <p style="font-size:14px;color:var(--ink-mid);line-height:1.65;margin-bottom:1.25rem;">Extends the feedback synthesis into succession planning, transforming subjective language into behavioral evidence, then placing direct reports on an interactive dual 9-box. Toggle between Traditional (Performance x Potential) and Success Model (The What x The How) views. The bias transformation panel shows exactly how subjective phrases became behavioral observations.</p>
         <div class="tool-list">
           <div class="tool-item" style="border-bottom:none;padding-bottom:0;">
             <div class="tool-item-icon">⬡</div>
@@ -870,8 +627,8 @@
               <div class="tool-item-name">Succession Planning Tool</div>
               <div class="tool-item-desc">Two direct reports (fictional employees Jordan Mills and Priya Anand) placed across both 9-box views with competency-anchored rationale and a language transformation panel demonstrating bias reduction in action.</div>
               <div class="tool-item-links">
-                <a class="tool-link tl-gold" href="stripe-succession-casestudy.html" target="_blank">View case study →</a>
-                <a class="tool-link tl-dim" href="stripe-succession-tool.html" target="_blank">Open standalone tool</a>
+                <a class="tool-link tl-gold" href="stripe-succession-casestudy.html" target="_blank" rel="noopener noreferrer">View case study →</a>
+                <a class="tool-link tl-dim" href="stripe-succession-tool.html" target="_blank" rel="noopener noreferrer">Open standalone tool</a>
               </div>
             </div>
           </div>
@@ -879,23 +636,20 @@
       </div>
     </div>
   </div>
-
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
-      <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('framework')">← The Framework</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('framework')" onkeydown="if(event.key==='Enter')showPage('framework')">← The Framework</span>
       <span style="font-size:12px;color:var(--ink-soft);margin-right:1rem;font-style:italic;">The gap is identified. Case studies 04 and 05 show what happens next.</span>
-      <span style="cursor:pointer;color:var(--blue);font-weight:500;" onclick="showPage('ecosystem')">Learning Delivery →</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--blue);font-weight:500;" onclick="showPage('ecosystem')" onkeydown="if(event.key==='Enter')showPage('ecosystem')">Learning Delivery →</span>
     </div>
   </footer>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 4 — ECOSYSTEM
-══════════════════════════════════════════ -->
-<div class="page" id="page-ecosystem">
+<!-- PAGE 4 — ECOSYSTEM -->
+<section class="page" id="page-ecosystem">
   <div class="inner-page">
-    <div class="page-breadcrumb" onclick="showPage('home')">
+    <div class="page-breadcrumb" tabindex="0" onclick="showPage('home')" onkeydown="if(event.key==='Enter')showPage('home')">
       ← <a>Home</a> <span>/</span> Learning Delivery
     </div>
     <div class="inner-page-header">
@@ -903,7 +657,6 @@
       <h1 class="inner-page-title">The <em>Ecosystem</em></h1>
       <p class="inner-page-desc">Two artifacts. One ecosystem loop.</p>
       <p class="inner-page-desc" style="margin-top:0.75rem;">These aren't tools for their own sake. They're the infrastructure that turns a feedback moment into a structured, competency-anchored capability-building journey, delivered where leaders already work.</p>
-      <p class="inner-page-desc">The most architecturally forward piece in the portfolio. Beacon closes the loop between feedback synthesis and development action, delivering learning in the flow of work, not redirected away from it.</p>
     </div>
 
     <div class="artifact-cards">
@@ -916,11 +669,7 @@
           <div style="font-size:11px;color:var(--ink-ghost);">Case study 04</div>
         </div>
         <div class="artifact-card-body">
-          <div class="artifact-card-desc">
-            Beacon is an AI agent created for this portfolio, as a way to connect feedback to action. Beacon fires when a feedback synthesis completes, surfacing three targeted learning resources directly into a Slack channel, in this case #people-insights. Privacy-by-design: the channel references "Direct Report Convo 5.17.26" while name and competency detail are revealed only on deliberate click. Three card formats (Article, Framework, Micro-lesson) serve different time availability and learning preferences. A progress tracker and card status cycling create lightweight accountability without a separate system.
-            <br><br>A live application could also pull from integrated LMS, LXP, and knowledge base options.
-          </div>
-
+          <div class="artifact-card-desc">Beacon is an AI agent created for this portfolio, as a way to connect feedback to action. Beacon fires when a feedback synthesis completes, surfacing three targeted learning resources directly into a Slack channel, in this case #people-insights. Privacy-by-design: the channel references "Direct Report Convo 5.17.26" while name and competency detail are revealed only on deliberate click. Three card formats (Article, Framework, Micro-lesson) serve different time availability and learning preferences. A progress tracker and card status cycling create lightweight accountability without a separate system.<br><br>A live application could also pull from integrated LMS, LXP, and knowledge base options.</div>
           <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
             <div style="background:var(--bg-3);border:0.5px solid var(--rule);border-radius:var(--radius-sm);padding:0.75rem 1rem;flex:1;min-width:120px;">
               <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:3px;">Trigger</div>
@@ -938,15 +687,13 @@
               <div style="font-size:11px;color:var(--ink-soft);">Timestamp at channel level</div>
             </div>
           </div>
-
           <div class="artifact-links">
-            <a class="artifact-link artifact-link-primary" href="beacon-casestudy.html" target="_blank">View case study →</a>
+            <a class="artifact-link artifact-link-primary" href="beacon-casestudy.html" target="_blank" rel="noopener noreferrer">View case study →</a>
             <a class="artifact-link artifact-link-secondary" href="beacon-slack-simulation.html" target="_blank" rel="noopener noreferrer">Open simulation</a>
           </div>
         </div>
       </div>
 
-      <!-- FICTIONALPIG LXP -->
       <div class="artifact-card" style="margin-top:1.25rem;">
         <div class="artifact-card-header">
           <div>
@@ -956,9 +703,7 @@
           <div style="font-size:11px;color:var(--ink-ghost);">Case study 05</div>
         </div>
         <div class="artifact-card-body">
-          <div class="artifact-card-desc">
-            The infrastructure layer underneath Beacon. A skills-based, competency-anchored pathway that auto-assigns when a feedback synthesis identifies a gap in Collaborates, Communicates Effectively, or Interpersonal Savvy. Built in FictionalPig LXP to demonstrate LXP ecosystem design — including trigger rule architecture, metadata structuring, content sequencing, audience targeting, and skill coverage tracking. Toggle between the admin/architect view and the learner view to see both design surfaces.
-          </div>
+          <div class="artifact-card-desc">The infrastructure layer underneath Beacon. A skills-based, competency-anchored pathway that auto-assigns when a feedback synthesis identifies a gap in Collaborates, Communicates Effectively, or Interpersonal Savvy. Built in FictionalPig LXP to demonstrate LXP ecosystem design, including trigger rule architecture, metadata structuring, content sequencing, audience targeting, and skill coverage tracking. Toggle between the admin/architect view and the learner view to see both design surfaces.</div>
           <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;">
             <div style="background:var(--bg-3);border:0.5px solid var(--rule);border-radius:var(--radius-sm);padding:0.75rem 1rem;flex:1;min-width:120px;">
               <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:3px;">Platform</div>
@@ -982,38 +727,28 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
-      <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('tools')">← The Tools</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('tools')" onkeydown="if(event.key==='Enter')showPage('tools')">← The Tools</span>
       <span style="font-size:12px;color:var(--ink-soft);margin-right:1rem;font-style:italic;">The system is complete. The person who built it is next.</span>
-      <span style="cursor:pointer;color:var(--blue);font-weight:500;" onclick="showPage('about')">About CP →</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--blue);font-weight:500;" onclick="showPage('priorwork')" onkeydown="if(event.key==='Enter')showPage('priorwork')">Prior Work →</span>
     </div>
   </footer>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 5 — ABOUT
-══════════════════════════════════════════ -->
-<div class="page" id="page-about">
+<!-- PAGE 5 — ABOUT -->
+<section class="page" id="page-about">
   <div class="inner-page">
-    <div class="page-breadcrumb" onclick="showPage('home')">
+    <div class="page-breadcrumb" tabindex="0" onclick="showPage('home')" onkeydown="if(event.key==='Enter')showPage('home')">
       ← <a>Home</a> <span>/</span> About
     </div>
-
-    <!-- TITLE -->
     <div style="margin-bottom:2rem;">
       <h1 class="about-title">Learning architect.<br><em>Systems thinker.</em><br>Builder.</h1>
     </div>
-
-    <!-- MAIN GRID: How I Work + Sidebar side by side -->
     <div class="about-grid">
-
-      <!-- LEFT: How I Work prose, single column, no header -->
       <div>
         <div class="about-body">
           <p>I take a holistic approach to learning and enablement, considering systems design alongside perceived learning need. My focus is on how knowledge becomes usable in real workflows, how it shows up in decisions, behaviors, and the day-to-day work of managers and teams. I cringe over training for training's sake. I want to understand the root cause before any learning strategy is considered.</p>
@@ -1026,31 +761,27 @@
           ◎ Prefer a visual? →
         </a>
       </div>
-
-      <!-- RIGHT: Sidebar cards -->
       <div class="about-sidebar">
         <div class="about-card">
           <div class="about-card-label">Experience</div>
           <div class="about-card-content">
-            <strong>Emerson</strong> | Program Manager, Global Learning & Leadership<br><br>
-            <strong>Pure Storage</strong> | Manager, Content Strategy & Experience Design<br><br>
-            <strong>Axon</strong> | Learning Consultant & Talent Enablement<br><br>
+            <strong>Emerson</strong> | Program Manager, Global Learning &amp; Leadership<br><br>
+            <strong>Pure Storage</strong> | Manager, Content Strategy &amp; Experience Design<br><br>
+            <strong>Axon</strong> | Learning Consultant &amp; Talent Enablement<br><br>
             <strong>University of Phoenix</strong> | Senior Instructional Designer
           </div>
         </div>
-
         <div class="about-card">
           <div class="about-card-label">Core capabilities</div>
           <div class="capabilities-list">
-            <div class="capability-item"><div class="capability-dot"></div>Learning ecosystem design & LMS/LXP architecture</div>
-            <div class="capability-item"><div class="capability-dot"></div>AI-assisted content infrastructure & prompt design</div>
-            <div class="capability-item"><div class="capability-dot"></div>UX-informed learning & interaction design</div>
-            <div class="capability-item"><div class="capability-dot"></div>Competency frameworks & career architecture</div>
+            <div class="capability-item"><div class="capability-dot"></div>Learning ecosystem design &amp; LMS/LXP architecture</div>
+            <div class="capability-item"><div class="capability-dot"></div>AI-assisted content infrastructure &amp; prompt design</div>
+            <div class="capability-item"><div class="capability-dot"></div>UX-informed learning &amp; interaction design</div>
+            <div class="capability-item"><div class="capability-dot"></div>Competency frameworks &amp; career architecture</div>
             <div class="capability-item"><div class="capability-dot"></div>Figma · Claude · Copilot · Runway · Articulate360 · Adobe</div>
             <div class="capability-item"><div class="capability-dot"></div>Agile/Kanban · Change enablement · Stakeholder alignment</div>
           </div>
         </div>
-
         <div class="about-card">
           <div class="about-card-label">Certifications</div>
           <div class="about-card-content" style="line-height:1.7;">
@@ -1058,10 +789,9 @@
             Insights Discovery Practitioner<br>
             Lean Yellow Belt<br>
             SAFe Agile Trained<br>
-            Wharton Innovation & Design Thinking (in progress)
+            Wharton Innovation &amp; Design Thinking (in progress)
           </div>
         </div>
-
         <div class="about-card">
           <div class="about-card-label">Education</div>
           <div class="about-card-content" style="line-height:1.7;">
@@ -1071,24 +801,20 @@
         </div>
       </div>
     </div>
-
   </div>
-
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
-      <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('ecosystem')">← Learning Delivery</span>
-      <span style="cursor:pointer;color:var(--gold);font-weight:600;" onclick="showPage('stripe')">A note for Stripe →</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('priorwork')" onkeydown="if(event.key==='Enter')showPage('priorwork')">← Prior Work</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--gold);font-weight:600;" onclick="showPage('stripe')" onkeydown="if(event.key==='Enter')showPage('stripe')">A note for Stripe →</span>
     </div>
   </footer>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 5B — PRIOR WORK
-══════════════════════════════════════════ -->
-<div class="page" id="page-priorwork">
+<!-- PAGE 5B — PRIOR WORK -->
+<section class="page" id="page-priorwork">
   <div class="inner-page">
-    <div class="page-breadcrumb" onclick="showPage('home')">
+    <div class="page-breadcrumb" tabindex="0" onclick="showPage('home')" onkeydown="if(event.key==='Enter')showPage('home')">
       ← <a>Home</a> <span>/</span> Prior Work
     </div>
     <div class="inner-page-header">
@@ -1097,13 +823,10 @@
       <p class="inner-page-desc">Before the frameworks and AI-enabled tools, there was the craft. These samples represent earlier work across eLearning development, video production, presentation design, and facilitator writing.</p>
     </div>
     <div style="margin-top:1.5rem;">
-      <a href="prior-work.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);border:0.5px solid var(--rule-strong);padding:10px 20px;border-radius:8px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-        Open Prior Work →
-      </a>
+      <a href="prior-work.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);border:0.5px solid var(--rule-strong);padding:10px 20px;border-radius:8px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Open Prior Work →</a>
     </div>
-    <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:0.5px;">
-
-      <div style="padding:1.1rem 0;border-bottom:0.5px solid var(--rule-strong);display:flex;align-items:center;gap:1.5rem;">
+    <div style="margin-top:2.5rem;display:flex;flex-direction:column;">
+      <div style="padding:1.1rem 0;border-top:0.5px solid var(--rule-strong);border-bottom:0.5px solid var(--rule-strong);display:flex;align-items:center;gap:1.5rem;">
         <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--ink-ghost);width:40px;flex-shrink:0;">A</div>
         <div style="flex:1;">
           <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;">Hardwired</div>
@@ -1111,7 +834,6 @@
         </div>
         <a href="prior-work.html" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;">View →</a>
       </div>
-
       <div style="padding:1.1rem 0;border-bottom:0.5px solid var(--rule-strong);display:flex;align-items:center;gap:1.5rem;">
         <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--ink-ghost);width:40px;flex-shrink:0;">B</div>
         <div style="flex:1;">
@@ -1120,7 +842,6 @@
         </div>
         <a href="prior-work.html" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;">View →</a>
       </div>
-
       <div style="padding:1.1rem 0;border-bottom:0.5px solid var(--rule-strong);display:flex;align-items:center;gap:1.5rem;">
         <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--ink-ghost);width:40px;flex-shrink:0;">C</div>
         <div style="flex:1;">
@@ -1129,8 +850,7 @@
         </div>
         <a href="prior-work.html" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;">View →</a>
       </div>
-
-      <div style="padding:1.1rem 0;display:flex;align-items:center;gap:1.5rem;">
+      <div style="padding:1.1rem 0;border-bottom:0.5px solid var(--rule-strong);display:flex;align-items:center;gap:1.5rem;">
         <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--ink-ghost);width:40px;flex-shrink:0;">D</div>
         <div style="flex:1;">
           <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;">Scripted facilitator guide</div>
@@ -1138,33 +858,27 @@
         </div>
         <a href="prior-work.html" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;">View →</a>
       </div>
-
     </div>
   </div>
-
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
     <div class="footer-right">
-      <span style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('ecosystem')">← Learning Delivery</span>
-      <span style="cursor:pointer;color:var(--ink-soft);" onclick="showPage('about')">About CP →</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--ink-soft);margin-right:1.5rem;" onclick="showPage('ecosystem')" onkeydown="if(event.key==='Enter')showPage('ecosystem')">← Learning Delivery</span>
+      <span tabindex="0" style="cursor:pointer;color:var(--ink-soft);" onclick="showPage('about')" onkeydown="if(event.key==='Enter')showPage('about')">About CP →</span>
     </div>
   </footer>
-</div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     PAGE 6 — FOR STRIPE
-══════════════════════════════════════════ -->
-<div class="page" id="page-stripe">
+<!-- PAGE 6 — FOR STRIPE -->
+<section class="page" id="page-stripe">
   <div class="inner-page">
-    <div class="page-breadcrumb" onclick="showPage('about')">
+    <div class="page-breadcrumb" tabindex="0" onclick="showPage('about')" onkeydown="if(event.key==='Enter')showPage('about')">
       ← <a>About</a> <span>/</span> A note for Stripe
     </div>
-
     <div class="inner-page-header">
       <div class="inner-page-eyebrow">A note for Stripe</div>
       <h1 class="inner-page-title">Why this <em>portfolio</em> exists.</h1>
     </div>
-
     <div style="max-width:640px;">
       <div class="about-body">
         <p>This portfolio is designed to demonstrate my belief that scaling human capability requires operating at the intersection of people strategy, learning architecture, and AI enablement. I view these elements not as adjacent disciplines, but as a single, interconnected system.</p>
@@ -1177,31 +891,27 @@
         </a>
       </div>
     </div>
-
   </div>
-
   <footer class="site-footer">
     <div class="footer-left">CP | Learning Architecture Portfolio · CP | 5.26</div>
-    <div class="footer-right"><span style="cursor:pointer;color:var(--ink-soft);" onclick="showPage('about')">← About</span></div>
+    <div class="footer-right">
+      <span tabindex="0" style="cursor:pointer;color:var(--ink-soft);" onclick="showPage('about')" onkeydown="if(event.key==='Enter')showPage('about')">← About</span>
+    </div>
   </footer>
-</div>
+</section>
 
 <script>
-function showPage(page) {
+function showPage(page, pushHistory = true) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-
   window.scrollTo({ top: 0, behavior: 'auto' });
-
   const activePage = document.getElementById(`page-${page}`);
   if (!activePage) return;
-
   activePage.classList.add('active');
   const targetNavLink = document.getElementById(`nav-${page}`);
   if (targetNavLink) targetNavLink.classList.add('active');
-
-  // Animate cards and grid items
-  activePage.querySelectorAll('.artifact-card, .tool-group, .cs-card, .about-card').forEach((el, i) => {
+  if (pushHistory) window.history.pushState({ page: page }, '', `#${page}`);
+  activePage.querySelectorAll('.artifact-card, .tool-group, .about-card').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(10px)';
     el.style.transition = 'none';
@@ -1213,8 +923,6 @@ function showPage(page) {
       }, i * 60);
     });
   });
-
-  // Animate For Stripe body text
   if (page === 'stripe') {
     const body = activePage.querySelector('.about-body');
     if (body) {
@@ -1231,6 +939,21 @@ function showPage(page) {
     }
   }
 }
+
+window.addEventListener('popstate', (event) => {
+  const pageToLoad = event.state && event.state.page ? event.state.page : 'home';
+  showPage(pageToLoad, false);
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.replace('#', '');
+  const validPages = ['home', 'framework', 'tools', 'ecosystem', 'priorwork', 'about', 'stripe'];
+  if (hash && validPages.includes(hash)) {
+    showPage(hash, false);
+  } else {
+    window.history.replaceState({ page: 'home' }, '', '#home');
+  }
+});
 </script>
 </body>
 </html>

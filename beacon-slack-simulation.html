@@ -45,7 +45,7 @@
     --radius-lg: 12px;
   }
 
-  body {
+  body { padding-top: 44px;
     font-family: 'Lato', sans-serif;
     background: #1a1a1a;
     display: flex;
@@ -380,7 +380,7 @@
     font-size: 12px;
   }
 
-  .message-body { flex: 1; min-width: 0; }
+  .message-body { padding-top: 44px; flex: 1; min-width: 0; }
 
   .message-header {
     display: flex;
@@ -525,7 +525,7 @@
   .accent-teal { background: var(--beacon-teal); }
   .accent-purple { background: var(--beacon-purple); }
 
-  .card-body { padding: 12px 14px; }
+  .card-body { padding-top: 44px; padding: 12px 14px; }
 
   .card-top {
     display: flex;
@@ -786,6 +786,9 @@
 </style>
 </head>
 <body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(13,14,20,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid rgba(255,255,255,0.08);padding:0 1.5rem;height:44px;display:flex;align-items:center;">
+  <a href="index.html" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s;" onmouseover="this.style.color='rgba(255,255,255,0.85)'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">← Portfolio</a>
+</div>
 
 <div class="portfolio-wrap">
 

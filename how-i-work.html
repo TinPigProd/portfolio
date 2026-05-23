@@ -31,7 +31,7 @@
     --pink-dim: rgba(255,107,138,0.10);
   }
 
-  body {
+  body { padding-top: 44px;
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
     color: var(--ink);
@@ -182,7 +182,7 @@
     transition: opacity 0.3s;
   }
 
-  .narrative-body {
+  .narrative-body { padding-top: 44px;
     font-size: 13px; color: var(--ink-mid); line-height: 1.7;
     transition: opacity 0.3s;
   }
@@ -370,7 +370,7 @@
     padding: 2px 7px; border-radius: 100px; letter-spacing: 0.04em;
   }
 
-  .eco-body { padding: 0.85rem; display: flex; gap: 0.75rem; }
+  .eco-body { padding-top: 44px; padding: 0.85rem; display: flex; gap: 0.75rem; }
 
   .eco-sidebar { width: 60px; display: flex; flex-direction: column; gap: 5px; }
   .eco-sidebar-item { height: 18px; background: var(--bg2); border-radius: 3px; }
@@ -507,6 +507,9 @@
 </style>
 </head>
 <body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(13,14,20,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid rgba(255,255,255,0.08);padding:0 1.5rem;height:44px;display:flex;align-items:center;">
+  <a href="index.html" style="font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.15s;" onmouseover="this.style.color='rgba(255,255,255,0.85)'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">← Portfolio</a>
+</div>
 
 <!-- PORTFOLIO HEADER -->
 <header class="port-header">
