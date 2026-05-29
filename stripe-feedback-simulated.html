@@ -10,27 +10,27 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --ink: #18180F;
-    --ink-mid: #4A4A40;
-    --ink-soft: #8A8A80;
-    --ink-ghost: #C2C2B8;
-    --paper: #F7F6F2;
-    --paper-warm: #EFEDE7;
-    --white: #FFFFFF;
-    --rule: rgba(0,0,0,0.10);
-    --rule-strong: rgba(0,0,0,0.16);
-    --blue-50: #E6F1FB;
-    --blue-400: #378ADD;
-    --blue-800: #0C447C;
-    --teal-50: #E1F5EE;
-    --teal-400: #1D9E75;
-    --teal-800: #085041;
-    --amber-50: #FAEEDA;
-    --amber-400: #BA7517;
-    --amber-800: #633806;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
+    --ink: #F0F2F8;
+    --ink-mid: #A8AEBF;
+    --ink-soft: #6A7088;
+    --ink-ghost: #3A3E52;
+    --paper: #0D0E14;
+    --paper-warm: #111318;
+    --white: #1E2130;
+    --rule: rgba(255,255,255,0.07);
+    --rule-strong: rgba(255,255,255,0.12);
+    --blue-50: rgba(74,143,212,0.12);
+    --blue-400: #4A8FD4;
+    --blue-800: #7AB8F0;
+    --teal-50: rgba(45,184,150,0.12);
+    --teal-400: #2DB896;
+    --teal-800: #5DD4B0;
+    --amber-50: rgba(232,168,56,0.12);
+    --amber-400: #E8A838;
+    --amber-800: #F0C870;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
   }
 
   body {
@@ -41,11 +41,18 @@
     min-height: 100vh;
   }
 
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.4;
+  }
+
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(247,246,242,0.95);
-    backdrop-filter: blur(8px);
-    border-bottom: 0.5px solid var(--rule-strong);
+    background: rgba(13,14,20,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--rule);
     padding: 0 2rem; height: 52px;
     display: flex; align-items: center; justify-content: space-between;
   }
@@ -53,16 +60,19 @@
   .nav-left { display: flex; align-items: center; gap: 0.75rem; }
 
   .nav-initials {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--ink); color: var(--white);
-    font-size: 11px; font-weight: 500;
+    width: 28px; height: 28px; border-radius: 4px;
+    border: 1px solid var(--ink-soft);
+    font-size: 11px; font-weight: 700; color: var(--ink-soft);
     display: flex; align-items: center; justify-content: center;
   }
 
-  .nav-label { font-size: 13px; color: var(--ink-mid); }
-  .nav-label strong { font-weight: 500; color: var(--ink); }
+  .nav-label { font-size: 13px; color: var(--ink-soft); }
+  .nav-label strong { font-weight: 500; color: rgba(255,255,255,0.7); }
 
-  .nav-right { display: flex; gap: 0.5rem; }
+  .nav-right { display: flex; gap: 0.5rem; align-items: center; }
+
+  .nav-back { font-size:12px; color:var(--ink-soft); text-decoration:none; transition:color 0.15s; }
+  .nav-back:hover { color:var(--ink); }
 
   .nav-tag {
     font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
@@ -300,6 +310,7 @@
   <div class="nav-right">
     <span class="nav-tag">Feedback Synthesis</span>
     <span class="nav-tag">Simulated</span>
+    <a class="nav-back" href="index.html">← Portfolio</a>
   </div>
 </nav>
 
