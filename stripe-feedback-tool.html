@@ -538,7 +538,7 @@ async function synthesize() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         system: SYSTEM_PROMPT,
         messages: [{ role: 'user', content: `Employee: ${name}\nRole: ${role}\nContext: ${context}\n\nObservations:\n${notes}` }]
@@ -546,7 +546,8 @@ async function synthesize() {
     });
 
     const data = await response.json();
-    const raw = data.content.map(c => c.text || '').join('');
+    const anthropicData = data.content ? data : (data.body ? JSON.parse(data.body) : data);
+    const raw = (anthropicData.content || []).map(c => c.text || '').join('');
     const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
     showOutput(parsed, name, role, context);
 
