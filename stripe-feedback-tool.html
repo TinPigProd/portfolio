@@ -3,436 +3,321 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Feedback Synthesis Tool — CP</title>
+<title>Feedback Synthesis Tool — Live · CP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --ink: #18180F;
-    --ink-mid: #4A4A40;
-    --ink-soft: #8A8A80;
-    --ink-ghost: #C2C2B8;
-    --paper: #F7F6F2;
-    --paper-warm: #EFEDE7;
-    --white: #FFFFFF;
-    --rule: rgba(0,0,0,0.10);
-    --rule-strong: rgba(0,0,0,0.16);
-    --blue-50: #E6F1FB;
-    --blue-400: #378ADD;
-    --blue-800: #0C447C;
-    --teal-50: #E1F5EE;
-    --teal-400: #1D9E75;
-    --teal-800: #085041;
-    --amber-50: #FAEEDA;
-    --amber-400: #BA7517;
-    --amber-800: #633806;
-    --coral-50: #FAECE7;
-    --coral-400: #D85A30;
-    --coral-800: #4A1B0C;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
+    --bg: #0D0E14;
+    --bg-2: #111318;
+    --bg-3: #181B24;
+    --surface: #1E2130;
+    --surface-2: #242838;
+    --rule: rgba(255,255,255,0.07);
+    --rule-strong: rgba(255,255,255,0.12);
+    --ink: #F0F2F8;
+    --ink-mid: #A8AEBF;
+    --ink-soft: #6A7088;
+    --ink-ghost: #3A3E52;
+    --blue: #4A8FD4;
+    --blue-dim: rgba(74,143,212,0.12);
+    --teal: #2DB896;
+    --teal-dim: rgba(45,184,150,0.12);
+    --amber: #E8A838;
+    --amber-dim: rgba(232,168,56,0.12);
+    --green: #3AB87A;
+    --green-dim: rgba(58,184,122,0.10);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 400;
-    background: var(--paper);
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.4;
+  }
+
+  /* NAV */
   nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(247,246,242,0.92);
-    backdrop-filter: blur(8px);
-    border-bottom: 0.5px solid var(--rule-strong);
-    padding: 0 2rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,14,20,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--rule);
+    padding: 0 2rem; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; z-index: 1;
   }
 
-  .nav-left { display: flex; align-items: center; gap: 1rem; }
+  .nav-left { display: flex; align-items: center; gap: 0.75rem; }
 
-  .nav-initials {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--ink);
-    color: var(--white);
-    font-size: 11px;
-    font-weight: 500;
+  .nav-monogram {
+    width: 28px; height: 28px; border-radius: var(--radius-sm);
+    border: 1px solid var(--ink-soft);
     display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px; font-weight: 700; color: var(--ink-soft);
   }
 
-  .nav-label { font-size: 13px; color: var(--ink-mid); }
-  .nav-label strong { font-weight: 500; color: var(--ink); }
+  .nav-label { font-size: 13px; color: var(--ink-soft); }
+  .nav-label strong { font-weight: 500; color: rgba(255,255,255,0.7); }
+
+  .nav-right { display: flex; gap: 0.5rem; align-items: center; }
 
   .nav-tag {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    padding: 3px 9px;
-    border: 0.5px solid var(--rule-strong);
-    border-radius: var(--radius-sm);
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); padding: 3px 9px;
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
   }
 
+  .nav-back {
+    font-size: 12px; color: var(--ink-soft); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-back:hover { color: var(--ink); }
+
+  /* PAGE */
   .page {
-    max-width: 860px;
-    margin: 0 auto;
+    max-width: 960px; margin: 0 auto;
     padding: 3rem 2rem 5rem;
+    position: relative; z-index: 1;
   }
 
   .page-header { margin-bottom: 2.5rem; }
 
-  .page-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.75rem;
+  .eyebrow {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 0.6rem;
   }
 
   .page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px;
-    line-height: 1.1;
-    color: var(--ink);
-    margin-bottom: 0.75rem;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.1; color: var(--ink); margin-bottom: 0.6rem;
   }
 
-  .page-desc {
-    font-size: 15px;
-    color: var(--ink-mid);
-    line-height: 1.65;
-    max-width: 580px;
+  .page-title em { font-style: italic; color: var(--ink-mid); }
+
+  .page-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.65; max-width: 560px; }
+
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    background: var(--teal-dim); color: var(--teal);
+    border: 0.5px solid rgba(45,184,150,0.25);
+    padding: 3px 10px; border-radius: 100px; margin-top: 0.75rem;
   }
 
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+    animation: livepulse 2s ease-in-out infinite;
+  }
+
+  @keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* LAYOUT */
   .layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    align-items: start;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start;
   }
 
   .panel {
-    background: var(--white);
-    border: 0.5px solid var(--rule);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    background: var(--surface); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); overflow: hidden;
   }
 
   .panel-header {
-    padding: 1.1rem 1.5rem;
-    border-bottom: 0.5px solid var(--rule);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 0.9rem 1.25rem; border-bottom: 0.5px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
   }
 
-  .panel-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink);
-  }
+  .panel-title { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .panel-sub { font-size: 11px; color: var(--ink-soft); }
+  .panel-body { padding: 1.25rem; }
 
-  .panel-sub {
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-
-  .panel-body { padding: 1.5rem; }
-
-  .field { margin-bottom: 1.1rem; }
-
-  .field:last-child { margin-bottom: 0; }
+  .field { margin-bottom: 1rem; }
 
   label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.4rem;
+    display: block; font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.35rem;
   }
 
-  input[type="text"], select, textarea {
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    background: var(--paper);
-    border: 0.5px solid var(--rule-strong);
-    border-radius: var(--radius-sm);
-    padding: 0.6rem 0.85rem;
-    outline: none;
-    transition: border-color 0.15s;
-    -webkit-appearance: none;
+  input[type="text"] {
+    width: 100%; font-family: 'Instrument Sans', sans-serif; font-size: 13px;
+    color: var(--ink); background: var(--bg-3);
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+    padding: 0.55rem 0.8rem; outline: none; transition: border-color 0.15s;
   }
 
-  input[type="text"]:focus, select:focus, textarea:focus {
-    border-color: var(--ink-soft);
-  }
+  input[type="text"]:focus { border-color: var(--blue); }
+  input[type="text"]::placeholder { color: var(--ink-ghost); }
 
   textarea {
-    resize: vertical;
-    min-height: 200px;
-    line-height: 1.65;
+    width: 100%; font-family: 'Instrument Sans', sans-serif; font-size: 13px;
+    color: var(--ink); background: var(--bg-3);
+    border: 0.5px solid var(--rule-strong); border-radius: var(--radius-sm);
+    padding: 0.55rem 0.8rem; outline: none; resize: vertical;
+    min-height: 165px; line-height: 1.65; transition: border-color 0.15s;
   }
 
-  .field-hint {
-    font-size: 11px;
-    color: var(--ink-ghost);
-    margin-top: 0.35rem;
-    line-height: 1.5;
+  textarea:focus { border-color: var(--blue); }
+  textarea::placeholder { color: var(--ink-ghost); }
+
+  .hint { font-size: 10px; color: var(--ink-ghost); margin-top: 0.3rem; line-height: 1.5; }
+
+  .context-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.4rem; }
+
+  .context-pill {
+    font-size: 11px; color: var(--ink-soft);
+    background: var(--bg-3); border: 0.5px solid var(--rule-strong);
+    border-radius: 100px; padding: 3px 10px; cursor: pointer;
+    user-select: none; transition: all 0.12s;
   }
+
+  .context-pill:hover { color: var(--ink); border-color: var(--rule-strong); }
+  .context-pill.selected { background: var(--blue); color: var(--bg); border-color: var(--blue); font-weight: 500; }
 
   .submit-btn {
-    width: 100%;
-    margin-top: 1.25rem;
-    padding: 0.75rem 1rem;
-    background: var(--ink);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: opacity 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    width: 100%; margin-top: 1rem; padding: 0.7rem 1rem;
+    background: var(--blue); color: var(--bg);
+    font-family: 'Instrument Sans', sans-serif; font-size: 13px; font-weight: 600;
+    border: none; border-radius: var(--radius-md); cursor: pointer;
+    transition: opacity 0.15s; letter-spacing: 0.02em;
   }
 
   .submit-btn:hover { opacity: 0.85; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+  /* OUTPUT PANEL */
   .output-panel {
-    background: var(--white);
-    border: 0.5px solid var(--rule);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    min-height: 500px;
-    display: flex;
-    flex-direction: column;
+    background: var(--surface); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-lg); overflow: hidden;
+    min-height: 480px; display: flex; flex-direction: column;
   }
 
   .output-empty {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
-    text-align: center;
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2.5rem 1.5rem; text-align: center;
   }
 
-  .output-empty-icon {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: var(--paper-warm);
-    border: 0.5px solid var(--rule-strong);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    margin-bottom: 1rem;
-    color: var(--ink-ghost);
-  }
-
-  .output-empty-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    margin-bottom: 0.4rem;
-  }
-
-  .output-empty-desc {
-    font-size: 13px;
-    color: var(--ink-ghost);
-    line-height: 1.6;
-    max-width: 220px;
-  }
-
-  .output-content { padding: 1.5rem; flex: 1; }
-
-  .output-dr-header {
-    padding-bottom: 1rem;
-    border-bottom: 0.5px solid var(--rule);
-    margin-bottom: 1.25rem;
-  }
-
-  .output-dr-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: var(--ink);
-    margin-bottom: 2px;
-  }
-
-  .output-dr-meta { font-size: 12px; color: var(--ink-soft); }
-
-  .output-section { margin-bottom: 1.5rem; }
-
-  .output-section:last-child { margin-bottom: 0; }
-
-  .output-section-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 0.75rem;
-  }
-
-  .output-section-badge {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 3px 9px;
-    border-radius: var(--radius-sm);
-  }
-
-  .badge-strengths { background: var(--teal-50); color: var(--teal-800); }
-  .badge-opportunities { background: var(--amber-50); color: var(--amber-800); }
-  .badge-actions { background: var(--blue-50); color: var(--blue-800); }
-
-  .output-section-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-soft);
-  }
-
-  .output-items { display: flex; flex-direction: column; gap: 10px; }
-
-  .output-item {
-    background: var(--paper);
-    border: 0.5px solid var(--rule);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.1rem;
-  }
-
-  .output-item-comp {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .comp-what { color: var(--blue-400); }
-  .comp-how { color: var(--teal-400); }
-
-  .output-item-text {
-    font-size: 13px;
-    color: var(--ink-mid);
-    line-height: 1.65;
-  }
+  .output-empty-icon { font-size: 22px; color: var(--ink-ghost); margin-bottom: 0.75rem; }
+  .output-empty-title { font-size: 13px; font-weight: 500; color: var(--ink-soft); margin-bottom: 0.3rem; }
+  .output-empty-desc { font-size: 12px; color: var(--ink-ghost); line-height: 1.6; max-width: 200px; }
 
   .loading-state {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
-    gap: 1rem;
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1rem;
   }
 
-  .loading-dots {
-    display: flex;
-    gap: 6px;
-  }
+  .loading-dots { display: flex; gap: 6px; }
 
   .loading-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
+    width: 8px; height: 8px; border-radius: 50%;
     background: var(--ink-ghost);
-    animation: pulse 1.2s ease-in-out infinite;
+    animation: dotpulse 1.2s ease-in-out infinite;
   }
 
   .loading-dot:nth-child(2) { animation-delay: 0.2s; }
   .loading-dot:nth-child(3) { animation-delay: 0.4s; }
 
-  @keyframes pulse {
-    0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+  @keyframes dotpulse {
+    0%,80%,100% { opacity: 0.3; transform: scale(0.85); }
     40% { opacity: 1; transform: scale(1); }
   }
 
-  .loading-label {
-    font-size: 13px;
-    color: var(--ink-ghost);
+  .loading-steps { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+
+  .loading-step {
+    font-size: 12px; color: var(--ink-ghost);
+    opacity: 0; transition: opacity 0.4s ease;
   }
 
-  .error-state {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
-    text-align: center;
+  .loading-step.visible { opacity: 1; color: var(--ink-soft); }
+  .loading-step.done { color: var(--teal); }
+
+  /* OUTPUT CONTENT */
+  .output-content { padding: 1.25rem; flex: 1; overflow-y: auto; }
+
+  .output-dr-header {
+    padding-bottom: 0.85rem; border-bottom: 0.5px solid var(--rule); margin-bottom: 1rem;
   }
 
-  .error-text {
-    font-size: 13px;
-    color: var(--coral-400);
-    line-height: 1.6;
-    max-width: 260px;
+  .output-dr-name {
+    font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); margin-bottom: 2px;
   }
 
-  .reset-btn {
-    margin-top: 1rem;
-    font-size: 13px;
-    color: var(--ink-soft);
-    background: none;
-    border: 0.5px solid var(--rule-strong);
-    border-radius: var(--radius-sm);
-    padding: 5px 12px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+  .output-dr-meta { font-size: 11px; color: var(--ink-soft); }
+
+  .output-section { margin-bottom: 1.1rem; }
+  .output-section:last-of-type { margin-bottom: 0.5rem; }
+
+  .output-section-header { display: flex; align-items: center; gap: 7px; margin-bottom: 0.6rem; }
+
+  .badge {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm);
   }
 
-  .reset-btn:hover { color: var(--ink); }
+  .badge-strengths { background: var(--green-dim); color: var(--green); border: 0.5px solid rgba(58,184,122,0.2); }
+  .badge-opportunities { background: var(--amber-dim); color: var(--amber); border: 0.5px solid rgba(232,168,56,0.2); }
+  .badge-actions { background: var(--blue-dim); color: var(--blue); border: 0.5px solid rgba(74,143,212,0.2); }
 
-  .context-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 0.5rem;
+  .output-section-title { font-size: 12px; color: var(--ink-soft); }
+
+  .output-items { display: flex; flex-direction: column; gap: 7px; }
+
+  .output-item {
+    background: var(--bg-3); border: 0.5px solid var(--rule);
+    border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
   }
 
-  .context-pill {
-    font-size: 12px;
-    color: var(--ink-mid);
-    background: var(--paper-warm);
-    border: 0.5px solid var(--rule-strong);
-    border-radius: 100px;
-    padding: 4px 12px;
-    cursor: pointer;
-    transition: background 0.12s;
-    user-select: none;
+  .output-item.revealed { opacity: 1; transform: translateY(0); }
+
+  .output-item-comp {
+    font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;
   }
 
-  .context-pill:hover { background: var(--paper); }
-  .context-pill.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .comp-what { color: var(--blue); }
+  .comp-how { color: var(--teal); }
+
+  .output-item-text { font-size: 12px; color: var(--ink-mid); line-height: 1.65; }
+
+  .error-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2.5rem 1.5rem; text-align: center; gap: 0.4rem;
+  }
+
+  .reset-link {
+    display: block; text-align: center; margin-top: 1rem;
+    font-size: 12px; color: var(--ink-soft); cursor: pointer;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+
+  .reset-link:hover { color: var(--ink); }
 
   footer {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem 3rem;
-    border-top: 0.5px solid var(--rule-strong);
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--ink-ghost);
+    max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem 3rem;
+    border-top: 0.5px solid var(--rule);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--ink-ghost);
+    position: relative; z-index: 1;
   }
 
-  @media (max-width: 680px) {
+  @media (max-width: 640px) {
     .layout { grid-template-columns: 1fr; }
     .page-title { font-size: 28px; }
   }
@@ -442,19 +327,23 @@
 
 <nav>
   <div class="nav-left">
-    <div class="nav-initials">CP</div>
+    <div class="nav-monogram">CP</div>
     <span class="nav-label"><strong>CP</strong> — Portfolio</span>
   </div>
   <div class="nav-right">
-    <span class="nav-tag">Feedback Synthesis</span>
+    <span class="nav-tag">Case study 02</span>
+    <span class="nav-tag">Live API</span>
+    <a class="nav-back" href="index.html">← Portfolio</a>
   </div>
 </nav>
 
 <div class="page">
+
   <div class="page-header">
-    <div class="page-eyebrow">Portfolio case study · 02</div>
-    <h1 class="page-title">Feedback Synthesis Tool</h1>
-    <p class="page-desc">Add raw observations, notes, or feedback on a direct report. The tool synthesizes your input into structured strengths, opportunities, and recommended actions — anchored to the Stripe Success Model competency framework.</p>
+    <div class="eyebrow">The Tools · Feedback Synthesis · Live version</div>
+    <h1 class="page-title">Feedback Synthesis <em>Tool</em></h1>
+    <p class="page-desc">Enter any manager observations — polished or raw — and the tool returns structured, competency-anchored feedback grounded in the Stripe Success Model. Enter your own or load a pre-built scenario.</p>
+    <div class="live-badge"><div class="live-dot"></div>Powered by Claude Sonnet · Live API</div>
   </div>
 
   <div class="layout">
@@ -466,32 +355,40 @@
         <span class="panel-sub">Raw notes → structured feedback</span>
       </div>
       <div class="panel-body">
+
         <div class="field">
-          <label>Direct report name</label>
-          <input type="text" id="dr-name" placeholder="e.g. Alex Rivera" />
+          <label for="dr-name">Direct report name</label>
+          <input type="text" id="dr-name" placeholder="e.g. Jordan Mills" />
         </div>
+
         <div class="field">
-          <label>Role</label>
-          <input type="text" id="dr-role" placeholder="e.g. Senior Product Manager" />
+          <label for="dr-role">Role</label>
+          <input type="text" id="dr-role" placeholder="e.g. Senior Engineer" />
         </div>
+
         <div class="field">
           <label>Context</label>
           <div class="context-pills">
-            <span class="context-pill" data-value="Performance review cycle">Performance review</span>
-            <span class="context-pill" data-value="Post-project debrief">Project debrief</span>
-            <span class="context-pill" data-value="360 feedback input">360 input</span>
-            <span class="context-pill" data-value="Mid-year check-in">Mid-year check-in</span>
-            <span class="context-pill" data-value="Ongoing coaching notes">Coaching notes</span>
+            <span class="context-pill selected" onclick="selectPill(this)">Performance review</span>
+            <span class="context-pill" onclick="selectPill(this)">Project debrief</span>
+            <span class="context-pill" onclick="selectPill(this)">360 input</span>
+            <span class="context-pill" onclick="selectPill(this)">Mid-year check-in</span>
+            <span class="context-pill" onclick="selectPill(this)">Coaching notes</span>
           </div>
         </div>
+
         <div class="field">
-          <label>Observations & notes</label>
-          <textarea id="raw-notes" placeholder="Paste or type your raw observations here. Don't worry about structure or polish — write however feels natural. Examples: 'Great in cross-functional meetings, tends to drive to decisions quickly. Sometimes skips the details and the team catches errors downstream. Reluctant to ask for help even when stretched thin.'""></textarea>
-          <div class="field-hint">The tool will handle structure. Focus on what you've observed.</div>
+          <label for="raw-notes">Observations and notes</label>
+          <textarea id="raw-notes" placeholder="Enter raw, unpolished manager observations. No need to structure them — the tool does that work. The more specific and honest, the more useful the output."></textarea>
+          <div class="hint">Load a pre-built scenario or enter your own observations above.</div>
+          <div class="context-pills" style="margin-top:0.5rem;">
+            <span class="context-pill" onclick="loadScenario('jordan')">Load: Jordan Mills</span>
+            <span class="context-pill" onclick="loadScenario('priya')">Load: Priya Anand</span>
+          </div>
         </div>
-        <button class="submit-btn" id="submit-btn" onclick="synthesize()">
-          <span id="btn-label">Synthesize feedback</span>
-        </button>
+
+        <button class="submit-btn" id="submit-btn" onclick="synthesize()">Synthesize feedback</button>
+
       </div>
     </div>
 
@@ -504,7 +401,7 @@
       <div class="output-empty" id="output-empty">
         <div class="output-empty-icon">◎</div>
         <div class="output-empty-title">Awaiting input</div>
-        <div class="output-empty-desc">Complete the form and submit to generate a competency-anchored feedback summary.</div>
+        <div class="output-empty-desc">Enter observations and submit to generate a competency-anchored feedback summary.</div>
       </div>
     </div>
 
@@ -512,124 +409,159 @@
 </div>
 
 <footer>
-  <span>CP — Learning Architecture Portfolio</span>
-  <span>Feedback Synthesis Tool · CP | 5.26</span>
+  <span>CP | Learning Architecture Portfolio · CP | 5.26</span>
+  <span>Feedback Synthesis · Live · Stripe Success Model</span>
 </footer>
 
 <script>
-let selectedContext = '';
+const SCENARIOS = {
+  jordan: {
+    name: 'Jordan Mills', role: 'Senior Engineer', context: 'Performance review',
+    notes: `Jordan is one of our strongest technical contributors — probably the most reliable person on the team when it comes to shipping clean code on time. He's not the most collaborative though. He tends to go heads down and sometimes the team finds out he's already solved something they were working on together. He doesn't speak up much in planning sessions even though his perspective would be valuable. He's been passed over for staff eng once already and I think he's getting frustrated. Hard worker, doesn't cause drama, just not sure he's ready to lead yet.`
+  },
+  priya: {
+    name: 'Priya Anand', role: 'Product Manager', context: 'Mid-year check-in',
+    notes: `Priya is one of the most impressive people I've managed. She's incredibly smart and picks things up so fast — she was leading her first product area within 6 months. She can be a bit much sometimes, like she moves so fast that she leaves people behind. Engineering gets frustrated with her because she changes direction a lot. But honestly I think she has the highest ceiling of anyone on my team. She's ambitious, maybe too ambitious, but her instincts are usually right even if her process needs work.`
+  }
+};
 
-document.querySelectorAll('.context-pill').forEach(pill => {
-  pill.addEventListener('click', () => {
-    document.querySelectorAll('.context-pill').forEach(p => p.classList.remove('selected'));
-    if (selectedContext === pill.dataset.value) {
-      selectedContext = '';
-    } else {
-      pill.classList.add('selected');
-      selectedContext = pill.dataset.value;
-    }
-  });
-});
+const LOADING_STEPS = [
+  'Reading observations...',
+  'Stripping subjective language...',
+  'Mapping to Stripe Success Model...',
+  'Anchoring to behavioral evidence...',
+  'Generating structured output...'
+];
 
-const SYSTEM_PROMPT = `You are a talent development synthesis engine used by people leaders at Stripe. Your role is to take raw, unstructured leader observations about a direct report and transform them into a structured, actionable feedback summary.
+const SYSTEM_PROMPT = `You are a talent development expert using the Stripe Success Model to analyze manager feedback. Transform raw, unstructured manager observations into structured, competency-anchored feedback that is specific, behavioral, and useful in development conversations.
 
-You anchor all output to the Stripe Success Model — a competency framework built on two tiers:
+STRIPE SUCCESS MODEL:
 
-THE WHAT (Enterprise-Critical Competencies — how high performers deliver at Stripe):
-1. Customer Focus — merchant/user empathy drives prioritization; observable in how someone centers user impact in decisions
-2. Drives Results — consistent delivery against ambitious goals; observable in accountability to outcomes not just effort
-3. Strategic Mindset — holds near-term execution and long-term systems thinking simultaneously; connects daily decisions to multi-year implications
-4. Decision Quality — precision and rigor in judgment; makes reasoning explicit, revisits decisions with new information
-5. Collaborates — low-ego teamwork; gives credit generously, pulls others in early, adjusts based on feedback
+STRIPE'S 10 OPERATING PRINCIPLES:
+1. Users First — obsessive focus on user needs
+2. Exothermic — generates more energy than it consumes; makes others better
+3. Macro-optimistic — long-term thinking, builds for what could be
+4. Rigorous — high standards, evidence-based, precise
+5. Transparent — honest, direct, shares context openly
+6. Velocity — moves fast, decides quickly, iterates
+7. Curious — learns continuously, asks hard questions
+8. Collaborative — multiplies others, works across boundaries
+9. Principled — does the right thing even when it's hard
+10. Accountable — owns outcomes, follows through
 
-THE HOW (Culture-Differentiating Competencies — what makes delivery feel distinctly Stripe):
-6. Learning Agility — absorbs new domains quickly; treats mistakes as learning, brings outside-in perspective
-7. Being Resilient — sustains performance through ambiguity and pressure; rebounds from setbacks without extended loss of momentum
-8. Tech Savvy — understands technical constraints well enough to make better decisions; engages credibly with engineering partners
-9. Communicates Effectively — writes with clarity and economy; adapts to audience without losing substance; invites critical feedback
-10. Self-Development — accurately identifies own development edges; takes deliberate action on feedback; seeks stretch proactively
-11. Interpersonal Savvy (The how) — generates energy and trust in others; reads group dynamics; moves people forward without formal authority
+THE WHAT — Performance delivery (5 competencies):
+- Drives Results: Delivers consistently, owns outcomes (Accountable, Velocity)
+- Customer Focus: Keeps users at the center (Users First)
+- Collaborates: Works across boundaries, multiplies others (Collaborative, Exothermic)
+- Decision Quality: Sound decisions with speed and rigor (Rigorous, Velocity)
+- Courage: Honest perspective, raises hard things (Principled, Transparent)
 
-Your output must be valid JSON only — no preamble, no markdown, no explanation outside the JSON structure.
+THE HOW — Culture and growth (6 competencies):
+- Learning Agility: Seeks feedback, adapts continuously (Curious, Macro-optimistic)
+- Being Resilient: Maintains effectiveness under pressure (Accountable)
+- Develops Talent: Invests in others' growth, coaches (Exothermic)
+- Communicates Effectively: Clear, direct, adapts to audience (Transparent)
+- Instills Trust: Does what they say, creates psychological safety (Principled)
+- Exothermic Energy: Makes the work and people around them better (Exothermic, Collaborative)
 
-Return exactly this structure:
+Return ONLY valid JSON — no markdown, no preamble:
 {
-  "strengths": [
-    { "competency": "competency name", "tier": "what" or "how", "insight": "2-3 sentence observation grounded in the leader's notes" }
-  ],
-  "opportunities": [
-    { "competency": "competency name", "tier": "what" or "how", "insight": "2-3 sentence observation grounded in the leader's notes" }
-  ],
-  "actions": [
-    { "competency": "competency name", "tier": "what" or "how", "action": "Specific, concrete recommended action item for the leader or direct report" }
-  ]
+  "strengths": [{"tier":"what or how","comp":"competency name","text":"2-3 sentences"}],
+  "opportunities": [{"tier":"what or how","comp":"competency name","text":"2-3 sentences"}],
+  "actions": [{"tier":"what or how","comp":"competency name","text":"2-3 sentences of specific recommended action"}]
 }
 
-Guidelines:
-- Identify 2-4 strengths, 2-3 opportunities, and 2-3 action items
-- Every item must map to a named competency from the Success Model
-- Insights should feel grounded in the specific observations provided, not generic
-- Action items should be specific and immediately usable in a coaching conversation
-- Write in third person, professional but human tone
-- If notes are very thin, still synthesize what you can and note where more observation would help
-- Never invent observations not present in the raw notes`;
+Rules: 2-4 items per category. Name a specific competency every item. Reframe subjective language into behavioral observations. Actions must be specific and actionable. Developmental tone throughout.`;
+
+let isSynthesizing = false;
+
+function selectPill(el) {
+  document.querySelectorAll('.context-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function loadScenario(key) {
+  const s = SCENARIOS[key];
+  document.getElementById('dr-name').value = s.name;
+  document.getElementById('dr-role').value = s.role;
+  document.getElementById('raw-notes').value = s.notes;
+  document.querySelectorAll('.context-pill').forEach(p => {
+    p.classList.toggle('selected', p.textContent === s.context);
+  });
+  resetOutput();
+}
+
+function getSelectedContext() {
+  const sel = document.querySelector('.context-pill.selected');
+  return sel ? sel.textContent : 'Performance review';
+}
+
+function resetOutput() {
+  const panel = document.getElementById('output-panel');
+  clearOutput(panel);
+  const el = document.createElement('div');
+  el.className = 'output-empty';
+  el.id = 'output-empty';
+  el.innerHTML = `
+    <div class="output-empty-icon">◎</div>
+    <div class="output-empty-title">Awaiting input</div>
+    <div class="output-empty-desc">Enter observations and submit to generate a competency-anchored feedback summary.</div>`;
+  panel.appendChild(el);
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('submit-btn').textContent = 'Synthesize feedback';
+  isSynthesizing = false;
+}
+
+function clearOutput(panel) {
+  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-empty');
+  if (existing) existing.remove();
+}
 
 async function synthesize() {
-  const name = document.getElementById('dr-name').value.trim();
-  const role = document.getElementById('dr-role').value.trim();
+  if (isSynthesizing) return;
   const notes = document.getElementById('raw-notes').value.trim();
+  if (!notes) { document.getElementById('raw-notes').focus(); return; }
 
-  if (!notes) {
-    document.getElementById('raw-notes').focus();
-    return;
-  }
-
+  isSynthesizing = true;
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
-  document.getElementById('btn-label').textContent = 'Synthesizing...';
+  btn.textContent = 'Synthesizing...';
+
+  const name = document.getElementById('dr-name').value.trim() || 'Direct report';
+  const role = document.getElementById('dr-role').value.trim() || '';
+  const context = getSelectedContext();
 
   showLoading();
 
-  const userMessage = `
-Direct report: ${name || 'Not specified'}
-Role: ${role || 'Not specified'}
-Context: ${selectedContext || 'General feedback'}
-
-Raw observations:
-${notes}
-  `.trim();
-
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/api/synthesize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userMessage }]
+        messages: [{ role: 'user', content: `Employee: ${name}\nRole: ${role}\nContext: ${context}\n\nObservations:\n${notes}` }]
       })
     });
 
     const data = await response.json();
-    const raw = data.content.map(b => b.text || '').join('');
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    const raw = data.content.map(c => c.text || '').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    showOutput(parsed, name, role, context);
 
-    showOutput(parsed, name, role);
   } catch (err) {
     showError();
-  } finally {
-    btn.disabled = false;
-    document.getElementById('btn-label').textContent = 'Synthesize feedback';
   }
+
+  btn.disabled = false;
+  btn.textContent = 'Synthesize feedback';
+  isSynthesizing = false;
 }
 
 function showLoading() {
   const panel = document.getElementById('output-panel');
-  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
-  if (existing) existing.remove();
-
+  clearOutput(panel);
   const el = document.createElement('div');
   el.className = 'loading-state';
   el.innerHTML = `
@@ -638,93 +570,75 @@ function showLoading() {
       <div class="loading-dot"></div>
       <div class="loading-dot"></div>
     </div>
-    <div class="loading-label">Synthesizing observations...</div>
-  `;
+    <div class="loading-steps">
+      ${LOADING_STEPS.map((s, i) => `<div class="loading-step" id="step-${i}">${s}</div>`).join('')}
+    </div>`;
   panel.appendChild(el);
+
+  let stepIndex = 0;
+  const stepInterval = setInterval(() => {
+    if (stepIndex > 0) {
+      const prev = document.getElementById(`step-${stepIndex - 1}`);
+      if (prev) { prev.classList.add('done'); prev.textContent = '✓ ' + LOADING_STEPS[stepIndex - 1]; }
+    }
+    const current = document.getElementById(`step-${stepIndex}`);
+    if (current) current.classList.add('visible');
+    stepIndex++;
+    if (stepIndex >= LOADING_STEPS.length) clearInterval(stepInterval);
+  }, 380);
+}
+
+function showOutput(data, name, role, context) {
+  const panel = document.getElementById('output-panel');
+  clearOutput(panel);
+  const el = document.createElement('div');
+  el.className = 'output-content';
+  el.innerHTML = `
+    <div class="output-dr-header">
+      <div class="output-dr-name">${name}</div>
+      <div class="output-dr-meta">${[role, context].filter(Boolean).join(' · ')}</div>
+    </div>
+    ${renderSection(data.strengths || [], 'badge-strengths', 'Strengths', "What's working")}
+    ${renderSection(data.opportunities || [], 'badge-opportunities', 'Opportunities', 'Areas for growth')}
+    ${renderSection(data.actions || [], 'badge-actions', 'Recommended actions', 'Next steps')}
+    <span class="reset-link" onclick="resetOutput()">↩ Reset and try again</span>`;
+  panel.appendChild(el);
+
+  const items = panel.querySelectorAll('.output-item');
+  items.forEach((item, i) => {
+    setTimeout(() => item.classList.add('revealed'), i * 80);
+  });
+}
+
+function renderSection(items, badgeClass, badgeLabel, sectionTitle) {
+  return `
+    <div class="output-section">
+      <div class="output-section-header">
+        <span class="badge ${badgeClass}">${badgeLabel}</span>
+        <span class="output-section-title">${sectionTitle}</span>
+      </div>
+      <div class="output-items">
+        ${items.map(item => `
+          <div class="output-item">
+            <div class="output-item-comp comp-${item.tier || 'what'}">
+              ${item.tier === 'what' ? 'The what' : 'The how'} · ${item.comp || ''}
+            </div>
+            <div class="output-item-text">${item.text || ''}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
 }
 
 function showError() {
   const panel = document.getElementById('output-panel');
-  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
-  if (existing) existing.remove();
-
+  clearOutput(panel);
   const el = document.createElement('div');
-  el.className = 'error-state';
+  el.className = 'error-empty';
   el.innerHTML = `
-    <div class="error-text">Something went wrong during synthesis. Please check your input and try again.</div>
-    <button class="reset-btn" onclick="resetOutput()">Reset</button>
-  `;
-  panel.appendChild(el);
-}
-
-function resetOutput() {
-  const panel = document.getElementById('output-panel');
-  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
-  if (existing) existing.remove();
-
-  const el = document.createElement('div');
-  el.className = 'output-empty';
-  el.id = 'output-empty';
-  el.innerHTML = `
-    <div class="output-empty-icon">◎</div>
-    <div class="output-empty-title">Awaiting input</div>
-    <div class="output-empty-desc">Complete the form and submit to generate a competency-anchored feedback summary.</div>
-  `;
-  panel.appendChild(el);
-}
-
-function showOutput(data, name, role) {
-  const panel = document.getElementById('output-panel');
-  const existing = panel.querySelector('.output-content, .output-empty, .loading-state, .error-state');
-  if (existing) existing.remove();
-
-  const el = document.createElement('div');
-  el.className = 'output-content';
-
-  const header = (name || role) ? `
-    <div class="output-dr-header">
-      <div class="output-dr-name">${name || 'Direct report'}</div>
-      <div class="output-dr-meta">${[role, selectedContext].filter(Boolean).join(' · ')}</div>
-    </div>
-  ` : '';
-
-  const renderItems = (items, type) => items.map(item => {
-    const tierClass = item.tier === 'what' ? 'comp-what' : 'comp-how';
-    const tierLabel = item.tier === 'what' ? 'The what' : 'The how';
-    const text = type === 'actions' ? item.action : item.insight;
-    return `
-      <div class="output-item">
-        <div class="output-item-comp ${tierClass}">${tierLabel} · ${item.competency}</div>
-        <div class="output-item-text">${text}</div>
-      </div>
-    `;
-  }).join('');
-
-  el.innerHTML = `
-    ${header}
-    <div class="output-section">
-      <div class="output-section-header">
-        <span class="output-section-badge badge-strengths">Strengths</span>
-        <span class="output-section-title">What's working</span>
-      </div>
-      <div class="output-items">${renderItems(data.strengths, 'strengths')}</div>
-    </div>
-    <div class="output-section">
-      <div class="output-section-header">
-        <span class="output-section-badge badge-opportunities">Opportunities</span>
-        <span class="output-section-title">Areas for growth</span>
-      </div>
-      <div class="output-items">${renderItems(data.opportunities, 'opportunities')}</div>
-    </div>
-    <div class="output-section">
-      <div class="output-section-header">
-        <span class="output-section-badge badge-actions">Recommended actions</span>
-        <span class="output-section-title">Next steps</span>
-      </div>
-      <div class="output-items">${renderItems(data.actions, 'actions')}</div>
-    </div>
-  `;
-
+    <div class="output-empty-icon">⚠</div>
+    <div class="output-empty-title" style="color:var(--ink-soft);">Something went wrong</div>
+    <div class="output-empty-desc">The synthesis couldn't complete. Please try again.</div>
+    <span class="reset-link" onclick="resetOutput()">← Try again</span>`;
   panel.appendChild(el);
 }
 </script>
