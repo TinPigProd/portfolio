@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Feedback Synthesis Tool — FictionalPig · TinPigProd</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0E0E0E;
+  --bg2: #1A1A1A;
+  --bg3: #222222;
+  --surface: #242424;
+  --rule: rgba(255,255,255,0.07);
+  --rule-mid: rgba(255,255,255,0.13);
+  --ink: #F5F5F0;
+  --ink-mid: #999999;
+  --ink-soft: #666666;
+  --ink-ghost: #333333;
+  --teal: #2DB8B8;
+  --teal-light: #5DD4D4;
+  --teal-dim: rgba(45,184,184,0.10);
+  --teal-bright: rgba(45,184,184,0.18);
+  --amber: #E8A838;
+  --amber-dim: rgba(232,168,56,0.10);
+  --green: #3AB87A;
+  --green-dim: rgba(58,184,122,0.10);
+  --pink: #FF6B8A;
+  --pink-dim: rgba(255,107,138,0.10);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.4;
+}
+
+/* BACK NAV */
+.back-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(14,14,14,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--rule);
+  height: 44px; padding: 0 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.back-link {
+  font-size: 12px; color: var(--ink-soft); text-decoration: none;
+  display: flex; align-items: center; gap: 6px; transition: color 0.15s;
+}
+
+.back-link:hover { color: var(--ink); }
+
+.back-nav-brand {
+  font-size: 12px; color: var(--ink-ghost);
+  font-family: 'DM Mono', monospace;
+}
+
+/* MAIN */
+.main {
+  position: relative; z-index: 1;
+  padding-top: 44px;
+  max-width: 860px; margin: 0 auto;
+  padding-left: 1.5rem; padding-right: 1.5rem;
+  padding-bottom: 5rem;
+}
+
+/* HEADER */
+.tool-header {
+  padding: 2.5rem 0 2rem;
+  border-bottom: 0.5px solid var(--rule);
+  margin-bottom: 2rem;
+}
+
+.tool-eyebrow {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 0.75rem;
+  font-family: 'DM Mono', monospace;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+
+.eyebrow-line { width: 20px; height: 0.5px; background: var(--teal); opacity: 0.5; }
+
+.tool-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 3.5vw, 42px);
+  line-height: 1.1; color: var(--ink); margin-bottom: 0.75rem;
+}
+
+.tool-title em { font-style: italic; color: var(--teal); }
+
+.tool-desc {
+  font-size: 14px; color: var(--ink-mid); line-height: 1.7; max-width: 560px;
+}
+
+/* INPUT SECTION */
+.input-section {
+  background: var(--bg2); border: 0.5px solid var(--rule-mid);
+  border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem;
+}
+
+.input-section-header {
+  padding: 1rem 1.25rem; border-bottom: 0.5px solid var(--rule);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.input-section-title {
+  font-size: 12px; font-weight: 600; color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.input-section-body { padding: 1.25rem; }
+
+/* EMPLOYEE ROW */
+.employee-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem; margin-bottom: 1rem;
+}
+
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+
+.field-label {
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-soft); font-family: 'DM Mono', monospace;
+}
+
+.field-input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; color: var(--ink);
+  background: var(--bg3); border: 0.5px solid var(--rule-mid);
+  border-radius: 6px; padding: 8px 12px;
+  transition: border-color 0.15s; outline: none; width: 100%;
+}
+
+.field-input:focus { border-color: var(--teal); }
+.field-input::placeholder { color: var(--ink-ghost); }
+
+/* LEVEL SELECTOR */
+.level-selector {
+  display: flex; gap: 0; border: 0.5px solid var(--rule-mid);
+  border-radius: 8px; overflow: hidden; width: 100%;
+  margin-bottom: 1rem;
+}
+
+.level-btn {
+  flex: 1; font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 500; padding: 7px 8px;
+  cursor: pointer; border: none;
+  background: var(--bg3); color: var(--ink-soft);
+  border-right: 0.5px solid var(--rule);
+  transition: all 0.15s; text-align: center; line-height: 1.3;
+}
+
+.level-btn:last-child { border-right: none; }
+.level-btn:hover { color: var(--ink); background: var(--surface); }
+.level-btn.active { background: var(--teal); color: #0E0E0E; font-weight: 600; }
+
+/* OBSERVATIONS TEXTAREA */
+.observations-wrap { position: relative; }
+
+.observations-textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--ink); line-height: 1.65;
+  background: var(--bg3); border: 0.5px solid var(--rule-mid);
+  border-radius: 8px; padding: 1rem 1.1rem;
+  width: 100%; min-height: 160px; resize: vertical;
+  transition: border-color 0.15s; outline: none;
+}
+
+.observations-textarea:focus { border-color: var(--teal); }
+.observations-textarea::placeholder { color: var(--ink-ghost); }
+
+/* SCENARIO CHIPS */
+.scenario-row {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 0.75rem;
+}
+
+.scenario-chip {
+  font-size: 10px; font-weight: 500; padding: 4px 10px;
+  border-radius: 100px; cursor: pointer;
+  background: var(--bg3); color: var(--ink-soft);
+  border: 0.5px solid var(--rule-mid);
+  transition: all 0.15s; letter-spacing: 0.02em;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.scenario-chip:hover { color: var(--teal); border-color: rgba(45,184,184,0.3); }
+
+/* SUBMIT */
+.submit-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 1.25rem;
+}
+
+.submit-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  background: var(--teal); color: #0E0E0E;
+  border: none; border-radius: 6px;
+  padding: 10px 24px; cursor: pointer;
+  transition: opacity 0.15s; letter-spacing: 0.02em;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.submit-btn:hover { opacity: 0.85; }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.submit-hint {
+  font-size: 11px; color: var(--ink-soft);
+  font-family: 'DM Mono', monospace;
+}
+
+/* LOADING */
+.loading-state {
+  display: none; padding: 2.5rem;
+  text-align: center;
+}
+
+.loading-state.visible { display: block; }
+
+.loading-spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--rule-mid);
+  border-top-color: var(--teal);
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-label {
+  font-size: 12px; color: var(--ink-soft);
+  font-family: 'DM Mono', monospace;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* RESULTS */
+.results-section { display: none; }
+.results-section.visible { display: block; }
+
+.results-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+  border-bottom: 0.5px solid var(--rule);
+}
+
+.results-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink);
+}
+
+.results-meta {
+  font-size: 11px; color: var(--ink-soft);
+  font-family: 'DM Mono', monospace;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+
+.results-meta-badge {
+  font-size: 9px; font-weight: 600; padding: 2px 8px;
+  border-radius: 100px; letter-spacing: 0.06em;
+  background: var(--teal-dim); color: var(--teal);
+  border: 0.5px solid rgba(45,184,184,0.2);
+}
+
+.reset-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; color: var(--ink-soft);
+  background: var(--bg3); border: 0.5px solid var(--rule-mid);
+  border-radius: 4px; padding: 4px 12px; cursor: pointer;
+  transition: color 0.15s;
+}
+
+.reset-btn:hover { color: var(--ink); }
+
+/* RESULT GROUPS */
+.result-group { margin-bottom: 1.25rem; }
+
+.result-group-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+  border-bottom: 0.5px solid var(--rule);
+}
+
+.result-group-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+
+.result-group-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; font-family: 'DM Mono', monospace;
+}
+
+.result-group-count {
+  font-size: 10px; color: var(--ink-soft);
+  font-family: 'DM Mono', monospace; margin-left: auto;
+}
+
+/* RESULT ITEMS */
+.result-items { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.result-item {
+  background: var(--bg2); border: 0.5px solid var(--rule);
+  border-radius: 10px; overflow: hidden;
+  animation: slideIn 0.3s ease both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-item-header {
+  padding: 0.75rem 1rem 0.5rem;
+  display: flex; align-items: flex-start; gap: 0.75rem;
+}
+
+.result-item-comp {
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: 100px; letter-spacing: 0.04em;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+.comp-what { background: var(--teal-dim); color: var(--teal); border: 0.5px solid rgba(45,184,184,0.2); }
+.comp-how { background: rgba(93,212,212,0.10); color: var(--teal-light); border: 0.5px solid rgba(93,212,212,0.2); }
+
+.result-item-value {
+  font-size: 10px; color: var(--ink-soft);
+  font-family: 'DM Mono', monospace; flex-shrink: 0;
+}
+
+.result-item-body { padding: 0 1rem 0.85rem; }
+
+.result-item-text {
+  font-size: 13px; color: var(--ink-mid); line-height: 1.65;
+}
+
+.result-item-text strong { color: var(--ink); font-weight: 500; }
+
+/* FRAMEWORK FOOTER */
+.framework-footer {
+  margin-top: 2rem; padding: 1.25rem;
+  background: var(--bg2); border: 0.5px solid var(--rule);
+  border-radius: 10px;
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+
+.framework-footer-icon {
+  font-size: 18px; color: var(--teal);
+  font-family: 'DM Mono', monospace; flex-shrink: 0;
+}
+
+.framework-footer-title {
+  font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 3px;
+}
+
+.framework-footer-body {
+  font-size: 11px; color: var(--ink-soft); line-height: 1.55;
+}
+
+.framework-footer-link {
+  font-size: 11px; color: var(--teal); text-decoration: none;
+  font-weight: 500; display: inline-block; margin-top: 4px;
+}
+
+/* TIER LEGEND */
+.tier-legend {
+  display: flex; gap: 0.75rem; margin-top: 0.5rem;
+}
+
+.tier-legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--ink-soft);
+}
+
+.tier-legend-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .employee-row { grid-template-columns: 1fr; }
+  .level-selector { flex-wrap: wrap; }
+  .level-btn { flex: 1 1 45%; border-bottom: 0.5px solid var(--rule); }
+}
+</style>
+</head>
+<body>
+
+<!-- BACK NAV -->
+<div class="back-nav">
+  <a class="back-link" href="tinpigprod-home.html">← TinPigProd</a>
+  <span class="back-nav-brand">FictionalPig · Feedback Synthesis</span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="tool-header">
+    <div class="tool-eyebrow"><div class="eyebrow-line"></div>TinPigProd · Talent enablement</div>
+    <h1 class="tool-title">Feedback <em>Synthesis</em> Tool</h1>
+    <p class="tool-desc">Enter raw manager observations about a FictionalPig employee. The tool synthesizes them into competency-anchored strengths, opportunities, and recommended actions — grounded in the FictionalPig Success Model at the right career level.</p>
+    <div class="tier-legend" style="margin-top:0.75rem;">
+      <div class="tier-legend-item">
+        <div class="tier-legend-dot" style="background:var(--teal);"></div>
+        The What — performance delivery
+      </div>
+      <div class="tier-legend-item">
+        <div class="tier-legend-dot" style="background:var(--teal-light);"></div>
+        The How — culture and growth
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-section" id="input-section">
+    <div class="input-section-header">
+      <div class="input-section-title">Manager observations</div>
+      <div style="font-size:10px;color:var(--ink-soft);font-family:'DM Mono',monospace;">Powered by Claude Sonnet</div>
+    </div>
+    <div class="input-section-body">
+
+      <!-- EMPLOYEE INFO -->
+      <div class="employee-row">
+        <div class="field-group">
+          <label class="field-label" for="employee-name">Employee name</label>
+          <input class="field-input" id="employee-name" type="text" placeholder="e.g. Jordan Mills" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="employee-role">Role</label>
+          <input class="field-input" id="employee-role" type="text" placeholder="e.g. Senior Software Engineer" />
+        </div>
+      </div>
+
+      <!-- CAREER LEVEL -->
+      <div class="field-group" style="margin-bottom:1rem;">
+        <label class="field-label">Career level</label>
+        <div class="level-selector">
+          <button class="level-btn active" data-level="ic" onclick="setLevel('ic')">Individual<br>Contributor</button>
+          <button class="level-btn" data-level="tl" onclick="setLevel('tl')">Leading<br>Teams</button>
+          <button class="level-btn" data-level="ll" onclick="setLevel('ll')">Leading<br>Leaders</button>
+          <button class="level-btn" data-level="ex" onclick="setLevel('ex')">Executive</button>
+        </div>
+      </div>
+
+      <!-- OBSERVATIONS -->
+      <div class="field-group">
+        <label class="field-label" for="observations">Observations</label>
+        <div class="observations-wrap">
+          <textarea
+            class="observations-textarea"
+            id="observations"
+            placeholder="Enter raw, unpolished manager observations. No need to structure them — the tool does that work. Example: Jordan is really strong technically but tends to go heads down and not loop the team in. Gets defensive in code reviews. Delivers reliably but I'm not sure they're growing."
+          ></textarea>
+        </div>
+        <div class="scenario-row">
+          <span style="font-size:10px;color:var(--ink-ghost);font-family:'DM Mono',monospace;align-self:center;">Try a scenario:</span>
+          <button class="scenario-chip" onclick="loadScenario('jordan')">Jordan Mills · IC</button>
+          <button class="scenario-chip" onclick="loadScenario('taylor')">Taylor Chen · Team Lead</button>
+          <button class="scenario-chip" onclick="loadScenario('sam')">Sam Rivera · Leading Leaders</button>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-row">
+        <button class="submit-btn" id="submit-btn" onclick="synthesize()">
+          <span>⬡</span> Synthesize feedback
+        </button>
+        <span class="submit-hint">Output anchored to FictionalPig Success Model</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-state" id="loading-state">
+    <div class="loading-spinner"></div>
+    <div class="loading-label" id="loading-label">Reading observations...</div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="results-section">
+
+    <div class="results-header">
+      <div>
+        <div class="results-title" id="results-name">Synthesis complete</div>
+        <div class="results-meta">
+          <span id="results-level-badge" class="results-meta-badge">IC</span>
+          <span id="results-role-meta"></span>
+        </div>
+      </div>
+      <button class="reset-btn" onclick="reset()">← New synthesis</button>
+    </div>
+
+    <!-- STRENGTHS -->
+    <div class="result-group" id="group-strengths">
+      <div class="result-group-header">
+        <div class="result-group-dot" style="background:var(--green);"></div>
+        <div class="result-group-title" style="color:var(--green);">Strengths</div>
+        <div class="result-group-count" id="count-strengths"></div>
+      </div>
+      <div class="result-items" id="items-strengths"></div>
+    </div>
+
+    <!-- OPPORTUNITIES -->
+    <div class="result-group" id="group-opportunities">
+      <div class="result-group-header">
+        <div class="result-group-dot" style="background:var(--amber);"></div>
+        <div class="result-group-title" style="color:var(--amber);">Opportunities</div>
+        <div class="result-group-count" id="count-opportunities"></div>
+      </div>
+      <div class="result-items" id="items-opportunities"></div>
+    </div>
+
+    <!-- RECOMMENDED ACTIONS -->
+    <div class="result-group" id="group-actions">
+      <div class="result-group-header">
+        <div class="result-group-dot" style="background:var(--teal);"></div>
+        <div class="result-group-title" style="color:var(--teal);">Recommended actions</div>
+        <div class="result-group-count" id="count-actions"></div>
+      </div>
+      <div class="result-items" id="items-actions"></div>
+    </div>
+
+    <!-- FRAMEWORK FOOTER -->
+    <div class="framework-footer">
+      <div class="framework-footer-icon">⬡</div>
+      <div>
+        <div class="framework-footer-title">Grounded in the FictionalPig Success Model</div>
+        <div class="framework-footer-body">Every output is anchored to one of 11 competencies across The What (performance delivery) and The How (culture and growth), calibrated to the selected career level's proficiency expectations.</div>
+        <a class="framework-footer-link" href="fictionalpig-success-model.html" target="_blank" rel="noopener noreferrer">Explore the full Success Model →</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ── STATE ──
+let currentLevel = 'ic';
+
+const LEVEL_LABELS = {
+  ic: 'Individual Contributor',
+  tl: 'Leading Teams',
+  ll: 'Leading Leaders',
+  ex: 'Executive'
+};
+
+// ── SCENARIOS ──
+const SCENARIOS = {
+  jordan: {
+    name: 'Jordan Mills',
+    role: 'Senior Software Engineer',
+    level: 'ic',
+    observations: `Jordan is one of the strongest engineers on the team technically — very few people can match the depth of knowledge and quality of code output. But I keep noticing that Jordan tends to disappear into work for days at a time without checking in or looping in the team. In cross-functional meetings, Jordan is often quiet unless directly asked a question, and even then the answers can be pretty clipped. There was an incident last sprint where a technical decision got made that impacted two other teams and Jordan hadn't flagged it to anyone. The other team leads were frustrated. Jordan also got pretty defensive in a code review last week when a peer suggested an alternative approach — shut the conversation down pretty quickly. On the positive side, Jordan never misses a deadline and the work is almost always right the first time. I just worry about the ceiling if we can't figure out the collaboration piece.`
+  },
+  taylor: {
+    name: 'Taylor Chen',
+    role: 'Program Manager',
+    level: 'tl',
+    observations: `Taylor is doing a solid job keeping the trains running but I'm starting to wonder if we're getting all we can from this role. The team really likes Taylor and the day-to-day execution is clean — meetings run well, statuses are current, blockers get flagged. But when I look at the bigger picture I feel like Taylor is more of a coordinator than a leader. The team rarely hears a point of view from Taylor in planning sessions — it's mostly facilitation without much direction. There was a situation last quarter where we needed someone to push back on a scope change from the product team and Taylor just accepted it and re-planned around it without much of a fight. The team noticed. Also Taylor is great with the immediate team but I haven't seen much effort to build relationships outside the direct pod — which matters a lot at our level.`
+  },
+  sam: {
+    name: 'Sam Rivera',
+    role: 'Engineering Manager',
+    level: 'll',
+    observations: `Sam is a strong operator and I have a lot of confidence in the day-to-day management of the team. But I'm trying to assess readiness for a bigger scope and I'm seeing some gaps. The direct team is high-performing and Sam clearly invests in those relationships. Where I'm less sure is whether Sam is developing the managers underneath — I don't get a lot of visibility into how those one-on-ones go or whether the managers are actually growing. When I look at the talent pipeline under Sam's org, it feels thin. There are a few people who've been in the same role for a while and I'm not sure there's a development plan in place. On the strategic side, Sam is good at executing against direction but I'd like to see more proactive thinking about where the function needs to go — especially as we head into a big organizational change next quarter.`
+  }
+};
+
+// ── SUCCESS MODEL SYSTEM PROMPT ──
+const SYSTEM_PROMPT = `You are a talent development expert using the FictionalPig Success Model to analyze manager feedback. Your role is to transform raw, unstructured manager observations into structured, competency-anchored feedback that is specific, behavioral, and useful in development conversations.
+
+THE FICTIONALPIG SUCCESS MODEL:
+
+FIVE ORGANIZATIONAL VALUES:
+1. Curate Curiosity — create psychological safety that supports questions, feedback, failure, and challenge
+2. Prioritize People — set clear expectations, empower your people, engage to retain
+3. Operate with Integrity — do the right thing even when it's not the popular or comfortable thing
+4. Collaborate to Execute — we are better together; set clear goals, hold ourselves and each other accountable
+5. User Impact — deeply understand user needs and work to create experiences that feel natural and relevant
+
+ELEVEN COMPETENCIES across two tiers:
+
+THE WHAT (Performance delivery — 6 competencies):
+- Drives Results: Delivers on commitments, owns outcomes, holds self and others accountable
+- Customer Focus: Understands user needs, incorporates feedback, advocates for the user
+- Collaborates: Works across boundaries, shares information, pulls others in rather than working in isolation
+- Decision Quality: Makes sound decisions with available information, knows when to escalate
+- Courage: Shares honest perspective, raises concerns, delivers difficult feedback directly
+- Plans and Aligns: Organizes work effectively, sets clear goals, communicates progress
+
+THE HOW (Culture and growth — 5 competencies):
+- Learning Agility: Seeks feedback, applies learning quickly, adapts when approaches aren't working
+- Being Resilient: Recovers from setbacks, maintains effectiveness under pressure
+- Develops Talent: Invests in own and others' development, coaches, gives constructive feedback
+- Communicates Effectively: Adapts communication to audience, ensures shared understanding
+- Instills Trust: Does what they say, is honest under pressure, creates psychological safety
+
+CAREER LEVEL PROFICIENCY EXPECTATIONS (1=Developing, 2=Effective, 3=Advanced, 4=Expert):
+
+Individual Contributor (IC):
+- Drives Results: 2 — delivers consistently, owns personal outcomes
+- Customer Focus: 2 — understands user needs in their domain
+- Collaborates: 2 — works across team boundaries, shares proactively
+- Decision Quality: 1 — makes sound decisions in scope, knows when to escalate
+- Courage: 1 — shares perspective when asked, raises concerns appropriately
+- Plans and Aligns: 2 — organizes own work, communicates progress
+- Learning Agility: 2 — seeks feedback, applies learning quickly
+- Being Resilient: 2 — recovers from setbacks without losing momentum
+- Develops Talent: 1 — invests in own development, mentors peers informally
+- Communicates Effectively: 2 — clear in writing and verbally, adapts to audience
+- Instills Trust: 2 — does what they say, builds credibility through consistency
+
+Leading Teams:
+- Drives Results: 3 — holds team accountable, removes blockers
+- Customer Focus: 2 — ensures team output is grounded in user insight
+- Collaborates: 3 — models collaborative behavior, builds bridges across functions
+- Decision Quality: 2 — makes timely decisions with incomplete information
+- Courage: 2 — delivers difficult feedback, advocates for team, names problems
+- Plans and Aligns: 2 — sets clear team goals, maintains visibility
+- Learning Agility: 2 — creates learning moments for team, normalizes failure as data
+- Being Resilient: 2 — steadies team during uncertainty, models composure
+- Develops Talent: 3 — builds development plans, coaches directly
+- Communicates Effectively: 2 — translates strategy to team clarity
+- Instills Trust: 3 — creates psychological safety, models vulnerability
+
+Leading Leaders:
+- Drives Results: 3 — drives results through others, builds accountability cultures
+- Customer Focus: 3 — builds customer-centric practices into how functions operate
+- Collaborates: 3 — creates structural conditions for cross-functional collaboration
+- Decision Quality: 3 — makes high-stakes decisions confidently, builds decision frameworks
+- Courage: 3 — challenges upward when necessary, addresses organizational dysfunction
+- Plans and Aligns: 3 — aligns multiple teams, builds planning cadences
+- Learning Agility: 3 — builds learning into function operations, rewards experimentation
+- Being Resilient: 3 — sustains performance through organizational change
+- Develops Talent: 3 — develops leadership pipeline, holds managers accountable for developing people
+- Communicates Effectively: 3 — drives alignment across functions
+- Instills Trust: 3 — builds trust across organizational boundaries
+
+Executive:
+- All competencies at level 4 — sets organizational standards, shapes culture, drives enterprise-wide capability
+
+OUTPUT FORMAT:
+Return a JSON object with exactly this structure — no markdown, no preamble, just the JSON:
+{
+  "strengths": [
+    {
+      "competency": "competency name",
+      "tier": "what" or "how",
+      "value": "anchoring value name",
+      "text": "specific behavioral observation reframed as a strength, 2-3 sentences"
+    }
+  ],
+  "opportunities": [
+    {
+      "competency": "competency name",
+      "tier": "what" or "how",
+      "value": "anchoring value name",
+      "text": "specific gap described behaviorally, calibrated to career level expectation, 2-3 sentences"
+    }
+  ],
+  "actions": [
+    {
+      "competency": "competency name",
+      "tier": "what" or "how",
+      "value": "anchoring value name",
+      "text": "concrete, specific recommended action for manager or employee, 2-3 sentences"
+    }
+  ]
+}
+
+RULES:
+- Identify 2-4 items per category (strengths, opportunities, actions)
+- Every item must name a specific competency from the Success Model
+- Calibrate opportunity descriptions to the career level — what's expected vs. what's being demonstrated
+- Reframe subjective language ("defensive", "quiet", "not a team player") into behavioral observations
+- Actions should be specific and actionable — not generic ("have a conversation about growth") but concrete ("In the next 1:1, name the specific decision that impacted two teams and ask Jordan to walk you through how they'd handle it differently")
+- Tone should be developmental, not punitive
+- The output should be usable in an actual development conversation next week`;
+
+// ── FUNCTIONS ──
+function setLevel(level) {
+  currentLevel = level;
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === level);
+  });
+}
+
+function loadScenario(key) {
+  const s = SCENARIOS[key];
+  document.getElementById('employee-name').value = s.name;
+  document.getElementById('employee-role').value = s.role;
+  document.getElementById('observations').value = s.observations;
+  setLevel(s.level);
+}
+
+const LOADING_MESSAGES = [
+  'Reading observations...',
+  'Identifying behavioral patterns...',
+  'Mapping to Success Model competencies...',
+  'Calibrating to career level...',
+  'Structuring output...'
+];
+
+async function synthesize() {
+  const name = document.getElementById('employee-name').value.trim() || 'Employee';
+  const role = document.getElementById('employee-role').value.trim() || '';
+  const observations = document.getElementById('observations').value.trim();
+
+  if (!observations) {
+    document.getElementById('observations').focus();
+    return;
+  }
+
+  // Show loading
+  document.getElementById('input-section').style.display = 'none';
+  document.getElementById('loading-state').classList.add('visible');
+  document.getElementById('results-section').classList.remove('visible');
+
+  // Cycle loading messages
+  let msgIdx = 0;
+  const labelEl = document.getElementById('loading-label');
+  const msgInterval = setInterval(() => {
+    msgIdx = (msgIdx + 1) % LOADING_MESSAGES.length;
+    labelEl.textContent = LOADING_MESSAGES[msgIdx];
+  }, 1200);
+
+  const userPrompt = `Employee: ${name}
+Role: ${role}
+Career Level: ${LEVEL_LABELS[currentLevel]}
+
+Manager observations:
+${observations}
+
+Please synthesize this feedback using the FictionalPig Success Model, calibrated to the ${LEVEL_LABELS[currentLevel]} level.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    clearInterval(msgInterval);
+    renderResults(parsed, name, role);
+
+  } catch (err) {
+    clearInterval(msgInterval);
+    labelEl.textContent = 'Something went wrong. Please try again.';
+    setTimeout(() => {
+      document.getElementById('loading-state').classList.remove('visible');
+      document.getElementById('input-section').style.display = 'block';
+    }, 2000);
+  }
+}
+
+function renderResults(data, name, role) {
+  document.getElementById('loading-state').classList.remove('visible');
+  document.getElementById('results-section').classList.add('visible');
+
+  document.getElementById('results-name').textContent = name;
+  document.getElementById('results-level-badge').textContent = LEVEL_LABELS[currentLevel];
+  document.getElementById('results-role-meta').textContent = role;
+
+  renderGroup('strengths', data.strengths || [], 'green');
+  renderGroup('opportunities', data.opportunities || [], 'amber');
+  renderGroup('actions', data.actions || [], 'teal');
+}
+
+function renderGroup(key, items, color) {
+  const container = document.getElementById(`items-${key}`);
+  const count = document.getElementById(`count-${key}`);
+  count.textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
+
+  container.innerHTML = items.map((item, i) => `
+    <div class="result-item" style="animation-delay:${i * 0.08}s">
+      <div class="result-item-header">
+        <span class="result-item-comp comp-${item.tier || 'what'}">${item.competency || ''}</span>
+        <span class="result-item-value">${item.value || ''}</span>
+      </div>
+      <div class="result-item-body">
+        <div class="result-item-text">${item.text || ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function reset() {
+  document.getElementById('results-section').classList.remove('visible');
+  document.getElementById('input-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
