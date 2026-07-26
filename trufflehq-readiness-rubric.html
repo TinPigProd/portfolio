@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CSM Readiness Rubric - TruffleHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0E0E0E; --bg2:#1A1A1A; --bg3:#222222;
+  --rule:rgba(255,255,255,0.07); --rule-mid:rgba(255,255,255,0.13);
+  --ink:#F5F5F0; --ink-mid:#999999; --ink-soft:#666666; --ink-ghost:#333333;
+  --teal:#2DB8B8; --teal-light:#5DD4D4; --teal-dim:rgba(45,184,184,0.10);
+  --green:#4CAF7D; --green-dim:rgba(76,175,125,0.10);
+  --red:#E85D5D; --red-dim:rgba(232,93,93,0.10);
+  --yellow:#E8C83A; --yellow-dim:rgba(232,200,58,0.10);
+}
+
+body { font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; background:var(--bg); color:var(--ink); min-height:100vh; }
+
+body::before {
+  content:''; position:fixed; inset:0; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none; opacity:0.4;
+}
+
+.site-header { position:sticky; top:0; z-index:200; background:rgba(14,14,14,0.92); backdrop-filter:blur(12px); border-bottom:0.5px solid var(--rule); padding:0 2rem; height:52px; display:flex; align-items:center; justify-content:space-between; }
+.header-brand { font-size:14px; font-weight:600; color:var(--ink); letter-spacing:-0.01em; text-decoration:none; }
+.header-brand span { color:var(--teal); font-weight:400; }
+.header-back { font-size:12px; color:var(--ink-soft); text-decoration:none; display:flex; align-items:center; gap:6px; transition:color 0.15s; }
+.header-back:hover { color:var(--ink); }
+
+.page { max-width:1040px; margin:0 auto; padding:0 2rem 6rem; position:relative; z-index:1; }
+
+.hero { padding:3rem 0 2rem; border-bottom:0.5px solid var(--rule); margin-bottom:2.5rem; }
+.hero-eyebrow { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal); margin-bottom:0.75rem; font-family:'DM Mono',monospace; display:flex; align-items:center; gap:0.75rem; }
+.eyebrow-line { width:20px; height:0.5px; background:var(--teal); opacity:0.5; }
+.hero-title { font-family:'DM Serif Display',serif; font-size:clamp(24px,3.5vw,40px); line-height:1.1; color:var(--ink); margin-bottom:0.75rem; }
+.hero-title em { font-style:italic; color:var(--teal); }
+.hero-desc { font-size:14px; color:var(--ink-mid); line-height:1.7; max-width:620px; margin-bottom:1rem;  font-weight:300;}
+.hero-meta { display:flex; gap:1rem; flex-wrap:wrap; }
+.hero-badge { font-size:10px; font-family:'DM Mono',monospace; color:var(--ink-soft); padding:3px 10px; border:0.5px solid var(--rule-mid); border-radius:100px; }
+
+/* MILESTONE NAVIGATION */
+.milestone-nav { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border:0.5px solid var(--rule-mid); border-radius:10px; overflow:hidden; margin-bottom:2rem; }
+.milestone-btn { padding:1rem 1.25rem; background:var(--bg2); border:none; cursor:pointer; font-family:'DM Sans',sans-serif; text-align:left; border-right:0.5px solid var(--rule); transition:background 0.15s; }
+.milestone-btn:last-child { border-right:none; }
+.milestone-btn:hover { background:var(--bg3); }
+.milestone-btn.active { background:var(--teal-dim); border-bottom:2px solid var(--teal); }
+.milestone-num { color:var(--teal); font-size:11px; font-weight:600; font-family:'DM Mono',monospace; letter-spacing:0.08em; }
+.milestone-label { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+.milestone-sub { font-size:11px; color:var(--ink-soft); }
+
+.milestone-panel { display:none; }
+.milestone-panel.active { display:block; }
+
+/* MILESTONE INTENT */
+.milestone-intent { padding:1rem 1.25rem; background:var(--bg2); border:0.5px solid var(--rule); border-radius:8px; border-left:2px solid var(--teal); margin-bottom:1.5rem; font-size:13px; color:var(--ink-mid); line-height:1.65; }
+.milestone-intent strong { color:var(--ink); }
+
+/* COMPETENCY TABLE */
+.comp-table { border:0.5px solid var(--rule-mid); border-radius:10px; overflow:hidden; margin-bottom:1.5rem; }
+.comp-table-header { display:grid; grid-template-columns:200px 1fr 120px 120px; background:var(--bg3); border-bottom:0.5px solid var(--rule-mid); }
+.comp-th { padding:0.6rem 1rem; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; font-family:'DM Mono',monospace; color:var(--ink-soft); font-weight:600; }
+
+.comp-row { display:grid; grid-template-columns:200px 1fr 120px 120px; border-top:0.5px solid var(--rule); align-items:start; }
+.comp-row:first-child { border-top:none; }
+.comp-row:hover { background:rgba(255,255,255,0.02); }
+
+.comp-cell { padding:0.75rem 1rem; font-size:12px; color:var(--ink); line-height:1.55; font-weight:300; }
+.comp-name { font-weight:600; color:var(--ink); font-size:12px; }
+.comp-domain { font-size:10px; color:var(--teal); font-family:'DM Mono',monospace; margin-top:2px; }
+
+.comp-indicator { font-size:12px; color:var(--ink); line-height:1.6; font-weight:300; }
+.comp-indicator strong { color:var(--ink-mid); font-weight:500; display:block; margin-bottom:2px; font-size:11px; }
+
+.comp-method { font-size:12px; color:var(--ink); font-family:'DM Mono',monospace; line-height:1.55; }
+
+.comp-gate { display:flex; align-items:center; justify-content:center; }
+.gate-badge { font-size:9px; font-weight:600; padding:3px 8px; border-radius:100px; font-family:'DM Mono',monospace; letter-spacing:0.04em; }
+.gate-required { background:var(--teal-dim); color:var(--teal); border:0.5px solid rgba(45,184,184,0.25); }
+.gate-observed { background:var(--yellow-dim); color:var(--yellow); border:0.5px solid rgba(232,200,58,0.25); }
+.gate-stretch { background:rgba(255,255,255,0.04); color:var(--ink-soft); border:0.5px solid var(--rule-mid); }
+
+/* OBSERVATION FORM */
+.obs-form { background:var(--bg2); border:0.5px solid var(--rule-mid); border-radius:10px; overflow:hidden; }
+.obs-form-header { padding:1rem 1.25rem; border-bottom:0.5px solid var(--rule); display:flex; align-items:center; justify-content:space-between; }
+.obs-form-title { font-size:14px; font-weight:600; color:var(--ink); }
+.obs-form-sub { font-size:10px; color:var(--ink-soft); font-family:'DM Mono',monospace; }
+.obs-form-body { padding:1.25rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.obs-field { display:flex; flex-direction:column; gap:6px; }
+.obs-field.wide { grid-column:1/-1; }
+.obs-label { font-size:10px; letter-spacing:0.08em; text-transform:uppercase; font-family:'DM Mono',monospace; color:var(--teal); }
+.obs-input { background:var(--bg3); border:0.5px solid var(--rule-mid); border-radius:6px; padding:0.6rem 0.75rem; font-size:12px; color:var(--ink-soft); font-family:'DM Sans',sans-serif; resize:none; cursor:not-allowed; }
+.obs-input.textarea { height:64px; }
+.obs-rating { display:flex; gap:6px; }
+.obs-rating-opt { padding:4px 12px; border:0.5px solid var(--rule-mid); border-radius:100px; font-size:11px; color:var(--ink-soft); cursor:not-allowed; font-family:'DM Mono',monospace; }
+.obs-rating-opt.selected { border-color:var(--teal); color:var(--teal); background:var(--teal-dim); }
+.obs-form-footer { padding:0.75rem 1.25rem; border-top:0.5px solid var(--rule); font-size:11px; color:var(--ink-soft); font-family:'DM Mono',monospace; font-style:italic; }
+
+.site-footer { border-top:0.5px solid var(--rule); padding:1.5rem 2rem; display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); font-family:'DM Mono',monospace; position:relative; z-index:1; }
+
+@media(max-width:700px){
+  .milestone-nav { grid-template-columns:1fr; }
+  .milestone-btn { border-right:none; border-bottom:0.5px solid var(--rule); }
+  .comp-table-header, .comp-row { grid-template-columns:1fr 1fr; }
+  .comp-th:nth-child(3), .comp-th:nth-child(4) { display:none; }
+  .comp-cell:nth-child(3), .comp-cell:nth-child(4) { display:none; }
+  .obs-form-body { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="index.html">TinPig<span>Productions</span></a>
+  <a class="header-back" href="tinpigprod-revenue-enablement.html">← Revenue Enablement</a>
+</header>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow"><div class="eyebrow-line"></div>TruffleHQ · CSM Readiness Rubric</div>
+    <h1 class="hero-title">Readiness is a milestone, <em>not a calendar date.</em></h1>
+    <p class="hero-desc">A 0-to-90 day rubric for TruffleHQ Customer Success Managers. Each milestone defines what demonstrated competency looks like, how it gets observed, and what it gates. Time is a minimum threshold, not a measure of readiness.</p>
+    <div class="hero-meta">
+      <span class="hero-badge">Role: Customer Success Manager</span>
+      <span class="hero-badge">3 milestone gates</span>
+      <span class="hero-badge">5 competency domains</span>
+    </div>
+  </div>
+
+  <!-- MILESTONE NAV -->
+  <div class="milestone-nav">
+    <button class="milestone-btn active" onclick="showMilestone('m30', this)">
+      <div class="milestone-num">Day 30</div>
+      <div class="milestone-label">Foundation</div>
+      <div class="milestone-sub">Platform fluency + first customer contact</div>
+    </button>
+    <button class="milestone-btn" onclick="showMilestone('m60', this)">
+      <div class="milestone-num">Day 60</div>
+      <div class="milestone-label">Independence</div>
+      <div class="milestone-sub">Solo customer management + first upsell attempt</div>
+    </button>
+    <button class="milestone-btn" onclick="showMilestone('m90', this)">
+      <div class="milestone-num">Day 90</div>
+      <div class="milestone-label">Full ownership</div>
+      <div class="milestone-sub">Book ownership + renewal readiness</div>
+    </button>
+  </div>
+
+  <!-- DAY 30 -->
+  <div class="milestone-panel active" id="m30">
+    <div class="milestone-intent"><strong>What Day 30 means:</strong> The CSM can navigate TruffleHQ's platform confidently, articulate the core value proposition without coaching, and has completed their first customer touchpoint with a manager present. They understand the TruffleHQ customer journey and can speak to their assigned accounts' goals and health status.</div>
+
+    <div class="comp-table">
+      <div class="comp-table-header">
+        <div class="comp-th">Competency</div>
+        <div class="comp-th">Behavioral indicator at Day 30</div>
+        <div class="comp-th">Observation method</div>
+        <div class="comp-th">Gate status</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Product fluency</div><div class="comp-domain">Platform knowledge</div></div>
+        <div class="comp-cell comp-indicator"><strong>Can demonstrate</strong>Completes a full platform walkthrough for a new customer without reference materials. Accurately explains AI skills gap analysis methodology when questioned.</div>
+        <div class="comp-cell comp-method">Observed demo to manager. Certification quiz score 85%+.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Customer communication</div><div class="comp-domain">Relationship management</div></div>
+        <div class="comp-cell comp-indicator"><strong>Can execute</strong>Sends accurate, professional customer communications without manager review. Responds to customer inquiries within SLA with correct information.</div>
+        <div class="comp-cell comp-method">Manager review of first 5 customer emails. SLA compliance tracking.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Onboarding delivery</div><div class="comp-domain">Time to value</div></div>
+        <div class="comp-cell comp-indicator"><strong>Can facilitate</strong>Runs customer onboarding call with manager shadowing. Covers all required platform setup steps and captures customer success goals accurately in CRM.</div>
+        <div class="comp-cell comp-method">Manager observation form. CRM data quality check.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Account health awareness</div><div class="comp-domain">Risk management</div></div>
+        <div class="comp-cell comp-indicator"><strong>Can identify</strong>Accurately reads account health dashboard and can name the top risk signal for each assigned account. Knows when to escalate.</div>
+        <div class="comp-cell comp-method">Weekly 1:1 account review with manager.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-observed">Observed</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Expansion awareness</div><div class="comp-domain">Revenue growth</div></div>
+        <div class="comp-cell comp-indicator"><strong>Can recognize</strong>Can identify expansion signals in their assigned accounts even if not yet ready to act on them. Knows TruffleHQ's expansion products and which use cases they address.</div>
+        <div class="comp-cell comp-method">Verbal assessment in 1:1.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-stretch">Stretch</span></div>
+      </div>
+
+    </div>
+
+    <!-- OBSERVATION FORM -->
+    <div class="obs-form">
+      <div class="obs-form-header">
+        <div class="obs-form-title">Manager observation form · Day 30</div>
+        <div class="obs-form-sub">Complete after observed customer onboarding call</div>
+      </div>
+      <div class="obs-form-body">
+        <div class="obs-field">
+          <div class="obs-label">CSM name</div>
+          <div class="obs-input">________________________</div>
+        </div>
+        <div class="obs-field">
+          <div class="obs-label">Observation date</div>
+          <div class="obs-input">________________________</div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">What did the CSM do well in the platform walkthrough?</div>
+          <div class="obs-input textarea"></div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Where did they need coaching or correction?</div>
+          <div class="obs-input textarea"></div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Platform fluency rating</div>
+          <div class="obs-rating">
+            <div class="obs-rating-opt">1 · Not ready</div>
+            <div class="obs-rating-opt">2 · Developing</div>
+            <div class="obs-rating-opt selected">3 · Meeting standard</div>
+            <div class="obs-rating-opt">4 · Exceeding</div>
+          </div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Day 30 gate recommendation</div>
+          <div class="obs-rating">
+            <div class="obs-rating-opt selected">Advance to Day 60</div>
+            <div class="obs-rating-opt">Extend Day 30 · 2 weeks</div>
+            <div class="obs-rating-opt">Escalate to manager + HR</div>
+          </div>
+        </div>
+      </div>
+      <div class="obs-form-footer">Form is a reference design. In practice, this lives in the CSM's onboarding tracker in the CRM.</div>
+    </div>
+  </div>
+
+  <!-- DAY 60 -->
+  <div class="milestone-panel" id="m60">
+    <div class="milestone-intent"><strong>What Day 60 means:</strong> The CSM is managing their full book of accounts independently with light manager oversight. They have attempted at least one upsell or expansion conversation. They proactively flag at-risk accounts without being prompted, and their CRM hygiene is consistently meeting standard.</div>
+
+    <div class="comp-table">
+      <div class="comp-table-header">
+        <div class="comp-th">Competency</div>
+        <div class="comp-th">Behavioral indicator at Day 60</div>
+        <div class="comp-th">Observation method</div>
+        <div class="comp-th">Gate status</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Independent account management</div><div class="comp-domain">Relationship management</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates consistently</strong>Runs QBRs and customer touchpoints without manager present. Customer satisfaction scores at or above team average. No customer escalations attributable to CSM error.</div>
+        <div class="comp-cell comp-method">Customer satisfaction data. Manager review of QBR recordings.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Proactive risk identification</div><div class="comp-domain">Risk management</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates consistently</strong>Flags at-risk accounts in weekly team meeting before manager identifies them. Has a written action plan for each red account with timeline and owner.</div>
+        <div class="comp-cell comp-method">Weekly team meeting observation. Account health tracker audit.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Expansion conversation</div><div class="comp-domain">Revenue growth</div></div>
+        <div class="comp-cell comp-indicator"><strong>Has attempted</strong>Has initiated at least one expansion or upsell conversation with a customer. Can articulate which expansion products are relevant to which customer use cases.</div>
+        <div class="comp-cell comp-method">CRM activity log. Manager debrief after first expansion attempt.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">CRM hygiene</div><div class="comp-domain">Operational discipline</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates consistently</strong>All customer touchpoints logged within 24 hours. Renewal dates, health scores, and expansion opportunities current and accurate. Zero data quality flags in monthly audit.</div>
+        <div class="comp-cell comp-method">Monthly CRM data quality audit.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-observed">Observed</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Cross-functional escalation</div><div class="comp-domain">Internal navigation</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates when needed</strong>Knows when and how to loop in Support, Product, and Sales. Escalations are appropriately scoped and include the right context for the receiving team.</div>
+        <div class="comp-cell comp-method">Review of escalation tickets. Manager observation.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-observed">Observed</span></div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">MEDDIC fluency</div><div class="comp-domain">Deal qualification</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates for CS context</strong>Can identify the economic buyer, champion, and decision process for each renewal or expansion opportunity. Understands what success metrics the customer used to justify the original purchase and uses those to frame renewal and expansion conversations.</div>
+        <div class="comp-cell comp-method">Renewal planning review. 1:1 account discussion with manager.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-observed">Observed</span></div>
+      </div>
+
+    </div>
+
+    <div class="obs-form">
+      <div class="obs-form-header">
+        <div class="obs-form-title">Manager observation form · Day 60</div>
+        <div class="obs-form-sub">Complete after first independent QBR and expansion attempt debrief</div>
+      </div>
+      <div class="obs-form-body">
+        <div class="obs-field">
+          <div class="obs-label">CSM name</div>
+          <div class="obs-input">________________________</div>
+        </div>
+        <div class="obs-field">
+          <div class="obs-label">Observation date</div>
+          <div class="obs-input">________________________</div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Describe the first expansion conversation attempt. What did they do well?</div>
+          <div class="obs-input textarea"></div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">What account management behavior still needs development?</div>
+          <div class="obs-input textarea"></div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Independence rating</div>
+          <div class="obs-rating">
+            <div class="obs-rating-opt">1 · High oversight still needed</div>
+            <div class="obs-rating-opt">2 · Light oversight</div>
+            <div class="obs-rating-opt selected">3 · Independent</div>
+            <div class="obs-rating-opt">4 · Coaching others</div>
+          </div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Day 60 gate recommendation</div>
+          <div class="obs-rating">
+            <div class="obs-rating-opt selected">Advance to Day 90</div>
+            <div class="obs-rating-opt">Extend Day 60 · 2 weeks</div>
+            <div class="obs-rating-opt">Performance plan</div>
+          </div>
+        </div>
+      </div>
+      <div class="obs-form-footer">Form is a reference design. In practice, this lives in the CSM's onboarding tracker in the CRM.</div>
+    </div>
+  </div>
+
+  <!-- DAY 90 -->
+  <div class="milestone-panel" id="m90">
+    <div class="milestone-intent"><strong>What Day 90 means:</strong> The CSM fully owns their book of accounts and is accountable for their renewal rate and expansion pipeline. They operate without manager oversight on routine customer interactions and are ready to be measured against the same metrics as tenured CSMs. Ramp ends here. Standard performance management begins.</div>
+
+    <div class="comp-table">
+      <div class="comp-table-header">
+        <div class="comp-th">Competency</div>
+        <div class="comp-th">Behavioral indicator at Day 90</div>
+        <div class="comp-th">Observation method</div>
+        <div class="comp-th">Gate status</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Renewal ownership</div><div class="comp-domain">Revenue retention</div></div>
+        <div class="comp-cell comp-indicator"><strong>Fully owns</strong>Has a written renewal plan for all accounts renewing in the next 90 days. Has completed renewal conversation with at least one account. Forecast is current and defensible.</div>
+        <div class="comp-cell comp-method">Renewal plan audit. Forecast review with manager.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Expansion pipeline</div><div class="comp-domain">Revenue growth</div></div>
+        <div class="comp-cell comp-indicator"><strong>Actively manages</strong>Has identified expansion opportunities across their book and logged them in CRM with estimated value and timeline. Has closed or is actively progressing at least one expansion opportunity.</div>
+        <div class="comp-cell comp-method">CRM pipeline review. Manager 1:1.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Executive relationship</div><div class="comp-domain">Stakeholder management</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates</strong>Has a direct relationship with at least one executive stakeholder at each strategic account. Executive is reachable by the CSM without going through the day-to-day contact.</div>
+        <div class="comp-cell comp-method">Account map review. Manager observation at executive QBR.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Health signal accuracy</div><div class="comp-domain">Risk management</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates consistently</strong>Health score predictions match actual customer behavior. No surprises in renewal conversations. Churn risk identified and actioned before it becomes a lost account.</div>
+        <div class="comp-cell comp-method">Retrospective on any churn or near-churn events. Health score calibration review.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-observed">Observed</span></div>
+      </div>
+
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">MEDDIC fluency</div><div class="comp-domain">Deal qualification</div></div>
+        <div class="comp-cell comp-indicator"><strong>Demonstrates consistently</strong>Uses MEDDIC framework to qualify and manage every renewal and expansion opportunity. Can identify metrics, economic buyer, decision criteria, decision process, identified pain, and champion for each strategic account and uses this to drive renewal and expansion conversations with precision.</div>
+        <div class="comp-cell comp-method">Renewal planning audit. Expansion pipeline quality review.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-required">Required</span></div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell"><div class="comp-name">Peer contribution</div><div class="comp-domain">Team development</div></div>
+        <div class="comp-cell comp-indicator"><strong>Beginning to show</strong>Has shared at least one customer insight, objection response, or best practice in team setting. Is a resource to newer CSMs, not just a recipient of coaching.</div>
+        <div class="comp-cell comp-method">Manager observation in team meetings. Peer feedback.</div>
+        <div class="comp-cell comp-gate"><span class="gate-badge gate-stretch">Stretch</span></div>
+      </div>
+
+    </div>
+
+    <div class="obs-form">
+      <div class="obs-form-header">
+        <div class="obs-form-title">Day 90 gate review · Ramp completion assessment</div>
+        <div class="obs-form-sub">Complete with CSM and their manager. Signals transition to standard performance management.</div>
+      </div>
+      <div class="obs-form-body">
+        <div class="obs-field">
+          <div class="obs-label">CSM name</div>
+          <div class="obs-input">________________________</div>
+        </div>
+        <div class="obs-field">
+          <div class="obs-label">Review date</div>
+          <div class="obs-input">________________________</div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">What is this CSM's strongest demonstrated competency?</div>
+          <div class="obs-input textarea"></div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">What is the single development area to focus on in Q1 of standard performance management?</div>
+          <div class="obs-input textarea"></div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Overall ramp rating</div>
+          <div class="obs-rating">
+            <div class="obs-rating-opt">Below standard</div>
+            <div class="obs-rating-opt selected">Met standard</div>
+            <div class="obs-rating-opt">Exceeded standard</div>
+          </div>
+        </div>
+        <div class="obs-field wide">
+          <div class="obs-label">Day 90 gate recommendation</div>
+          <div class="obs-rating">
+            <div class="obs-rating-opt selected">Ramp complete · Standard performance management</div>
+            <div class="obs-rating-opt">Extend ramp · 30 days with PIP</div>
+          </div>
+        </div>
+      </div>
+      <div class="obs-form-footer">Ramp complete means the CSM is now measured against the same metrics as all tenured CSMs. There is no grace period after Day 90.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span>TinPigProductions · TruffleHQ · CSM Readiness Rubric</span>
+  <span>Revenue Enablement · 0–90 Day Ramp</span>
+</footer>
+
+<script>
+function showMilestone(id, btn) {
+  document.querySelectorAll('.milestone-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Content Production - TruffleHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0E0E0E; --bg2:#1A1A1A; --bg3:#222222;
+  --rule:rgba(255,255,255,0.07); --rule-mid:rgba(255,255,255,0.13);
+  --ink:#F5F5F0; --ink-mid:#999999; --ink-soft:#666666; --ink-ghost:#333333;
+  --teal:#2DB8B8; --teal-light:#5DD4D4; --teal-dim:rgba(45,184,184,0.10);
+}
+body { font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; background:var(--bg); color:var(--ink); min-height:100vh; }
+body::before { content:''; position:fixed; inset:0; z-index:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; opacity:0.4; }
+
+.site-header { position:sticky; top:0; z-index:200; background:rgba(14,14,14,0.92); backdrop-filter:blur(12px); border-bottom:0.5px solid var(--rule); padding:0 2rem; height:52px; display:flex; align-items:center; justify-content:space-between; }
+.header-brand { font-size:14px; font-weight:600; color:var(--ink); letter-spacing:-0.01em; text-decoration:none; }
+.header-brand span { color:var(--teal); font-weight:400; }
+.header-back { font-size:12px; color:var(--ink-soft); text-decoration:none; display:flex; align-items:center; gap:6px; transition:color 0.15s; }
+.header-back:hover { color:var(--ink); }
+
+.page { max-width:860px; margin:0 auto; padding:0 2rem 6rem; position:relative; z-index:1; }
+
+/* HERO */
+.hero { padding:3rem 0 2.5rem; border-bottom:0.5px solid var(--rule); margin-bottom:2.5rem; }
+.hero-eyebrow { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal); margin-bottom:0.75rem; font-family:'DM Mono',monospace; display:flex; align-items:center; gap:0.75rem; }
+.eyebrow-line { width:20px; height:0.5px; background:var(--teal); opacity:0.5; }
+.hero-title { font-family:'DM Serif Display',serif; font-size:clamp(26px,4vw,44px); line-height:1.1; color:var(--ink); margin-bottom:1rem; }
+.hero-title em { font-style:italic; color:var(--teal); }
+.hero-desc { font-size:15px; color:var(--ink); line-height:1.8; max-width:620px; font-weight:300; }
+
+/* SECTION LABEL */
+.section-label { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal); font-family:'DM Mono',monospace; display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+.section-label::after { content:''; flex:1; height:0.5px; background:var(--rule-mid); }
+
+/* REQUEST TYPES */
+.type-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border:0.5px solid var(--rule-mid); border-radius:10px; overflow:hidden; margin-bottom:2.5rem; }
+.type-card { padding:1.25rem; border-right:0.5px solid var(--rule); }
+.type-card:last-child { border-right:none; }
+.type-tag { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; font-family:'DM Mono',monospace; color:var(--teal); margin-bottom:6px; }
+.type-name { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:6px; }
+.type-examples { font-size:12px; color:var(--ink); font-weight:300; line-height:1.6; margin-bottom:8px; }
+.type-signal { font-size:12px; color:var(--ink); font-weight:300; line-height:1.55; padding-top:8px; border-top:0.5px solid var(--rule); }
+
+/* PIPELINE ACCORDION */
+.pipeline-grid { display:flex; flex-direction:column; gap:0; border:0.5px solid var(--rule-mid); border-radius:10px; overflow:hidden; margin-bottom:2.5rem; }
+.pipeline-row { border-bottom:0.5px solid var(--rule); }
+.pipeline-row:last-child { border-bottom:none; }
+
+.pipeline-trigger { display:grid; grid-template-columns:40px 1fr auto; gap:0.75rem; align-items:center; padding:1rem 1.25rem; cursor:pointer; background:var(--bg2); transition:background 0.15s; }
+.pipeline-trigger:hover { background:var(--bg3); }
+.pipeline-trigger.open { background:var(--bg3); }
+.pipeline-num { font-size:11px; font-weight:600; color:var(--teal); font-family:'DM Mono',monospace; letter-spacing:0.08em; }
+.pipeline-title-wrap { }
+.pipeline-title { font-size:14px; font-weight:600; color:var(--ink); }
+.pipeline-who { font-size:11px; color:var(--ink-mid); margin-top:2px; font-weight:300; }
+.pipeline-chevron { font-size:10px; color:var(--teal); transition:transform 0.2s; flex-shrink:0; }
+.pipeline-trigger.open .pipeline-chevron { transform:rotate(180deg); }
+
+.pipeline-detail { display:none; padding:1rem 1.25rem 1.25rem 4rem; background:var(--bg3); }
+.pipeline-detail.open { display:block; }
+.pipeline-body { font-size:14px; color:var(--ink); line-height:1.75; font-weight:300; margin-bottom:0.75rem; }
+.pipeline-body strong { font-weight:600; }
+.pipeline-tools { display:flex; flex-wrap:wrap; gap:5px; }
+.tool-tag { font-size:10px; font-family:'DM Mono',monospace; color:var(--teal); padding:3px 8px; background:var(--teal-dim); border:0.5px solid rgba(45,184,184,0.2); border-radius:100px; }
+
+/* AI CALLOUT */
+.ai-callout { background:var(--bg2); border:0.5px solid var(--teal); border-radius:10px; padding:1.25rem 1.5rem; margin-bottom:2.5rem; }
+.ai-callout-label { font-size:9px; letter-spacing:0.12em; text-transform:uppercase; font-family:'DM Mono',monospace; color:var(--teal); margin-bottom:8px; font-weight:600; }
+.ai-callout-title { font-size:15px; font-weight:600; color:var(--ink); margin-bottom:8px; }
+.ai-callout-body { font-size:14px; color:var(--ink); line-height:1.75; font-weight:300; }
+.ai-callout-body strong { font-weight:600; }
+
+.site-footer { border-top:0.5px solid var(--rule); padding:1.5rem 2rem; display:flex; justify-content:space-between; font-size:11px; color:var(--ink-soft); font-family:'DM Mono',monospace; position:relative; z-index:1; }
+
+@media(max-width:640px){
+  .type-grid { grid-template-columns:1fr; }
+  .type-card { border-right:none; border-bottom:0.5px solid var(--rule); }
+  .type-card:last-child { border-bottom:none; }
+  .pipeline-trigger { grid-template-columns:30px 1fr auto; }
+  .pipeline-detail { padding-left:2.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="index.html">TinPig<span>Productions</span></a>
+  <a class="header-back" href="tinpigprod-revenue-enablement.html">← Revenue Enablement</a>
+</header>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow"><div class="eyebrow-line"></div>TruffleHQ · 04 · Produce</div>
+    <h1 class="hero-title">Intake to launch <em>at GTM speed.</em></h1>
+    <p class="hero-desc">A lean enablement function can't afford a content development cycle that takes weeks. AI does the acceleration work: faster first drafts, smarter reformatting, gap detection against a checklist. Human judgment focuses on accuracy, tone, and the calls only people can make.</p>
+  </div>
+
+  <div class="section-label">Request types</div>
+
+  <div class="type-grid">
+    <div class="type-card">
+      <div class="type-tag">Type A · Highest priority</div>
+      <div class="type-name">Strategic launch</div>
+      <div class="type-examples">Product launch, pricing change, major positioning update, competitive shift. Tied directly to annual GTM goals set by leadership.</div>
+      <div class="type-signal">Operationally significant. Changes how reps position, price, or handle a competitive objection. Distributes broadly and immediately.</div>
+      
+    </div>
+    <div class="type-card">
+      <div class="type-tag">Type B · Medium priority</div>
+      <div class="type-name">Skill gap response</div>
+      <div class="type-examples">Pattern surfaced by relevant call analysis logs or pipeline data, not manager-reported. Recurring objection, qualification gap, drop-off at a specific deal stage.</div>
+      <div class="type-signal">Behavioral significance. Changes how reps handle a specific moment in the sales motion. Targeted to the affected cohort.</div>
+      
+    </div>
+    <div class="type-card">
+      <div class="type-tag">Type C · Planned</div>
+      <div class="type-name">Evergreen refresh</div>
+      <div class="type-examples">Minor UI change, updated screenshot, terminology correction. Low operational impact. A button changed color, not a workflow.</div>
+      <div class="type-signal">Maintenance. Doesn't change rep behavior. Fits into the regular production cycle without interrupting higher-priority work.</div>
+      
+    </div>
+  </div>
+
+  <div class="section-label">Production pipeline</div>
+
+  <div class="pipeline-grid">
+
+    <div class="pipeline-row">
+      <div class="pipeline-trigger" onclick="togglePipeline(this)">
+        <div class="pipeline-num">01</div>
+        <div class="pipeline-title-wrap">
+          <div class="pipeline-title">Intake and prioritization</div>
+          <div class="pipeline-who">Enablement · Human</div>
+        </div>
+        <div class="pipeline-chevron">▼</div>
+      </div>
+      <div class="pipeline-detail">
+        <div class="pipeline-body">Requests enter from Product Marketing, Sales Leadership, CS, and RevOps. Each request is categorized by type and scored against two questions: does this connect to an annual GTM goal set by leadership, or is it an ad hoc need? And what is the operational significance: does this change how reps behave with customers, or is it a minor update with no behavioral impact. Those two filters determine how fast it moves and how broadly it distributes. A button changing color is not the same as a pricing structure changing. The pipeline treats them differently.</div>
+        <div class="pipeline-tools"><span class="tool-tag">Salesforce</span><span class="tool-tag">Asana</span><span class="tool-tag">Slack</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipeline-trigger" onclick="togglePipeline(this)">
+        <div class="pipeline-num">02</div>
+        <div class="pipeline-title-wrap">
+          <div class="pipeline-title">Context gathering</div>
+          <div class="pipeline-who">Enablement · Human</div>
+        </div>
+        <div class="pipeline-chevron">▼</div>
+      </div>
+      <div class="pipeline-detail">
+        <div class="pipeline-body">Enablement reviews the relevant content before any drafting begins: positioning document, product release notes, customer customer objection logs, competitive intelligence update. For strategic launches, enablement is connected to product cycles and daily standups, not scheduling a separate sync after the fact. The goal is to surface the one or two things that most change how reps should talk about this product. That nuance rarely lives in a document.</div>
+        <div class="pipeline-tools"><span class="tool-tag">Highspot</span><span class="tool-tag">Confluence</span><span class="tool-tag">Product standup</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipeline-trigger" onclick="togglePipeline(this)">
+        <div class="pipeline-num">03</div>
+        <div class="pipeline-title-wrap">
+          <div class="pipeline-title">AI-assisted drafting</div>
+          <div class="pipeline-who">Claude · AI</div>
+        </div>
+        <div class="pipeline-chevron">▼</div>
+      </div>
+      <div class="pipeline-detail">
+        <div class="pipeline-body">A custom Claude prompt, trained on TruffleHQ's messaging framework, tone, and GTM competency model, generates the first draft. The prompt is built so outputs are anchored to TruffleHQ's language from the start, not requiring a full rewrite after the fact. Claude does three things in this step: produces a reviewable first draft faster than any human can, reformats existing content for different channels (battlecard becomes Slack update becomes certification question), and flags gaps against a checklist: missing objection handling, no competitive angle, no MEDDIC connection. What Claude does not do: make accuracy calls, assess competitive claims, or decide what the field actually needs to hear. That's the next step.</div>
+        <div class="pipeline-tools"><span class="tool-tag">Claude</span><span class="tool-tag">Custom prompt</span><span class="tool-tag">TruffleHQ messaging framework</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipeline-trigger" onclick="togglePipeline(this)">
+        <div class="pipeline-num">04</div>
+        <div class="pipeline-title-wrap">
+          <div class="pipeline-title">Human review gate</div>
+          <div class="pipeline-who">Enablement + SME · Human</div>
+        </div>
+        <div class="pipeline-chevron">▼</div>
+      </div>
+      <div class="pipeline-detail">
+        <div class="pipeline-body">Enablement reviews for accuracy, tone, and field-readiness. A subject matter expert spot-checks any product claims or competitive comparisons. The question at review is not whether it looks good. It is whether a rep would use it exactly as written, and whether it would work. For Type A content, one round of review maximum. The cost of slow is higher than the cost of imperfect. Ship it, then refine based on what the field actually encounters.</div>
+        <div class="pipeline-tools"><span class="tool-tag">Highspot</span><span class="tool-tag">Slack review thread</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-row">
+      <div class="pipeline-trigger" onclick="togglePipeline(this)">
+        <div class="pipeline-num">05</div>
+        <div class="pipeline-title-wrap">
+          <div class="pipeline-title">Distribution and tracking</div>
+          <div class="pipeline-who">Enablement · Human</div>
+        </div>
+        <div class="pipeline-chevron">▼</div>
+      </div>
+      <div class="pipeline-detail">
+        <div class="pipeline-body">The distribution decision is part of the design, not an afterthought. Slack for urgent competitive updates. Highspot for certification-required content. Salesforce for deal-stage-specific guidance that surfaces when a rep opens a relevant opportunity. Each piece is tagged in the tracking system so usage and adoption can be measured against the outcomes on the measure page.</div>
+        <div class="pipeline-tools"><span class="tool-tag">Slack</span><span class="tool-tag">Highspot</span><span class="tool-tag">Salesforce</span><span class="tool-tag">Zapier</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ai-callout">
+    <div class="ai-callout-label">On training Claude</div>
+    <div class="ai-callout-title">The prompt is the infrastructure.</div>
+    <div class="ai-callout-body">A generic Claude prompt produces generic content. A prompt trained on TruffleHQ's messaging framework, competency model, and tone produces content that sounds like TruffleHQ from the first draft. Building and maintaining that prompt is an enablement responsibility, not a one-time setup. As the product evolves, the messaging shifts, and the competitive landscape changes, the prompt gets updated. <strong>The prompt is a living document, not a configuration file.</strong></div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span>TinPigProductions · TruffleHQ · Content Production</span>
+  <span>Revenue Enablement · AI-assisted content operations</span>
+</footer>
+
+<script>
+function togglePipeline(trigger) {
+  const detail = trigger.nextElementSibling;
+  const isOpen = trigger.classList.contains('open');
+  document.querySelectorAll('.pipeline-trigger').forEach(t => t.classList.remove('open'));
+  document.querySelectorAll('.pipeline-detail').forEach(d => d.classList.remove('open'));
+  if (!isOpen) {
+    trigger.classList.add('open');
+    detail.classList.add('open');
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How I Think, TinPigProductions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0E0E0E;
+  --bg2: #1A1A1A;
+  --bg3: #222222;
+  --rule: rgba(255,255,255,0.07);
+  --rule-mid: rgba(255,255,255,0.13);
+  --ink: #F5F5F0;
+  --ink-mid: #999999;
+  --ink-soft: #666666;
+  --ink-ghost: #333333;
+  --teal: #2DB8B8;
+  --teal-light: #5DD4D4;
+  --teal-dim: rgba(45,184,184,0.10);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.4;
+}
+
+/* NAV */
+.site-header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(14,14,14,0.92); backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--rule);
+  padding: 0 2rem; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.header-brand {
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  letter-spacing: -0.01em; text-decoration: none;
+}
+.header-brand span { color: var(--teal); font-weight: 400; }
+
+.header-nav { display: flex; gap: 1.5rem; }
+.header-nav a { font-size: 12px; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
+.header-nav a:hover { color: var(--ink); }
+.header-nav a.active { color: var(--teal); }
+
+/* PAGE */
+.page {
+  max-width: 720px; margin: 0 auto;
+  padding: 5rem 2rem 6rem;
+  position: relative; z-index: 1;
+}
+
+/* OPENING */
+.opening {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 0.5px solid var(--rule);
+}
+
+.opening-eyebrow {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 1.5rem;
+  font-family: 'DM Mono', monospace;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+
+.eyebrow-line { width: 20px; height: 0.5px; background: var(--teal); opacity: 0.5; }
+
+.opening-statement {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 4.5vw, 54px);
+  line-height: 1.1; color: var(--ink);
+  margin-bottom: 2rem;
+}
+
+.opening-statement em { font-style: italic; color: var(--teal); }
+
+.opening-body {
+  font-size: 16px; color: var(--ink-mid); line-height: 1.8;
+  max-width: 620px;
+}
+
+.opening-body p { margin-bottom: 1.25rem; }
+.opening-body p:last-child { margin-bottom: 0; }
+.opening-body strong { color: var(--ink); font-weight: 500; }
+
+/* PRINCIPLES */
+.principles { margin-bottom: 4rem; }
+
+.principle {
+  padding: 2rem 0;
+  border-bottom: 0.5px solid var(--rule);
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.principle:first-child { border-top: 0.5px solid var(--rule); }
+
+.principle-num { color:var(--teal); font-size:11px; font-weight:600; font-family:'DM Mono',monospace; letter-spacing:0.08em; }
+
+.principle-content {}
+
+.principle-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--ink);
+  margin-bottom: 0.6rem; line-height: 1.2;
+}
+
+.principle-title em { font-style: italic; color: var(--teal); }
+
+.principle-body {
+  font-size: 14px; color: var(--ink-mid); line-height: 1.75;
+ font-weight:300;}
+
+.principle-body strong { color: var(--ink); font-weight: 500; }
+
+/* PROOF STRIP */
+.proof-strip {
+  background: var(--bg2); border: 0.5px solid var(--rule-mid);
+  border-radius: 12px; padding: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.proof-label {
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-ghost); font-family: 'DM Mono', monospace;
+  margin-bottom: 1rem;
+}
+
+.proof-items {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.proof-item {
+  background: var(--bg3); border: 0.5px solid var(--rule);
+  border-radius: 8px; padding: 0.85rem 1rem;
+}
+
+.proof-item-stage {
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--teal); font-family: 'DM Mono', monospace; margin-bottom: 3px;
+}
+
+.proof-item-name {
+  font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px;
+}
+
+.proof-item-desc {
+  font-size: 11px; color: var(--ink-soft); line-height: 1.5;
+}
+
+/* CTA */
+.cta-block {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem; padding: 1.75rem;
+  background: var(--bg2); border: 0.5px solid var(--teal);
+  border-radius: 14px;
+}
+
+.cta-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px; color: var(--ink); line-height: 1.3;
+}
+
+.cta-text em { font-style: italic; color: var(--teal); }
+
+.cta-links { display: flex; gap: 0.75rem; flex-shrink: 0; flex-wrap: wrap; }
+
+.btn-primary {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  background: var(--teal); color: #0E0E0E;
+  padding: 10px 22px; border-radius: 6px;
+  border: none; text-decoration: none;
+  transition: opacity 0.15s; display: inline-block;
+}
+.btn-primary:hover { opacity: 0.85; }
+
+.btn-secondary {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500;
+  background: transparent; color: var(--ink-mid);
+  border: 0.5px solid var(--rule-mid);
+  padding: 10px 22px; border-radius: 6px;
+  text-decoration: none; transition: color 0.15s; display: inline-block;
+}
+.btn-secondary:hover { color: var(--ink); }
+
+.site-footer {
+  border-top: 0.5px solid var(--rule); padding: 1.5rem 2rem;
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--ink-soft);
+  font-family: 'DM Mono', monospace;
+  position: relative; z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .principle { grid-template-columns: 1fr; gap: 0.5rem; }
+  .proof-items { grid-template-columns: 1fr; }
+  .cta-block { flex-direction: column; align-items: flex-start; }
+  .header-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="index.html">TinPig<span>Productions</span></a>
+  <nav class="header-nav">
+    <a href="index.html">Home</a>
+    <a href="tinpigprod-howithink.html">How I Think</a>
+    <a href="tinpigprod-lifecycle.html">Talent Enablement</a>
+    <a href="tinpigprod-revenue-enablement.html">Revenue Enablement</a>
+    <a href="tinpigprod-pov.html">Point of View</a>
+    <a href="tinpigprod-about.html">About</a>
+  </nav>
+</header>
+
+<div class="page">
+
+  <!-- OPENING -->
+  <div class="opening">
+    <div class="opening-eyebrow"><div class="eyebrow-line"></div>How I think</div>
+    <h1 class="opening-statement">I think in <em>systems.</em></h1>
+    <div class="opening-body">
+      <p>I am a systems thinker. Before I design anything, I want to understand the full picture. The user, their environment, what exists, what's missing, and what could get in the way. The answers to those questions shape everything I build.</p>
+    </div>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="principles">
+
+    <div class="principle">
+      <div class="principle-num">01</div>
+      <div class="principle-content">
+        <div class="principle-title">Start with the <em>learner,</em> not the content.</div>
+        <div class="principle-body">The right design starts with who is being asked to learn, what they already know, what's getting in their way, and what they actually need to do differently. Content is the last decision, not the first. I cringe at training built around what's easy to deliver rather than what the learner actually needs. Every engagement starts with understanding the person and the environment before touching a single design element.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">02</div>
+      <div class="principle-content">
+        <div class="principle-title">Environment shapes <em>behavior</em> as much as training does.</div>
+        <div class="principle-body">A learner who leaves a great program and returns to a broken environment will revert within weeks. I think about the conditions around learning as much as the learning itself. What does the manager reinforce? What does the culture reward? What systems make the new behavior easier or harder? Designing for learning without designing for the environment is designing to fail.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">03</div>
+      <div class="principle-content">
+        <div class="principle-title">The moment of need is the <em>moment of learning.</em></div>
+        <div class="principle-body">People learn best when the need is real and immediate. A new hire on Day 4 is more motivated to understand the company operating model than a tenured employee sitting through an annual training. A manager who just completed a feedback synthesis is more ready to engage a learning resource than one who receives a calendar invite two weeks later. I design for the moment, not the schedule.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">04</div>
+      <div class="principle-content">
+        <div class="principle-title">AI belongs in the <em>infrastructure,</em> not the curriculum.</div>
+        <div class="principle-body">Building a course about AI is the least interesting thing you can do with AI. The more interesting question is: where does AI reduce friction for the learner? Where does it surface the right resource at the right moment? Where does it help a manager translate what they observed into something actionable? I use AI to make learning more timely, feedback more useful, and decisions less subjective.</div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-num">05</div>
+      <div class="principle-content">
+        <div class="principle-title">The systems have to <em>connect.</em></div>
+        <div class="principle-body">A framework that lives in a PDF is not infrastructure. A feedback conversation that doesn't trigger a learning moment is a missed opportunity. A platform that requires leaving the workflow doesn't get used. I design for the connections between systems as much as the systems themselves. Because the learner doesn't experience your organizational chart. They experience what happens when the pieces do or don't talk to each other.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <div class="cta-text">See the thinking<br><em>applied.</em></div>
+    <div class="cta-links">
+      <a class="btn-primary" href="tinpigprod-lifecycle.html">Enter the FictionalPig engagement →</a>
+      <a class="btn-secondary" href="tinpigprod-pov.html">Point of View</a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span>TinPigProductions · How I Think</span>
+  <span>Learning Architecture and Experience Design</span>
+</footer>
+
+</body>
+</html>
